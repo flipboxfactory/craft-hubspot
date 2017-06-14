@@ -44,9 +44,10 @@
     "hasCpSection": false,
     "schemaVersion": "1.0.0",
     "components": {
-      "client": "flipbox\\hubspot\\services\\Client",
       "cache": "flipbox\\craft\\psr6\\Cache",
-      "logger": "flipbox\\craft\\psr3\\Logger"
+      "client": "flipbox\\hubspot\\services\\Client",
+      "logger": "flipbox\\craft\\psr3\\Logger",
+      "transformer": "flipbox\\hubspot\\services\\Transformer"
     },
     "modules": {
       "http": {

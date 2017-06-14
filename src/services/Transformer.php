@@ -1,25 +1,25 @@
 <?php
 
-namespace flipbox\hubspot\modules\resources\services;
+namespace flipbox\hubspot\services;
 
 use flipbox\hubspot\HubSpot;
-use Flipbox\Transform\Helpers\Transformer as TransformerHelper;
 use Flipbox\Transform\Transformers\TransformerInterface;
-use flipbox\transformer\Transformer;
+use Flipbox\Transform\Helpers\Transformer as TransformerHelper;
 use yii\base\Component;
+use flipbox\transformer\Transformer as TransformerPlugin;
 
-class AbstractResource extends Component
+class Transformer extends Component
 {
     /**
      * @param $transformer
      * @param string      $class
      * @param string      $context
-     * @return callable|TransformerInterface|null
+     * @return callable|TransformerInterface|string
      * @throws \Exception
      */
-    public function resolveTransformer(
+    public function get(
         string $class,
-        string $context = Transformer::CONTEXT_ARRAY,
+        string $context = TransformerPlugin::CONTEXT_ARRAY,
         $transformer = HubSpot::DEFAULT_TRANSFORMER
     ) {
         if (TransformerHelper::isTransformer($transformer)) {
@@ -31,7 +31,7 @@ class AbstractResource extends Component
         }
 
         if (is_string($transformer)) {
-            return Transformer::getInstance()->findTransformer($transformer, $class, 'hubspot', $context);
+            return TransformerPlugin::getInstance()->findTransformer($transformer, $class, 'hubspot', $context);
         }
 
         throw new \Exception("Invalid transformer");

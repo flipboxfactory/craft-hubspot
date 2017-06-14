@@ -44,16 +44,7 @@ class HubSpot extends Plugin
             );
 
         }
-
-        // Register cache
-        Event::on(
-            get_class(Craft::$app),
-            Cache::EVENT_REGISTER_CACHE_POOLS,
-            function (RegisterCachePools $event) {
-                $event->addPool('hubspot', 'foo');
-            }
-        );
-
+        
         parent::init();
     }
 
@@ -82,29 +73,36 @@ class HubSpot extends Plugin
      *******************************************/
 
     /**
-     * @return services\Client
-     */
-    public function getClient()
-    {
-        return $this->get('client');
-    }
-
-    /**
      * @return \flipbox\craft\psr6\Cache
      */
-    public function getCache()
+    public function cache()
     {
         return $this->get('cache');
     }
 
     /**
+     * @return services\Client
+     */
+    public function client()
+    {
+        return $this->get('client');
+    }
+
+    /**
      * @return \flipbox\craft\psr3\Logger
      */
-    public function getLogger()
+    public function logger()
     {
         return $this->get('logger');
     }
 
+    /**
+     * @return \flipbox\craft\psr6\Cache
+     */
+    public function transformer()
+    {
+        return $this->get('transformer');
+    }
 
     /*******************************************
      * SUB-MODULES
@@ -113,7 +111,7 @@ class HubSpot extends Plugin
     /**
      * @return modules\http\Module
      */
-    public function getHttp()
+    public function http()
     {
         return $this->getModule('http');
     }
@@ -121,7 +119,7 @@ class HubSpot extends Plugin
     /**
      * @return modules\resources\Module
      */
-    public function getResources()
+    public function resources()
     {
         return $this->getModule('resources');
     }

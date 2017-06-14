@@ -15,7 +15,7 @@ class ApplicationKey implements AuthenticationStrategyInterface
         return [
             'class' => Key::class,
             'key' => HubSpot::getInstance()->getSettings()->apiKey,
-            'logger' => HubSpot::getInstance()->getLogger()
+            'logger' => HubSpot::getInstance()->logger()
         ];
     }
 }

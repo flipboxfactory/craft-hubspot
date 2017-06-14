@@ -26,7 +26,7 @@ class Companies extends AbstractResource
         callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
-        return HubSpot::getInstance()->getHttp()->getCompanies()->create(
+        return HubSpot::getInstance()->http()->getCompanies()->create(
             $this->transformToArray($data, $transformer),
             $authenticationStrategy
         );
@@ -46,7 +46,7 @@ class Companies extends AbstractResource
         CacheStrategyInterface $cacheStrategy = null
     ) {
         // Get contact
-        $response = HubSpot::getInstance()->getHttp()->getCompanies()->getById(
+        $response = HubSpot::getInstance()->http()->getCompanies()->getById(
             $id,
             $authenticationStrategy,
             $cacheStrategy
@@ -73,7 +73,7 @@ class Companies extends AbstractResource
         CacheStrategyInterface $cacheStrategy = null
     ) {
         // Get contact
-        $response = HubSpot::getInstance()->getHttp()->getCompanies()->getByDomain(
+        $response = HubSpot::getInstance()->http()->getCompanies()->getByDomain(
             $domain,
             $authenticationStrategy,
             $cacheStrategy

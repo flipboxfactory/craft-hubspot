@@ -35,7 +35,7 @@ class UserToken implements AuthenticationStrategyInterface
         return [
             'class' => Token::class,
             'token' => $token,
-            'logger' => HubSpot::getInstance()->getLogger()
+            'logger' => HubSpot::getInstance()->logger()
         ];
     }
 

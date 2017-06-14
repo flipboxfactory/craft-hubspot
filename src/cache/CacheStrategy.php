@@ -23,6 +23,6 @@ class CacheStrategy extends Object implements CacheStrategyInterface
      */
     public function getPool(): PoolInterface
     {
-        return HubSpot::getInstance()->getCache()->get($this->type);
+        return HubSpot::getInstance()->cache()->get($this->type);
     }
 }

@@ -25,7 +25,7 @@ class Contacts extends AbstractResource
         callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
-        return HubSpot::getInstance()->getHttp()->getContacts()->create(
+        return HubSpot::getInstance()->http()->getContacts()->create(
             $this->transformToArray($data, $transformer),
             $authenticationStrategy
         );
@@ -44,7 +44,7 @@ class Contacts extends AbstractResource
         callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
-        return HubSpot::getInstance()->getHttp()->getContacts()->updateByEmail(
+        return HubSpot::getInstance()->http()->getContacts()->updateByEmail(
             $email,
             $this->transformToArray($data, $transformer),
             $authenticationStrategy
@@ -64,7 +64,7 @@ class Contacts extends AbstractResource
         callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
-        return HubSpot::getInstance()->getHttp()->getContacts()->updateById(
+        return HubSpot::getInstance()->http()->getContacts()->updateById(
             $id,
             $this->transformToArray($data, $transformer),
             $authenticationStrategy
@@ -85,7 +85,7 @@ class Contacts extends AbstractResource
         CacheStrategyInterface $cacheStrategy = null
     ) {
         // Get contact
-        $contact = HubSpot::getInstance()->getHttp()->getContacts()->getById(
+        $contact = HubSpot::getInstance()->http()->getContacts()->getById(
             $id,
             $authenticationStrategy,
             $cacheStrategy
@@ -112,7 +112,7 @@ class Contacts extends AbstractResource
         CacheStrategyInterface $cacheStrategy = null
     ) {
         // Get contact
-        $contact = HubSpot::getInstance()->getHttp()->getContacts()->getByEmail(
+        $contact = HubSpot::getInstance()->http()->getContacts()->getByEmail(
             $email,
             $authenticationStrategy,
             $cacheStrategy

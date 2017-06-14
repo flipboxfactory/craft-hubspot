@@ -12,6 +12,6 @@ class ApplicationPool implements CacheStrategyInterface
      */
     public function getPool(): PoolInterface
     {
-        return HubSpot::getInstance()->getCache()->get('foo');
+        return HubSpot::getInstance()->cache()->get('foo');
     }
 }

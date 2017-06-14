@@ -55,6 +55,6 @@ class AbstractResource extends Component
      */
     protected function getLogger()
     {
-        return HubSpot::getInstance()->getLogger();
+        return HubSpot::getInstance()->logger();
     }
 }
