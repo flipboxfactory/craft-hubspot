@@ -18,7 +18,7 @@ class AbstractResource extends Component
      * @return callable|TransformerInterface|null
      * @throws \Exception
      */
-    protected function resolveTransformer(
+    public function resolveTransformer(
         $transformer = HubSpot::DEFAULT_TRANSFORMER,
         string $class,
         string $context = Transformer::CONTEXT_ARRAY

@@ -9,6 +9,7 @@ use flipbox\hubspot\HubSpot;
 use Flipbox\Transform\Factory;
 use Flipbox\Transform\Transformers\TransformerInterface;
 use flipbox\transformer\Transformer;
+use yii\base\Component;
 
 class Contacts extends AbstractResource
 {
@@ -21,7 +22,7 @@ class Contacts extends AbstractResource
      */
     public function create(
         $data,
-        $transformer,
+        callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
         return HubSpot::getInstance()->getHttp()->getContacts()->create(
@@ -40,7 +41,7 @@ class Contacts extends AbstractResource
     public function updateByEmail(
         string $email,
         $data,
-        $transformer,
+        callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
         return HubSpot::getInstance()->getHttp()->getContacts()->updateByEmail(
@@ -60,7 +61,7 @@ class Contacts extends AbstractResource
     public function updateById(
         int $id,
         $data,
-        $transformer,
+        callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
         return HubSpot::getInstance()->getHttp()->getContacts()->updateById(
@@ -72,14 +73,14 @@ class Contacts extends AbstractResource
 
     /**
      * @param int                                  $id
-     * @param string|callable|TransformerInterface $transformer
+     * @param callable $transformer
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @param CacheStrategyInterface|null          $cacheStrategy
      * @return array|null
      */
     public function getById(
         int $id,
-        $transformer = HubSpot::DEFAULT_TRANSFORMER,
+        callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null,
         CacheStrategyInterface $cacheStrategy = null
     ) {
@@ -99,14 +100,14 @@ class Contacts extends AbstractResource
 
     /**
      * @param string                               $email
-     * @param string|callable|TransformerInterface $transformer
+     * @param callable|TransformerInterface $transformer
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @param CacheStrategyInterface|null          $cacheStrategy
      * @return array|null
      */
     public function getByEmail(
         string $email,
-        $transformer = HubSpot::DEFAULT_TRANSFORMER,
+        callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null,
         CacheStrategyInterface $cacheStrategy = null
     ) {
@@ -125,36 +126,28 @@ class Contacts extends AbstractResource
     }
 
     /**
-     * @param array                                $contact
-     * @param string|callable|TransformerInterface $transformer
+     * @param array                         $contact
+     * @param callable|TransformerInterface $transformer
      * @return mixed
      */
-    private function transformToObject(array $contact, $transformer = HubSpot::DEFAULT_TRANSFORMER)
+    public function transformToObject(array $contact, callable $transformer)
     {
         return Factory::item(
-            $this->resolveTransformer(
-                $transformer,
-                User::class,
-                Transformer::CONTEXT_OBJECT
-            ),
+            $transformer,
             $contact
         );
     }
 
     /**
-     * @param User                                 $user
-     * @param string|callable|TransformerInterface $transformer
+     * @param Component                     $component
+     * @param callable|TransformerInterface $transformer
      * @return array
      */
-    private function transformToArray(User $user, $transformer = HubSpot::DEFAULT_TRANSFORMER): array
+    public function transformToArray(Component $component, callable $transformer): array
     {
         return Factory::item(
-            $this->resolveTransformer(
-                $transformer,
-                User::class,
-                Transformer::CONTEXT_ARRAY
-            ),
-            $user
+            $transformer,
+            $component
         );
     }
 }

@@ -1,7 +1,7 @@
 {
   "name": "flipboxdigital/hubspot",
   "description": "Hubspot",
-  "version": "1.0.0-beta",
+  "version": "1.0.0-beta.1",
   "type": "craft-plugin",
   "minimum-stability": "beta",
   "prefer-stable": true,

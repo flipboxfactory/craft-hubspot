@@ -10,6 +10,7 @@ use flipbox\organization\elements\Organization;
 use Flipbox\Transform\Factory;
 use Flipbox\Transform\Transformers\TransformerInterface;
 use flipbox\transformer\Transformer;
+use yii\base\Component;
 
 class Companies extends AbstractResource
 {
@@ -22,7 +23,7 @@ class Companies extends AbstractResource
      */
     public function create(
         $data,
-        $transformer,
+        callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
         return HubSpot::getInstance()->getHttp()->getCompanies()->create(
@@ -33,14 +34,14 @@ class Companies extends AbstractResource
 
     /**
      * @param int                                  $id
-     * @param string|callable|TransformerInterface $transformer
+     * @param callable|TransformerInterface $transformer
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @param CacheStrategyInterface|null          $cacheStrategy
      * @return array|null
      */
     public function getById(
         int $id,
-        $transformer = HubSpot::DEFAULT_TRANSFORMER,
+        callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null,
         CacheStrategyInterface $cacheStrategy = null
     ) {
@@ -60,14 +61,14 @@ class Companies extends AbstractResource
 
     /**
      * @param string                               $domain
-     * @param string|callable|TransformerInterface $transformer
+     * @param callable|TransformerInterface $transformer
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @param CacheStrategyInterface|null          $cacheStrategy
      * @return array|null
      */
     public function getByDomain(
         string $domain,
-        $transformer = HubSpot::DEFAULT_TRANSFORMER,
+        callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null,
         CacheStrategyInterface $cacheStrategy = null
     ) {
@@ -86,36 +87,28 @@ class Companies extends AbstractResource
     }
 
     /**
-     * @param array                                $contact
-     * @param string|callable|TransformerInterface $transformer
+     * @param array                         $contact
+     * @param callable|TransformerInterface $transformer
      * @return mixed
      */
-    private function transformToObject(array $contact, $transformer = HubSpot::DEFAULT_TRANSFORMER)
+    public function transformToObject(array $contact, callable $transformer)
     {
         return Factory::item(
-            $this->resolveTransformer(
-                $transformer,
-                Organization::class,
-                Transformer::CONTEXT_OBJECT
-            ),
+            $transformer,
             $contact
         );
     }
 
     /**
-     * @param User                                 $user
-     * @param string|callable|TransformerInterface $transformer
+     * @param Component                     $component
+     * @param callable|TransformerInterface $transformer
      * @return array
      */
-    private function transformToArray(User $user, $transformer = HubSpot::DEFAULT_TRANSFORMER): array
+    public function transformToArray(Component $component, callable $transformer): array
     {
         return Factory::item(
-            $this->resolveTransformer(
-                $transformer,
-                Organization::class,
-                Transformer::CONTEXT_ARRAY
-            ),
-            $user
+            $transformer,
+            $component
         );
     }
 }
