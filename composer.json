@@ -1,0 +1,88 @@
+{
+  "name": "flipboxdigital/hubspot",
+  "description": "Hubspot",
+  "version": "1.0.0-beta",
+  "type": "craft-plugin",
+  "minimum-stability": "beta",
+  "prefer-stable": true,
+  "config": {
+    "optimize-autoloader": true
+  },
+  "require": {
+    "craftcms/cms": "~3.0.0-beta.19",
+    "flipboxdigital/transformer": "~1.0.0-beta",
+    "flipboxdigital/patron": "~1.0.0-beta.1",
+    "flipboxdigital/oauth2-hubspot": "~1.0.0",
+    "flipboxdigital/relay-hubspot": "dev-develop as 1.0.0-beta.99",
+    "flipboxdigital/relay": "^2.0",
+    "flipboxdigital/relay-transform": "^1.0",
+    "flipboxdigital/http-stream": "^2.0",
+    "flipboxdigital/craft-psr3": "^1.0",
+    "flipboxdigital/craft-psr6": "^1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.0",
+    "squizlabs/php_codesniffer": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "flipbox\\hubspot\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "flipbox\\hubspot\\tests\\": "tests/src/"
+    }
+  },
+  "extra": {
+    "name": "Hubspot",
+    "handle": "hubspot",
+    "developer": "Flipbox Digital",
+    "developerUrl": "https://www.flipboxdigital.com",
+    "class": "flipbox\\hubspot\\Hubspot",
+    "hasCpSettings": false,
+    "hasCpSection": false,
+    "schemaVersion": "1.0.0",
+    "components": {
+      "client": "flipbox\\hubspot\\services\\Client",
+      "cache": "flipbox\\craft\\psr6\\Cache",
+      "logger": "flipbox\\craft\\psr3\\Logger"
+    },
+    "modules": {
+      "http": {
+        "basePath": "@flipbox/hubspot/modules/http",
+        "class": "flipbox\\hubspot\\modules\\http\\Module",
+        "components": {
+          "contacts": "flipbox\\hubspot\\modules\\http\\services\\Contacts",
+          "companies": "flipbox\\hubspot\\modules\\http\\services\\Companies"
+        }
+      },
+      "resources": {
+        "basePath": "@flipbox/hubspot/modules/resources",
+        "class": "flipbox\\hubspot\\modules\\resources\\Module",
+        "components": {
+          "contacts": "flipbox\\hubspot\\modules\\resources\\services\\Contacts",
+          "companies": "flipbox\\hubspot\\modules\\resources\\services\\Companies"
+        }
+      }
+    },
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packagist.org"
+    },{
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/flipbox/transformer"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/flipbox/patron"
+    }
+  ]
+}

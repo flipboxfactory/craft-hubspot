@@ -1,0 +1,25 @@
+{% import "_includes/forms" as forms %}
+
+{% set scopeOptions = {
+    'contacts':'Contacts, Companies, and Deals, along with the associated property APIs, Engagements API, Owners API (Marketing and CRM)',
+    'content':'All COS APIs, Calendar API, Email and Email Events API (Marketing)',
+    'reports':'Keywords API (Marketing)',
+    'social':'Social Media API (Marketing)',
+    'automation':'Workflows API	(Marketing)',
+    'timeline':'Timelines API (Marketing and CRM)',
+    'forms':'Forms API (Marketing)',
+    'files':'File Manager API (Marketing and CRM)',
+    'hubdb':'HubDB API (Marketing with Website add on)',
+    'transactional-email':'Transactional Email API (Marketing with Transactional Email add on)'
+} %}
+
+{{ forms.checkboxSelectField({
+    label: "Scopes"|t('guardian'),
+    instructions: "Select the available default scopes."|t('hubspot'),
+    id: 'defaultScopes',
+    name: 'defaultScopes',
+    showAllOption: true,
+    values: defaultScopes,
+    options: scopeOptions,
+    required: true
+}) }}
