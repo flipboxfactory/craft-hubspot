@@ -97,7 +97,7 @@ class HubSpot extends Plugin
     }
 
     /**
-     * @return \flipbox\craft\psr6\Cache
+     * @return services\Transformer
      */
     public function transformer()
     {
