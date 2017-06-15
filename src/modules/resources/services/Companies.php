@@ -34,6 +34,46 @@ class Companies extends AbstractResource
 
     /**
      * @param int                                  $id
+     * @param $data
+     * @param callable|TransformerInterface        $transformer
+     * @param AuthenticationStrategyInterface|null $authenticationStrategy
+     * @return bool|array
+     */
+    public function updateById(
+        int $id,
+        $data,
+        callable $transformer,
+        AuthenticationStrategyInterface $authenticationStrategy = null
+    ) {
+        return HubSpot::getInstance()->http()->companies()->updateById(
+            $id,
+            Factory::item($transformer, $data),
+            $authenticationStrategy
+        );
+    }
+
+    /**
+     * @param string                               $domain
+     * @param $data
+     * @param callable|TransformerInterface        $transformer
+     * @param AuthenticationStrategyInterface|null $authenticationStrategy
+     * @return bool|array
+     */
+    public function updateByDomain(
+        string $domain,
+        $data,
+        callable $transformer,
+        AuthenticationStrategyInterface $authenticationStrategy = null
+    ) {
+        return HubSpot::getInstance()->http()->companies()->updateByDomain(
+            $domain,
+            Factory::item($transformer, $data),
+            $authenticationStrategy
+        );
+    }
+
+    /**
+     * @param int                                  $id
      * @param callable|TransformerInterface $transformer
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @param CacheStrategyInterface|null          $cacheStrategy
