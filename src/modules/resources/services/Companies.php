@@ -26,8 +26,8 @@ class Companies extends AbstractResource
         callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
-        return HubSpot::getInstance()->http()->getCompanies()->create(
-            $this->transformToArray($data, $transformer),
+        return HubSpot::getInstance()->http()->companies()->create(
+            Factory::item($transformer, $data),
             $authenticationStrategy
         );
     }
@@ -46,7 +46,7 @@ class Companies extends AbstractResource
         CacheStrategyInterface $cacheStrategy = null
     ) {
         // Get contact
-        $response = HubSpot::getInstance()->http()->getCompanies()->getById(
+        $response = HubSpot::getInstance()->http()->companies()->getById(
             $id,
             $authenticationStrategy,
             $cacheStrategy
@@ -56,7 +56,7 @@ class Companies extends AbstractResource
             return null;
         }
 
-        return $this->transformToObject($response, $transformer);
+        return Factory::item($transformer, $response);
     }
 
     /**
@@ -72,8 +72,8 @@ class Companies extends AbstractResource
         AuthenticationStrategyInterface $authenticationStrategy = null,
         CacheStrategyInterface $cacheStrategy = null
     ) {
-        // Get contact
-        $response = HubSpot::getInstance()->http()->getCompanies()->getByDomain(
+        // Get response
+        $response = HubSpot::getInstance()->http()->companies()->getByDomain(
             $domain,
             $authenticationStrategy,
             $cacheStrategy
@@ -83,32 +83,6 @@ class Companies extends AbstractResource
             return null;
         }
 
-        return $this->transformToObject($response, $transformer);
-    }
-
-    /**
-     * @param array                         $contact
-     * @param callable|TransformerInterface $transformer
-     * @return mixed
-     */
-    public function transformToObject(array $contact, callable $transformer)
-    {
-        return Factory::item(
-            $transformer,
-            $contact
-        );
-    }
-
-    /**
-     * @param Component                     $component
-     * @param callable|TransformerInterface $transformer
-     * @return array
-     */
-    public function transformToArray(Component $component, callable $transformer): array
-    {
-        return Factory::item(
-            $transformer,
-            $component
-        );
+        return Factory::item($transformer, $response);
     }
 }

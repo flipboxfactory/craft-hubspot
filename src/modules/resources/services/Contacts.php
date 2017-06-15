@@ -25,8 +25,8 @@ class Contacts extends AbstractResource
         callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
-        return HubSpot::getInstance()->http()->getContacts()->create(
-            $this->transformToArray($data, $transformer),
+        return HubSpot::getInstance()->http()->contacts()->create(
+            Factory::item($transformer, $data),
             $authenticationStrategy
         );
     }
@@ -44,9 +44,9 @@ class Contacts extends AbstractResource
         callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
-        return HubSpot::getInstance()->http()->getContacts()->updateByEmail(
+        return HubSpot::getInstance()->http()->contacts()->updateByEmail(
             $email,
-            $this->transformToArray($data, $transformer),
+            Factory::item($transformer, $data),
             $authenticationStrategy
         );
     }
@@ -64,9 +64,9 @@ class Contacts extends AbstractResource
         callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
-        return HubSpot::getInstance()->http()->getContacts()->updateById(
+        return HubSpot::getInstance()->http()->contacts()->updateById(
             $id,
-            $this->transformToArray($data, $transformer),
+            Factory::item($transformer, $data),
             $authenticationStrategy
         );
     }
@@ -85,17 +85,17 @@ class Contacts extends AbstractResource
         CacheStrategyInterface $cacheStrategy = null
     ) {
         // Get contact
-        $contact = HubSpot::getInstance()->http()->getContacts()->getById(
+        $response = HubSpot::getInstance()->http()->contacts()->getById(
             $id,
             $authenticationStrategy,
             $cacheStrategy
         );
 
-        if ($contact === null) {
+        if ($response === null) {
             return null;
         }
 
-        return $this->transformToObject($contact, $transformer);
+        return Factory::item($transformer, $response);
     }
 
     /**
@@ -112,42 +112,16 @@ class Contacts extends AbstractResource
         CacheStrategyInterface $cacheStrategy = null
     ) {
         // Get contact
-        $contact = HubSpot::getInstance()->http()->getContacts()->getByEmail(
+        $response = HubSpot::getInstance()->http()->contacts()->getByEmail(
             $email,
             $authenticationStrategy,
             $cacheStrategy
         );
 
-        if ($contact === null) {
+        if ($response === null) {
             return null;
         }
 
-        return $this->transformToObject($contact, $transformer);
-    }
-
-    /**
-     * @param array                         $contact
-     * @param callable|TransformerInterface $transformer
-     * @return mixed
-     */
-    public function transformToObject(array $contact, callable $transformer)
-    {
-        return Factory::item(
-            $transformer,
-            $contact
-        );
-    }
-
-    /**
-     * @param Component                     $component
-     * @param callable|TransformerInterface $transformer
-     * @return array
-     */
-    public function transformToArray(Component $component, callable $transformer): array
-    {
-        return Factory::item(
-            $transformer,
-            $component
-        );
+        return Factory::item($transformer, $response);
     }
 }

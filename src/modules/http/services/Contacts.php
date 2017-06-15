@@ -164,18 +164,12 @@ class Contacts extends AbstractResource
         AuthenticationStrategyInterface $authenticationStrategy = null,
         CacheStrategyInterface $cacheStrategy = null
     ) {
-        // The authentication strategy
-        $authenticationStrategy = $this->resolveAuthenticationStrategy($authenticationStrategy);
-
-        // The cache strategy
-        $cacheStrategy = $this->resolveCacheStrategy($cacheStrategy);
-
         // Create runner segments
         $segments = new GetById(
             [
             'id' => $id,
             'logger' => $this->getLogger(),
-            'cache' => $cacheStrategy->getPool()
+            'cache' => $this->resolveCacheStrategy($cacheStrategy)->getPool()
             ]
         );
 
@@ -212,18 +206,12 @@ class Contacts extends AbstractResource
         AuthenticationStrategyInterface $authenticationStrategy = null,
         CacheStrategyInterface $cacheStrategy = null
     ) {
-        // The authentication strategy
-        $authenticationStrategy = $this->resolveAuthenticationStrategy($authenticationStrategy);
-
-        // The cache strategy
-        $cacheStrategy = $this->resolveCacheStrategy($cacheStrategy);
-
         // Create runner segments
         $segments = new GetByEmail(
             [
             'email' => $email,
             'logger' => $this->getLogger(),
-            'cache' => $cacheStrategy->getPool()
+            'cache' => $this->resolveCacheStrategy($cacheStrategy)->getPool()
             ]
         );
 

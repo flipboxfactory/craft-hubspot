@@ -12,15 +12,23 @@ class Module extends \yii\base\Module
     /**
      * @return services\Contacts
      */
-    public function getContacts()
+    public function contacts()
     {
         return $this->get('contacts');
     }
 
     /**
+     * @return services\ContactLists
+     */
+    public function contactLists()
+    {
+        return $this->get('contactlists');
+    }
+
+    /**
      * @return services\Companies
      */
-    public function getCompanies()
+    public function companies()
     {
         return $this->get('companies');
     }

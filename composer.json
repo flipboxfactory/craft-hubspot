@@ -3,7 +3,7 @@
   "description": "Hubspot",
   "version": "1.0.0-beta.1",
   "type": "craft-plugin",
-  "minimum-stability": "beta",
+  "minimum-stability": "dev",
   "prefer-stable": true,
   "config": {
     "optimize-autoloader": true
@@ -13,7 +13,7 @@
     "flipboxdigital/transformer": "~1.0.0-beta",
     "flipboxdigital/patron": "~1.0.0-beta.1",
     "flipboxdigital/oauth2-hubspot": "~1.0.0",
-    "flipboxdigital/relay-hubspot": "~1.0.0-beta.1",
+    "flipboxdigital/relay-hubspot": "dev-develop as 1.0.0-beta.99",
     "flipboxdigital/relay": "^2.0",
     "flipboxdigital/relay-transform": "^1.0",
     "flipboxdigital/http-stream": "^2.0",
@@ -55,6 +55,7 @@
         "class": "flipbox\\hubspot\\modules\\http\\Module",
         "components": {
           "contacts": "flipbox\\hubspot\\modules\\http\\services\\Contacts",
+          "contactlists": "flipbox\\hubspot\\modules\\http\\services\\ContactLists",
           "companies": "flipbox\\hubspot\\modules\\http\\services\\Companies"
         }
       },
@@ -63,6 +64,7 @@
         "class": "flipbox\\hubspot\\modules\\resources\\Module",
         "components": {
           "contacts": "flipbox\\hubspot\\modules\\resources\\services\\Contacts",
+          "contactlists": "flipbox\\hubspot\\modules\\resources\\services\\ContactLists",
           "companies": "flipbox\\hubspot\\modules\\resources\\services\\Companies"
         }
       }

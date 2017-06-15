@@ -10,6 +10,8 @@ use flipbox\hubspot\HubSpot;
 use Flipbox\Relay\HubSpot\Segment\Companies\Create;
 use Flipbox\Relay\HubSpot\Segment\Companies\GetByDomain;
 use Flipbox\Relay\HubSpot\Segment\Companies\GetById;
+use Flipbox\Relay\HubSpot\Segment\Companies\UpdateById;
+use Flipbox\Relay\HubSpot\Segment\Companies\UpdateByDomain;
 
 class Companies extends AbstractResource
 {
@@ -55,6 +57,86 @@ class Companies extends AbstractResource
 
     /**
      * @param int                                  $id
+     * @param array                                $properties
+     * @param AuthenticationStrategyInterface|null $authenticationStrategy
+     * @return array|null
+     */
+    public function updateById(
+        int $id,
+        array $properties,
+        AuthenticationStrategyInterface $authenticationStrategy = null
+    ) {
+        // Create runner segments
+        $segments = new UpdateById([
+            'id' => $id,
+            'properties' => $properties,
+            'logger' => $this->getLogger()
+        ]);
+
+        // Prepend authorization
+        $this->prependAuthenticationMiddleware(
+            $segments,
+            $authenticationStrategy
+        );
+
+        // Run Http
+        $response = $segments->run();
+
+        if ($response->getStatusCode() !== 200) {
+            HubSpot::warning(
+                Craft::t(
+                    "Unable to update company with id: {id}",
+                    ['{id}' => $id]
+                )
+            );
+            return null;
+        }
+
+        return Json::decodeIfJson($response->getBody()->getContents());
+    }
+
+    /**
+     * @param string                               $domain
+     * @param array                                $properties
+     * @param AuthenticationStrategyInterface|null $authenticationStrategy
+     * @return array|null
+     */
+    public function updateByDomain(
+        string $domain,
+        array $properties,
+        AuthenticationStrategyInterface $authenticationStrategy = null
+    ) {
+        // Create runner segments
+        $segments = new UpdateByDomain([
+            'domain' => $domain,
+            'properties' => $properties,
+            'logger' => $this->getLogger()
+        ]);
+
+        // Prepend authorization
+        $this->prependAuthenticationMiddleware(
+            $segments,
+            $authenticationStrategy
+        );
+
+        // Run Http
+        $response = $segments->run();
+
+        if ($response->getStatusCode() !== 200) {
+            HubSpot::warning(
+                Craft::t(
+                    "Unable to update company with domain: {domain}",
+                    ['{domain}' => $domain]
+                )
+            );
+            return null;
+        }
+
+        return Json::decodeIfJson($response->getBody()->getContents());
+    }
+
+    /**
+     * @param int                                  $id
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @param CacheStrategyInterface|null          $cacheStrategy
      * @return array|null
@@ -64,17 +146,11 @@ class Companies extends AbstractResource
         AuthenticationStrategyInterface $authenticationStrategy = null,
         CacheStrategyInterface $cacheStrategy = null
     ) {
-        // The authentication strategy
-        $authenticationStrategy = $this->resolveAuthenticationStrategy($authenticationStrategy);
-
-        // The cache strategy
-        $cacheStrategy = $this->resolveCacheStrategy($cacheStrategy);
-
         // Create runner segments
         $segments = new GetById([
             'id' => $id,
             'logger' => $this->getLogger(),
-            'cache' => $cacheStrategy->getPool()
+            'cache' => $this->resolveCacheStrategy($cacheStrategy)->getPool()
         ]);
 
         // Prepend authorization
@@ -110,17 +186,11 @@ class Companies extends AbstractResource
         AuthenticationStrategyInterface $authenticationStrategy = null,
         CacheStrategyInterface $cacheStrategy = null
     ) {
-        // The authentication strategy
-        $authenticationStrategy = $this->resolveAuthenticationStrategy($authenticationStrategy);
-
-        // The cache strategy
-        $cacheStrategy = $this->resolveCacheStrategy($cacheStrategy);
-
         // Create runner segments
         $segments = new GetByDomain([
             'domain' => $domain,
             'logger' => $this->getLogger(),
-            'cache' => $cacheStrategy->getPool()
+            'cache' => $this->resolveCacheStrategy($cacheStrategy)->getPool()
         ]);
 
         // Prepend authorization
