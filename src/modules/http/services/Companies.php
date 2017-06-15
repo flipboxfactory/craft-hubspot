@@ -7,9 +7,11 @@ use craft\helpers\Json;
 use flipbox\hubspot\authentication\AuthenticationStrategyInterface;
 use flipbox\hubspot\cache\CacheStrategyInterface;
 use flipbox\hubspot\HubSpot;
+use Flipbox\Relay\HubSpot\Segment\Companies\AddContact;
 use Flipbox\Relay\HubSpot\Segment\Companies\Create;
 use Flipbox\Relay\HubSpot\Segment\Companies\GetByDomain;
 use Flipbox\Relay\HubSpot\Segment\Companies\GetById;
+use Flipbox\Relay\HubSpot\Segment\Companies\RemoveContact;
 use Flipbox\Relay\HubSpot\Segment\Companies\UpdateById;
 use Flipbox\Relay\HubSpot\Segment\Companies\UpdateByDomain;
 
@@ -18,7 +20,7 @@ class Companies extends AbstractResource
     /**
      * @param array                                $properties
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
-     * @return bool|array
+     * @return array
      */
     public function create(
         array $properties,
@@ -27,8 +29,8 @@ class Companies extends AbstractResource
         // Create runner segments
         $segments = new Create(
             [
-            'properties' => $properties,
-            'logger' => $this->getLogger()
+                'properties' => $properties,
+                'logger' => $this->getLogger()
             ]
         );
 
@@ -42,17 +44,27 @@ class Companies extends AbstractResource
         $response = $segments->run();
 
         // Interpret response
-        if ($response->getStatusCode() !== 201) {
+        if ($response->getStatusCode() !== 200) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+
             HubSpot::warning(
-                Craft::t(
-                    "Unable to create company: {properties}",
-                    ['{properties}' => Json::encode($properties)]
+                sprintf(
+                    "Unable to create company: %s, errors: %s",
+                    Json::encode($properties),
+                    Json::encode($body)
                 )
             );
-            return Json::decodeIfJson($response->getBody()->getContents());
+
+            return [
+                false,
+                $body
+            ];
         }
 
-        return true;
+        return [
+            true,
+            Json::decodeIfJson($response->getBody()->getContents())
+        ];
     }
 
     /**
@@ -83,10 +95,14 @@ class Companies extends AbstractResource
         $response = $segments->run();
 
         if ($response->getStatusCode() !== 200) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+
             HubSpot::warning(
-                Craft::t(
-                    "Unable to update company with id: {id}",
-                    ['{id}' => $id]
+                sprintf(
+                    "Unable to update company with id %s: %s, errors: %s",
+                    $id,
+                    Json::encode($properties),
+                    Json::encode($body)
                 )
             );
             return null;
@@ -123,10 +139,14 @@ class Companies extends AbstractResource
         $response = $segments->run();
 
         if ($response->getStatusCode() !== 200) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+
             HubSpot::warning(
-                Craft::t(
-                    "Unable to update company with domain: {domain}",
-                    ['{domain}' => $domain]
+                sprintf(
+                    "Unable to update company with domain %s: %s, errors: %s",
+                    $domain,
+                    Json::encode($properties),
+                    Json::encode($body)
                 )
             );
             return null;
@@ -215,5 +235,101 @@ class Companies extends AbstractResource
         }
 
         return Json::decodeIfJson($response->getBody()->getContents());
+    }
+
+    /**
+     * @param int                                  $companyId
+     * @param int                                  $contactId
+     * @param AuthenticationStrategyInterface|null $authenticationStrategy
+     * @return array|bool
+     */
+    public function addContact(
+        int $companyId,
+        int $contactId,
+        AuthenticationStrategyInterface $authenticationStrategy = null
+    ) {
+        // Create runner segments
+        $segments = new AddContact(
+            [
+                'id' => $companyId,
+                'contactId' => $contactId,
+                'logger' => $this->getLogger()
+            ]
+        );
+
+        // Prepend authorization
+        $this->prependAuthenticationMiddleware(
+            $segments,
+            $authenticationStrategy
+        );
+
+        // Run Http
+        $response = $segments->run();
+
+        // Interpret response
+        if ($response->getStatusCode() !== 204) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+
+            HubSpot::warning(
+                sprintf(
+                    "Unable to add contact %s to company %s, errors: %s",
+                    $contactId,
+                    $companyId,
+                    Json::encode($body)
+                )
+            );
+
+            return $body;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param int                                  $companyId
+     * @param int                                  $contactId
+     * @param AuthenticationStrategyInterface|null $authenticationStrategy
+     * @return array|bool
+     */
+    public function removeContact(
+        int $companyId,
+        int $contactId,
+        AuthenticationStrategyInterface $authenticationStrategy = null
+    ) {
+        // Create runner segments
+        $segments = new RemoveContact(
+            [
+                'id' => $companyId,
+                'contactId' => $contactId,
+                'logger' => $this->getLogger()
+            ]
+        );
+
+        // Prepend authorization
+        $this->prependAuthenticationMiddleware(
+            $segments,
+            $authenticationStrategy
+        );
+
+        // Run Http
+        $response = $segments->run();
+
+        // Interpret response
+        if ($response->getStatusCode() !== 204) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+
+            HubSpot::warning(
+                sprintf(
+                    "Unable to remove contact %s from company %s, errors: %s",
+                    $contactId,
+                    $companyId,
+                    Json::encode($body)
+                )
+            );
+
+            return $body;
+        }
+
+        return true;
     }
 }

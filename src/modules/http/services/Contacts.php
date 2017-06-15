@@ -17,7 +17,7 @@ class Contacts extends AbstractResource
     /**
      * @param array                                $properties
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
-     * @return bool|array
+     * @return array
      */
     public function create(
         array $properties,
@@ -41,8 +41,7 @@ class Contacts extends AbstractResource
         $response = $segments->run();
 
         // Interpret response
-        if ($response->getStatusCode() !== 201) {
-
+        if ($response->getStatusCode() !== 200) {
             $body = Json::decodeIfJson($response->getBody()->getContents());
 
             HubSpot::warning(
@@ -52,10 +51,17 @@ class Contacts extends AbstractResource
                     Json::encode($body)
                 )
             );
-            return $body;
+
+            return [
+                false,
+                $body
+            ];
         }
 
-        return true;
+        return [
+            true,
+            Json::decodeIfJson($response->getBody()->getContents())
+        ];
     }
 
     /**

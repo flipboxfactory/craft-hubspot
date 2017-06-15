@@ -18,7 +18,7 @@ class Contacts extends AbstractResource
      * @param $data
      * @param callable|TransformerInterface        $transformer
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
-     * @return array|bool
+     * @return array
      */
     public function create(
         $data,
