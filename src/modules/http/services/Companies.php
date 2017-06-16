@@ -267,7 +267,7 @@ class Companies extends AbstractResource
         $response = $segments->run();
 
         // Interpret response
-        if ($response->getStatusCode() !== 204) {
+        if ($response->getStatusCode() !== 200) {
             $body = Json::decodeIfJson($response->getBody()->getContents());
 
             HubSpot::warning(
