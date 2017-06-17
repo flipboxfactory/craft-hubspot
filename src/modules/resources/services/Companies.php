@@ -2,15 +2,12 @@
 
 namespace flipbox\hubspot\modules\resources\services;
 
-use craft\elements\User;
+use craft\helpers\Json;
 use flipbox\hubspot\authentication\AuthenticationStrategyInterface;
 use flipbox\hubspot\cache\CacheStrategyInterface;
 use flipbox\hubspot\HubSpot;
-use flipbox\organization\elements\Organization;
 use Flipbox\Transform\Factory;
 use Flipbox\Transform\Transformers\TransformerInterface;
-use flipbox\transformer\Transformer;
-use yii\base\Component;
 
 class Companies extends AbstractResource
 {
@@ -26,10 +23,33 @@ class Companies extends AbstractResource
         callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
-        return HubSpot::getInstance()->http()->companies()->create(
-            Factory::item($transformer, $data),
+        $payload = Factory::item($transformer, $data);
+
+        $response = HubSpot::getInstance()->http()->companies()->create(
+            $payload,
             $authenticationStrategy
         );
+
+        // Interpret response
+        if ($response->getStatusCode() !== 200) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+            HubSpot::warning(
+                sprintf(
+                    "Unable to create company: %s, errors: %s",
+                    Json::encode($payload),
+                    Json::encode($body)
+                )
+            );
+            return [
+                false,
+                $body
+            ];
+        }
+
+        return [
+            true,
+            Json::decodeIfJson($response->getBody()->getContents())
+        ];
     }
 
     /**
@@ -45,11 +65,28 @@ class Companies extends AbstractResource
         callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
-        return HubSpot::getInstance()->http()->companies()->updateById(
+        $payload = Factory::item($transformer, $data);
+
+        $response = HubSpot::getInstance()->http()->companies()->updateById(
             $id,
-            Factory::item($transformer, $data),
+            $payload,
             $authenticationStrategy
         );
+
+        if ($response->getStatusCode() !== 200) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+            HubSpot::warning(
+                sprintf(
+                    "Unable to update company with id %s: %s, errors: %s",
+                    $id,
+                    Json::encode($payload),
+                    Json::encode($body)
+                )
+            );
+            return null;
+        }
+
+        return Json::decodeIfJson($response->getBody()->getContents());
     }
 
     /**
@@ -65,11 +102,28 @@ class Companies extends AbstractResource
         callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
-        return HubSpot::getInstance()->http()->companies()->updateByDomain(
+        $payload = Factory::item($transformer, $data);
+
+        $response = HubSpot::getInstance()->http()->companies()->updateByDomain(
             $domain,
             Factory::item($transformer, $data),
             $authenticationStrategy
         );
+
+        if ($response->getStatusCode() !== 200) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+            HubSpot::warning(
+                sprintf(
+                    "Unable to update company with domain %s: %s, errors: %s",
+                    $domain,
+                    Json::encode($payload),
+                    Json::encode($body)
+                )
+            );
+            return null;
+        }
+
+        return Json::decodeIfJson($response->getBody()->getContents());
     }
 
     /**
@@ -92,11 +146,22 @@ class Companies extends AbstractResource
             $cacheStrategy
         );
 
-        if ($response === null) {
+        if ($response->getStatusCode() !== 200) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+            HubSpot::warning(
+                sprintf(
+                    "Unable to get company with id %s, errors: %s",
+                    $id,
+                    Json::encode($body)
+                )
+            );
             return null;
         }
 
-        return Factory::item($transformer, $response);
+        return Factory::item(
+            $transformer,
+            Json::decodeIfJson($response->getBody()->getContents())
+        );
     }
 
     /**
@@ -119,10 +184,21 @@ class Companies extends AbstractResource
             $cacheStrategy
         );
 
-        if ($response === null) {
+        if ($response->getStatusCode() !== 200) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+            HubSpot::warning(
+                sprintf(
+                    "Unable to get company with domain %s, errors: %s",
+                    $domain,
+                    Json::encode($body)
+                )
+            );
             return null;
         }
 
-        return Factory::item($transformer, $response);
+        return Factory::item(
+            $transformer,
+            Json::decodeIfJson($response->getBody()->getContents())
+        );
     }
 }

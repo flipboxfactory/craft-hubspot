@@ -3,6 +3,7 @@
 namespace flipbox\hubspot\modules\resources\services;
 
 use craft\elements\User;
+use craft\helpers\Json;
 use flipbox\hubspot\authentication\AuthenticationStrategyInterface;
 use flipbox\hubspot\cache\CacheStrategyInterface;
 use flipbox\hubspot\HubSpot;
@@ -25,10 +26,35 @@ class Contacts extends AbstractResource
         callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
-        return HubSpot::getInstance()->http()->contacts()->create(
-            Factory::item($transformer, $data),
+        $payload = Factory::item($transformer, $data);
+
+        $response = HubSpot::getInstance()->http()->contacts()->create(
+            $payload,
             $authenticationStrategy
         );
+
+        // Interpret response
+        if ($response->getStatusCode() !== 200) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+
+            HubSpot::warning(
+                sprintf(
+                    "Unable to create user: %s, errors: %s",
+                    Json::encode($payload),
+                    Json::encode($body)
+                )
+            );
+
+            return [
+                false,
+                $body
+            ];
+        }
+
+        return [
+            true,
+            Json::decodeIfJson($response->getBody()->getContents())
+        ];
     }
 
     /**
@@ -44,11 +70,30 @@ class Contacts extends AbstractResource
         callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
-        return HubSpot::getInstance()->http()->contacts()->updateByEmail(
+        $payload = Factory::item($transformer, $data);
+
+        $response = HubSpot::getInstance()->http()->contacts()->updateByEmail(
             $email,
-            Factory::item($transformer, $data),
+            $payload,
             $authenticationStrategy
         );
+
+        // Interpret response
+        if ($response->getStatusCode() !== 204) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+
+            HubSpot::warning(
+                sprintf(
+                    "Unable to create user email: %s, errors: %s",
+                    $email,
+                    Json::encode($payload),
+                    Json::encode($body)
+                )
+            );
+            return $body;
+        }
+
+        return true;
     }
 
     /**
@@ -64,11 +109,30 @@ class Contacts extends AbstractResource
         callable $transformer,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
-        return HubSpot::getInstance()->http()->contacts()->updateById(
+        $payload = Factory::item($transformer, $data);
+
+        $response = HubSpot::getInstance()->http()->contacts()->updateById(
             $id,
-            Factory::item($transformer, $data),
+            $payload,
             $authenticationStrategy
         );
+
+        // Interpret response
+        if ($response->getStatusCode() !== 204) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+
+            HubSpot::warning(
+                sprintf(
+                    "Unable to create user id %s: %s, errors: %s",
+                    $id,
+                    Json::encode($payload),
+                    Json::encode($body)
+                )
+            );
+            return $body;
+        }
+
+        return true;
     }
 
     /**
@@ -91,11 +155,17 @@ class Contacts extends AbstractResource
             $cacheStrategy
         );
 
-        if ($response === null) {
+        if ($response->getStatusCode() !== 200) {
+            HubSpot::warning(
+                sprintf(
+                    "Unable to get user with id:  %s",
+                    $id
+                )
+            );
             return null;
         }
 
-        return Factory::item($transformer, $response);
+        return Factory::item($transformer, Json::decodeIfJson($response->getBody()->getContents()));
     }
 
     /**
@@ -118,10 +188,17 @@ class Contacts extends AbstractResource
             $cacheStrategy
         );
 
-        if ($response === null) {
+
+        if ($response->getStatusCode() !== 200) {
+            HubSpot::warning(
+                sprintf(
+                    "Unable to get user with email: {email}",
+                    $email
+                )
+            );
             return null;
         }
 
-        return Factory::item($transformer, $response);
+        return Factory::item($transformer, Json::decodeIfJson($response->getBody()->getContents()));
     }
 }

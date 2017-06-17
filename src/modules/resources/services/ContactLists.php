@@ -2,6 +2,7 @@
 
 namespace flipbox\hubspot\modules\resources\services;
 
+use craft\helpers\Json;
 use flipbox\hubspot\authentication\AuthenticationStrategyInterface;
 use flipbox\hubspot\cache\CacheStrategyInterface;
 use flipbox\hubspot\HubSpot;
@@ -30,11 +31,17 @@ class ContactLists extends AbstractResource
             $cacheStrategy
         );
 
-        if ($response === null) {
+        if ($response->getStatusCode() !== 200) {
+            HubSpot::warning(
+                sprintf(
+                    "Unable to get contact list with id:  %s",
+                    $id
+                )
+            );
             return null;
         }
 
-        return Factory::item($transformer, $response);
+        return Factory::item($transformer, Json::decodeIfJson($response->getBody()->getContents()));
     }
 
     /**
@@ -57,13 +64,21 @@ class ContactLists extends AbstractResource
             $cacheStrategy
         );
 
-        if ($response === null) {
+        if ($response->getStatusCode() !== 200) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+            HubSpot::warning(
+                sprintf(
+                    "Unable to get contact list with id: %s, errors: %s",
+                    $id,
+                    Json::encode($body)
+                )
+            );
             return null;
         }
 
         return Factory::collection(
             $transformer,
-            $response
+            Json::decodeIfJson($response->getBody()->getContents())
         );
     }
 
@@ -87,11 +102,19 @@ class ContactLists extends AbstractResource
             $authenticationStrategy
         );
 
-        if ($response === null) {
-            return true;
+        if ($response->getStatusCode() !== 200) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+            HubSpot::warning(
+                sprintf(
+                    "Unable to get contact list with id: %s, errors: %s",
+                    $id,
+                    Json::encode($body)
+                )
+            );
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -114,10 +137,18 @@ class ContactLists extends AbstractResource
             $authenticationStrategy
         );
 
-        if ($response === null) {
-            return true;
+        if ($response->getStatusCode() !== 200) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+            HubSpot::warning(
+                sprintf(
+                    "Unable to get contact list with id: %s, errors: %s",
+                    $id,
+                    Json::encode($body)
+                )
+            );
+            return false;
         }
 
-        return false;
+        return true;
     }
 }

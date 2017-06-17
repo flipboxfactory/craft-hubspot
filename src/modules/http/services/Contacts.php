@@ -11,13 +11,14 @@ use Flipbox\Relay\HubSpot\Segment\Contacts\GetByEmail;
 use Flipbox\Relay\HubSpot\Segment\Contacts\GetById;
 use Flipbox\Relay\HubSpot\Segment\Contacts\UpdateByEmail;
 use Flipbox\Relay\HubSpot\Segment\Contacts\UpdateById;
+use Psr\Http\Message\ResponseInterface;
 
 class Contacts extends AbstractResource
 {
     /**
      * @param array                                $properties
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
-     * @return array
+     * @return ResponseInterface
      */
     public function create(
         array $properties,
@@ -37,38 +38,14 @@ class Contacts extends AbstractResource
             $authenticationStrategy
         );
 
-        // Run Http
-        $response = $segments->run();
-
-        // Interpret response
-        if ($response->getStatusCode() !== 200) {
-            $body = Json::decodeIfJson($response->getBody()->getContents());
-
-            HubSpot::warning(
-                sprintf(
-                    "Unable to create user: %s, errors: %s",
-                    Json::encode($properties),
-                    Json::encode($body)
-                )
-            );
-
-            return [
-                false,
-                $body
-            ];
-        }
-
-        return [
-            true,
-            Json::decodeIfJson($response->getBody()->getContents())
-        ];
+        return $segments->run();
     }
 
     /**
      * @param string                               $email
      * @param array                                $properties
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
-     * @return bool|array
+     * @return ResponseInterface
      */
     public function updateByEmail(
         string $email,
@@ -90,32 +67,14 @@ class Contacts extends AbstractResource
             $authenticationStrategy
         );
 
-        // Run Http
-        $response = $segments->run();
-
-        // Interpret response
-        if ($response->getStatusCode() !== 204) {
-            $body = Json::decodeIfJson($response->getBody()->getContents());
-
-            HubSpot::warning(
-                sprintf(
-                    "Unable to create user email: %s, errors: %s",
-                    $email,
-                    Json::encode($properties),
-                    Json::encode($body)
-                )
-            );
-            return $body;
-        }
-
-        return true;
+        return $segments->run();
     }
 
     /**
      * @param int                                  $id
      * @param array                                $properties
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
-     * @return bool|array
+     * @return ResponseInterface
      */
     public function updateById(
         int $id,
@@ -137,33 +96,14 @@ class Contacts extends AbstractResource
             $authenticationStrategy
         );
 
-        // Run Http
-        $response = $segments->run();
-
-        // Interpret response
-        if ($response->getStatusCode() !== 204) {
-
-            $body = Json::decodeIfJson($response->getBody()->getContents());
-
-            HubSpot::warning(
-                sprintf(
-                    "Unable to create user id %s: %s, errors: %s",
-                    $id,
-                    Json::encode($properties),
-                    Json::encode($body)
-                )
-            );
-            return $body;
-        }
-
-        return true;
+        return $segments->run();
     }
 
     /**
      * @param int                                  $id
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @param CacheStrategyInterface|null          $cacheStrategy
-     * @return array|null
+     * @return ResponseInterface
      */
     public function getById(
         int $id,
@@ -185,27 +125,14 @@ class Contacts extends AbstractResource
             $authenticationStrategy
         );
 
-        // Run Http
-        $response = $segments->run();
-
-        if ($response->getStatusCode() !== 200) {
-            HubSpot::warning(
-                sprintf(
-                    "Unable to get user with id:  %s",
-                    $id
-                )
-            );
-            return null;
-        }
-
-        return Json::decodeIfJson($response->getBody()->getContents());
+        return $segments->run();
     }
 
     /**
      * @param string                               $email
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @param CacheStrategyInterface|null          $cacheStrategy
-     * @return array|null
+     * @return ResponseInterface
      */
     public function getByEmail(
         string $email,
@@ -227,19 +154,6 @@ class Contacts extends AbstractResource
             $authenticationStrategy
         );
 
-        // Run Http
-        $response = $segments->run();
-
-        if ($response->getStatusCode() !== 200) {
-            HubSpot::warning(
-                sprintf(
-                    "Unable to get user with email: {email}",
-                    $email
-                )
-            );
-            return null;
-        }
-
-        return Json::decodeIfJson($response->getBody()->getContents());
+        return $segments->run();
     }
 }

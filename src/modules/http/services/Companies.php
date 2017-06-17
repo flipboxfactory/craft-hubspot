@@ -14,13 +14,14 @@ use Flipbox\Relay\HubSpot\Segment\Companies\GetById;
 use Flipbox\Relay\HubSpot\Segment\Companies\RemoveContact;
 use Flipbox\Relay\HubSpot\Segment\Companies\UpdateById;
 use Flipbox\Relay\HubSpot\Segment\Companies\UpdateByDomain;
+use Psr\Http\Message\ResponseInterface;
 
 class Companies extends AbstractResource
 {
     /**
      * @param array                                $properties
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
-     * @return array
+     * @return ResponseInterface
      */
     public function create(
         array $properties,
@@ -40,38 +41,15 @@ class Companies extends AbstractResource
             $authenticationStrategy
         );
 
-        // Run Http
-        $response = $segments->run();
+        return $segments->run();
 
-        // Interpret response
-        if ($response->getStatusCode() !== 200) {
-            $body = Json::decodeIfJson($response->getBody()->getContents());
-
-            HubSpot::warning(
-                sprintf(
-                    "Unable to create company: %s, errors: %s",
-                    Json::encode($properties),
-                    Json::encode($body)
-                )
-            );
-
-            return [
-                false,
-                $body
-            ];
-        }
-
-        return [
-            true,
-            Json::decodeIfJson($response->getBody()->getContents())
-        ];
     }
 
     /**
      * @param int                                  $id
      * @param array                                $properties
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
-     * @return array|null
+     * @return ResponseInterface
      */
     public function updateById(
         int $id,
@@ -91,31 +69,14 @@ class Companies extends AbstractResource
             $authenticationStrategy
         );
 
-        // Run Http
-        $response = $segments->run();
-
-        if ($response->getStatusCode() !== 200) {
-            $body = Json::decodeIfJson($response->getBody()->getContents());
-
-            HubSpot::warning(
-                sprintf(
-                    "Unable to update company with id %s: %s, errors: %s",
-                    $id,
-                    Json::encode($properties),
-                    Json::encode($body)
-                )
-            );
-            return null;
-        }
-
-        return Json::decodeIfJson($response->getBody()->getContents());
+        return $segments->run();
     }
 
     /**
      * @param string                               $domain
      * @param array                                $properties
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
-     * @return array|null
+     * @return ResponseInterface
      */
     public function updateByDomain(
         string $domain,
@@ -135,31 +96,14 @@ class Companies extends AbstractResource
             $authenticationStrategy
         );
 
-        // Run Http
-        $response = $segments->run();
-
-        if ($response->getStatusCode() !== 200) {
-            $body = Json::decodeIfJson($response->getBody()->getContents());
-
-            HubSpot::warning(
-                sprintf(
-                    "Unable to update company with domain %s: %s, errors: %s",
-                    $domain,
-                    Json::encode($properties),
-                    Json::encode($body)
-                )
-            );
-            return null;
-        }
-
-        return Json::decodeIfJson($response->getBody()->getContents());
+        return $segments->run();
     }
 
     /**
      * @param int                                  $id
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @param CacheStrategyInterface|null          $cacheStrategy
-     * @return array|null
+     * @return ResponseInterface
      */
     public function getById(
         int $id,
@@ -179,27 +123,14 @@ class Companies extends AbstractResource
             $authenticationStrategy
         );
 
-        // Run Http
-        $response = $segments->run();
-
-        if ($response->getStatusCode() !== 200) {
-            HubSpot::warning(
-                Craft::t(
-                    "Unable to get company with id: {id}",
-                    ['{id}' => $id]
-                )
-            );
-            return null;
-        }
-
-        return Json::decodeIfJson($response->getBody()->getContents());
+        return $segments->run();
     }
 
     /**
      * @param string                               $domain
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @param CacheStrategyInterface|null          $cacheStrategy
-     * @return array|null
+     * @return ResponseInterface
      */
     public function getByDomain(
         string $domain,
@@ -219,8 +150,7 @@ class Companies extends AbstractResource
             $authenticationStrategy
         );
 
-        // Run Http
-        $response = $segments->run();
+        return $segments->run();
 
         if ($response->getStatusCode() !== 200) {
             HubSpot::warning(
@@ -289,7 +219,7 @@ class Companies extends AbstractResource
      * @param int                                  $companyId
      * @param int                                  $contactId
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
-     * @return array|bool
+     * @return ResponseInterface
      */
     public function removeContact(
         int $companyId,
@@ -311,8 +241,7 @@ class Companies extends AbstractResource
             $authenticationStrategy
         );
 
-        // Run Http
-        $response = $segments->run();
+        return $segments->run();
 
         // Interpret response
         if ($response->getStatusCode() !== 204) {

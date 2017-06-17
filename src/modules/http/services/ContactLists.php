@@ -10,6 +10,7 @@ use Flipbox\Relay\HubSpot\Segment\ContactLists\Add;
 use Flipbox\Relay\HubSpot\Segment\ContactLists\Remove;
 use Flipbox\Relay\HubSpot\Segment\ContactLists\GetById;
 use Flipbox\Relay\HubSpot\Segment\ContactLists\GetContacts;
+use Psr\Http\Message\ResponseInterface;
 
 class ContactLists extends AbstractResource
 {
@@ -18,7 +19,7 @@ class ContactLists extends AbstractResource
      * @param int                                  $id
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @param CacheStrategyInterface|null          $cacheStrategy
-     * @return array|null
+     * @return ResponseInterface
      */
     public function getContacts(
         int $id,
@@ -40,27 +41,14 @@ class ContactLists extends AbstractResource
             $authenticationStrategy
         );
 
-        // Run Http
-        $response = $segments->run();
-
-        if ($response->getStatusCode() !== 200) {
-            HubSpot::warning(
-                sprintf(
-                    "Unable to get contact list with id:  %s",
-                    $id
-                )
-            );
-            return null;
-        }
-
-        return Json::decodeIfJson($response->getBody()->getContents());
+        return $segments->run();
     }
 
     /**
      * @param int                                  $id
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @param CacheStrategyInterface|null          $cacheStrategy
-     * @return array|null
+     * @return ResponseInterface
      */
     public function getById(
         int $id,
@@ -82,20 +70,7 @@ class ContactLists extends AbstractResource
             $authenticationStrategy
         );
 
-        // Run Http
-        $response = $segments->run();
-
-        if ($response->getStatusCode() !== 200) {
-            HubSpot::warning(
-                sprintf(
-                    "Unable to get contact list with id:  %s",
-                    $id
-                )
-            );
-            return null;
-        }
-
-        return Json::decodeIfJson($response->getBody()->getContents());
+        return $segments->run();
     }
 
     /**
@@ -103,7 +78,7 @@ class ContactLists extends AbstractResource
      * @param array                                $vids
      * @param array                                $emails
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
-     * @return array|null
+     * @return ResponseInterface
      */
     public function add(
         int $id,
@@ -126,20 +101,7 @@ class ContactLists extends AbstractResource
             $authenticationStrategy
         );
 
-        // Run Http
-        $response = $segments->run();
-
-        if ($response->getStatusCode() !== 200) {
-            HubSpot::warning(
-                sprintf(
-                    "Unable to get contact list with id:  %s",
-                    $id
-                )
-            );
-            return null;
-        }
-
-        return Json::decodeIfJson($response->getBody()->getContents());
+        return $segments->run();
     }
 
     /**
@@ -147,7 +109,7 @@ class ContactLists extends AbstractResource
      * @param array                                $vids
      * @param array                                $emails
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
-     * @return array|null
+     * @return ResponseInterface
      */
     public function remove(
         int $id,
@@ -170,19 +132,6 @@ class ContactLists extends AbstractResource
             $authenticationStrategy
         );
 
-        // Run Http
-        $response = $segments->run();
-
-        if ($response->getStatusCode() !== 200) {
-            HubSpot::warning(
-                sprintf(
-                    "Unable to get contact list with id:  %s",
-                    $id
-                )
-            );
-            return null;
-        }
-
-        return Json::decodeIfJson($response->getBody()->getContents());
+        return $segments->run();
     }
 }
