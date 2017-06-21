@@ -10,7 +10,7 @@
   },
   "require": {
     "craftcms/cms": "~3.0.0-beta.19",
-    "flipboxdigital/transformer": "~1.0.0-beta",
+    "flipboxdigital/transformer": "1.0.0-beta.3",
     "flipboxdigital/patron": "~1.0.0-beta.1",
     "flipboxdigital/oauth2-hubspot": "~1.0.0",
     "flipboxdigital/relay-hubspot": "dev-develop as 1.0.0-beta.99",
