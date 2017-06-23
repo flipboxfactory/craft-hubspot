@@ -39,7 +39,7 @@
     "handle": "hubspot",
     "developer": "Flipbox Digital",
     "developerUrl": "https://www.flipboxdigital.com",
-    "class": "flipbox\\hubspot\\Hubspot",
+    "class": "flipbox\\hubspot\\HubSpot",
     "hasCpSettings": false,
     "hasCpSection": false,
     "schemaVersion": "1.0.0",
