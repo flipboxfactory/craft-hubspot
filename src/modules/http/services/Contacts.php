@@ -6,6 +6,7 @@ use craft\helpers\Json;
 use flipbox\hubspot\authentication\AuthenticationStrategyInterface;
 use flipbox\hubspot\cache\CacheStrategyInterface;
 use flipbox\hubspot\HubSpot;
+use Flipbox\Relay\HubSpot\Segment\Contacts\Batch;
 use Flipbox\Relay\HubSpot\Segment\Contacts\Create;
 use Flipbox\Relay\HubSpot\Segment\Contacts\GetByEmail;
 use Flipbox\Relay\HubSpot\Segment\Contacts\GetById;
@@ -16,18 +17,18 @@ use Psr\Http\Message\ResponseInterface;
 class Contacts extends AbstractResource
 {
     /**
-     * @param array                                $properties
+     * @param array                                $payload
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @return ResponseInterface
      */
     public function create(
-        array $properties,
+        array $payload,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
         // Create runner segments
         $segments = new Create(
             [
-            'properties' => $properties,
+            'payload' => $payload,
             'logger' => $this->getLogger()
             ]
         );
@@ -43,20 +44,20 @@ class Contacts extends AbstractResource
 
     /**
      * @param string                               $email
-     * @param array                                $properties
+     * @param array                                $payload
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @return ResponseInterface
      */
     public function updateByEmail(
         string $email,
-        array $properties,
+        array $payload,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
         // Create runner segments
         $segments = new UpdateByEmail(
             [
             'email' => $email,
-            'properties' => $properties,
+            'payload' => $payload,
             'logger' => $this->getLogger()
             ]
         );
@@ -72,21 +73,47 @@ class Contacts extends AbstractResource
 
     /**
      * @param int                                  $id
-     * @param array                                $properties
+     * @param array                                $payload
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @return ResponseInterface
      */
     public function updateById(
         int $id,
-        array $properties,
+        array $payload,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
         // Create runner segments
         $segments = new UpdateById(
             [
             'id' => $id,
-            'properties' => $properties,
+            'payload' => $payload,
             'logger' => $this->getLogger()
+            ]
+        );
+
+        // Prepend authorization
+        $this->prependAuthenticationMiddleware(
+            $segments,
+            $authenticationStrategy
+        );
+
+        return $segments->run();
+    }
+
+    /**
+     * @param array                                $payload
+     * @param AuthenticationStrategyInterface|null $authenticationStrategy
+     * @return ResponseInterface
+     */
+    public function batch(
+        array $payload,
+        AuthenticationStrategyInterface $authenticationStrategy = null
+    ) {
+        // Create runner segments
+        $segments = new Batch(
+            [
+                'payload' => $payload,
+                'logger' => $this->getLogger()
             ]
         );
 

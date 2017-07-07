@@ -137,6 +137,42 @@ class Contacts extends AbstractResource
 
     /**
      * @param int                                  $id
+     * @param $data
+     * @param callable|TransformerInterface        $transformer
+     * @param AuthenticationStrategyInterface|null $authenticationStrategy
+     * @return bool|array
+     */
+    public function batch(
+        $data,
+        callable $transformer,
+        AuthenticationStrategyInterface $authenticationStrategy = null
+    ) {
+        $payload = Factory::collection($transformer, $data);
+
+        $response = HubSpot::getInstance()->http()->contacts()->batch(
+            $payload,
+            $authenticationStrategy
+        );
+
+        // Interpret response
+        if ($response->getStatusCode() !== 202) {
+            $body = Json::decodeIfJson($response->getBody()->getContents());
+
+            HubSpot::warning(
+                sprintf(
+                    "Unable to batch users: %s, errors: %s",
+                    Json::encode($payload),
+                    Json::encode($body)
+                )
+            );
+            return $body;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param int                                  $id
      * @param callable $transformer
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @param CacheStrategyInterface|null          $cacheStrategy

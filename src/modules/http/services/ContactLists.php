@@ -92,7 +92,8 @@ class ContactLists extends AbstractResource
                 'id' => $id,
                 'vids' => $vids,
                 'emails' => $emails,
-                'logger' => $this->getLogger()]
+                'logger' => $this->getLogger()
+            ]
         );
 
         // Prepend authorization

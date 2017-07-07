@@ -19,18 +19,18 @@ use Psr\Http\Message\ResponseInterface;
 class Companies extends AbstractResource
 {
     /**
-     * @param array                                $properties
+     * @param array                                $payload
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @return ResponseInterface
      */
     public function create(
-        array $properties,
+        array $payload,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
         // Create runner segments
         $segments = new Create(
             [
-                'properties' => $properties,
+                'payload' => $payload,
                 'logger' => $this->getLogger()
             ]
         );
@@ -47,19 +47,19 @@ class Companies extends AbstractResource
 
     /**
      * @param int                                  $id
-     * @param array                                $properties
+     * @param array                                $payload
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @return ResponseInterface
      */
     public function updateById(
         int $id,
-        array $properties,
+        array $payload,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
         // Create runner segments
         $segments = new UpdateById([
             'id' => $id,
-            'properties' => $properties,
+            'payload' => $payload,
             'logger' => $this->getLogger()
         ]);
 
@@ -74,19 +74,19 @@ class Companies extends AbstractResource
 
     /**
      * @param string                               $domain
-     * @param array                                $properties
+     * @param array                                $payload
      * @param AuthenticationStrategyInterface|null $authenticationStrategy
      * @return ResponseInterface
      */
     public function updateByDomain(
         string $domain,
-        array $properties,
+        array $payload,
         AuthenticationStrategyInterface $authenticationStrategy = null
     ) {
         // Create runner segments
         $segments = new UpdateByDomain([
             'domain' => $domain,
-            'properties' => $properties,
+            'payload' => $payload,
             'logger' => $this->getLogger()
         ]);
 
