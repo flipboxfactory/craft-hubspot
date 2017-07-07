@@ -16,8 +16,7 @@ class AbstractResource extends Component
      */
     protected function resolveAuthenticationStrategy(
         AuthenticationStrategyInterface $authenticationStrategy = null
-    ): AuthenticationStrategyInterface
-    {
+    ): AuthenticationStrategyInterface {
         if ($authenticationStrategy === null) {
             return HubSpot::getInstance()->getSettings()->getAuthenticationStrategy();
         }
