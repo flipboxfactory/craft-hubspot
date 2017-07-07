@@ -13,7 +13,7 @@
     "flipboxdigital/transformer": "~1.0.0-beta",
     "flipboxdigital/patron": "~1.0.0-beta.1",
     "flipboxdigital/oauth2-hubspot": "~1.0.0",
-    "flipboxdigital/relay-hubspot": "dev-develop as 1.0.0-beta.99",
+    "flipboxdigital/relay-hubspot": "1.0.0-beta.3",
     "flipboxdigital/relay": "^2.0",
     "flipboxdigital/relay-transform": "^1.0",
     "flipboxdigital/http-stream": "^2.0",
