@@ -1,7 +1,7 @@
 {
   "name": "flipboxdigital/hubspot",
   "description": "Hubspot",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "type": "craft-plugin",
   "minimum-stability": "dev",
   "prefer-stable": true,
@@ -10,7 +10,7 @@
   },
   "require": {
     "craftcms/cms": "~3.0.0-beta.19",
-    "flipboxdigital/transformer": "~1.0.0-beta",
+    "flipboxdigital/transformer": "1.0.0-beta.3",
     "flipboxdigital/patron": "~1.0.0-beta.1",
     "flipboxdigital/oauth2-hubspot": "~1.0.0",
     "flipboxdigital/relay-hubspot": "1.0.0-beta.3",
@@ -39,7 +39,7 @@
     "handle": "hubspot",
     "developer": "Flipbox Digital",
     "developerUrl": "https://www.flipboxdigital.com",
-    "class": "flipbox\\hubspot\\Hubspot",
+    "class": "flipbox\\hubspot\\HubSpot",
     "hasCpSettings": false,
     "hasCpSection": false,
     "schemaVersion": "1.0.0",
@@ -80,12 +80,6 @@
     },{
       "type": "composer",
       "url": "https://asset-packagist.org"
-    },{
-      "type": "vcs",
-      "url": "https://github.com/flipbox/transformer"
-    },{
-      "type": "vcs",
-      "url": "https://github.com/flipbox/patron"
     }
   ]
 }
