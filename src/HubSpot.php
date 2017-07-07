@@ -31,10 +31,9 @@ class HubSpot extends Plugin
     public function init()
     {
         // CP Requests
-        if (Craft::$app->getRequest() instanceof Request 
-            && Craft::$app->getRequest()->getIsCpRequest()
+        if (Craft::$app->getRequest() instanceof Request &&
+            Craft::$app->getRequest()->getIsCpRequest()
         ) {
-
             Event::on(
                 PatronConfiguration::class,
                 PatronConfiguration::EVENT_REGISTER_PROVIDERS,
@@ -42,7 +41,6 @@ class HubSpot extends Plugin
                     $event->providers[] = HubSpotProvider::class;
                 }
             );
-
         }
         
         parent::init();

@@ -4,8 +4,6 @@ namespace flipbox\hubspot\modules\http;
 
 class Module extends \yii\base\Module
 {
-
-
     /*******************************************
      * SERVICES
      *******************************************/
@@ -33,5 +31,4 @@ class Module extends \yii\base\Module
     {
         return $this->get('companies');
     }
-
 }

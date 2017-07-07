@@ -42,7 +42,6 @@ class Companies extends AbstractResource
         );
 
         return $segments->run();
-
     }
 
     /**

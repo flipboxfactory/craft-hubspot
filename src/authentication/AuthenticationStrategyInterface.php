@@ -6,10 +6,8 @@ use Relay\MiddlewareInterface;
 
 interface AuthenticationStrategyInterface
 {
-
     /**
      * @return array|MiddlewareInterface
      */
     public function getMiddleware();
-
 }

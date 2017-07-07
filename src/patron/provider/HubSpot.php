@@ -10,8 +10,10 @@ use flipbox\patron\modules\configuration\providers\AbstractProvider;
 
 class HubSpot extends AbstractProvider
 {
-
-    const TEMPLATE_PATH = 'hubspot' . DIRECTORY_SEPARATOR . '_patron' . DIRECTORY_SEPARATOR . 'provider' . DIRECTORY_SEPARATOR . 'settings';
+    const TEMPLATE_PATH = 'hubspot' .
+    DIRECTORY_SEPARATOR . '_patron' .
+    DIRECTORY_SEPARATOR . 'provider' .
+    DIRECTORY_SEPARATOR . 'settings';
 
     /**
      * @return string
@@ -41,5 +43,4 @@ class HubSpot extends AbstractProvider
             ]
         );
     }
-
 }
