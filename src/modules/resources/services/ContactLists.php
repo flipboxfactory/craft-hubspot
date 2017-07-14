@@ -102,6 +102,14 @@ class ContactLists extends AbstractResource
             $authenticationStrategy
         );
 
+        HubSpot::info(
+            sprintf(
+                "ResponseBody: %s",
+                $response->getBody()->getContents()
+            ),
+            __METHOD__
+        );
+
         if ($response->getStatusCode() !== 200) {
             $body = Json::decodeIfJson($response->getBody()->getContents());
             HubSpot::warning(
@@ -135,6 +143,14 @@ class ContactLists extends AbstractResource
             $vids,
             $emails,
             $authenticationStrategy
+        );
+
+        HubSpot::info(
+            sprintf(
+                "ResponseBody: %s",
+                $response->getBody()->getContents()
+            ),
+            __METHOD__
         );
 
         if ($response->getStatusCode() !== 200) {

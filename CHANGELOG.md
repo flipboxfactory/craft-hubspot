@@ -1,6 +1,10 @@
 # Changelog
 All Notable changes to `flipboxdigital/hubspot` will be documented in this file
 
+## 1.0.0-beta.5 - 2017-7-14
+### Added
+- Adding response body logging for add and remove from contact lists.
+
 ## 1.0.0-beta.4 - 2017-7-7
 ### Added
 - Updated dependencies
