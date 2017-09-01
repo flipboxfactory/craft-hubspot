@@ -10,6 +10,7 @@
   },
   "require": {
     "craftcms/cms": "~3.0.0-beta.19",
+    "flipboxdigital/spark": "~1.0.0-beta.2",
     "flipboxdigital/transformer": "1.0.0-beta.3",
     "flipboxdigital/patron": "~1.0.0-beta.1",
     "flipboxdigital/oauth2-hubspot": "~1.0.0",
@@ -40,13 +41,16 @@
     "developer": "Flipbox Digital",
     "developerUrl": "https://www.flipboxdigital.com",
     "class": "flipbox\\hubspot\\HubSpot",
-    "hasCpSettings": false,
+    "hasCpSettings": true,
     "hasCpSection": false,
     "schemaVersion": "1.0.0",
     "components": {
       "cache": "flipbox\\craft\\psr6\\Cache",
       "client": "flipbox\\hubspot\\services\\Client",
-      "logger": "flipbox\\craft\\psr3\\Logger",
+      "logger": {
+        "class": "flipbox\\craft\\psr3\\Logger",
+        "category": "Hubspot"
+      },
       "transformer": "flipbox\\hubspot\\services\\Transformer"
     },
     "modules": {

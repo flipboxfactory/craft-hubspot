@@ -11,10 +11,18 @@ use yii\base\Model;
 class Settings extends Model
 {
     /**
+     * @var bool
+     */
+    public $debugMode = false;
+
+    /**
      * @var string
      */
     public $apiKey;
 
+    /**
+     * @var string
+     */
     public $userIdFieldHandle;
 
     /**

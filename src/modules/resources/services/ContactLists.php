@@ -102,7 +102,7 @@ class ContactLists extends AbstractResource
             $authenticationStrategy
         );
 
-        HubSpot::warning(
+        HubSpot::info(
             sprintf(
                 "ResponseBody: %s",
                 $response->getBody()->getContents()
@@ -145,7 +145,7 @@ class ContactLists extends AbstractResource
             $authenticationStrategy
         );
 
-        HubSpot::warning(
+        HubSpot::info(
             sprintf(
                 "ResponseBody: %s",
                 $response->getBody()->getContents()

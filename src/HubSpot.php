@@ -12,13 +12,17 @@ use flipbox\hubspot\models\Settings as SettingsModel;
 use flipbox\hubspot\patron\provider\HubSpot as HubSpotProvider;
 use flipbox\patron\modules\configuration\events\RegisterProviders;
 use flipbox\patron\modules\configuration\Module as PatronConfiguration;
+use flipbox\spark\modules\interfaces\LoggableInterface;
+use flipbox\spark\modules\traits\LoggableTrait;
 use yii\base\Event;
 
 /**
  * @method SettingsModel getSettings()
  */
-class HubSpot extends Plugin
+class HubSpot extends Plugin implements LoggableInterface
 {
+
+    use LoggableTrait;
 
     /**
      * The default transformer
@@ -42,8 +46,19 @@ class HubSpot extends Plugin
                 }
             );
         }
+
+        // PSR3 logger override
+        $this->logger()->logger = static::getLogger();
         
         parent::init();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isDebugModeEnabled()
+    {
+        return (bool) $this->getSettings()->debugMode;
     }
 
     /**
@@ -57,13 +72,11 @@ class HubSpot extends Plugin
     /**
      * @inheritdoc
      */
-    public function getSettingsResponse()
+    public function settingsHtml()
     {
-        Craft::$app->getResponse()->redirect(
-            UrlHelper::cpUrl('hubspot/configuration')
-        );
-
-        Craft::$app->end();
+        return Craft::$app->getView()->renderTemplate('hubspot/settings', [
+            'hubspot' => $this
+        ]);
     }
 
     /*******************************************
@@ -120,43 +133,5 @@ class HubSpot extends Plugin
     public function resources()
     {
         return $this->getModule('resources');
-    }
-
-
-    /*******************************************
-     * LOGGING
-     *******************************************/
-
-    /**
-     * Logs an informative message.
-     *
-     * @param $message
-     * @param string  $category
-     */
-    public static function info($message, $category = 'hubspot')
-    {
-        Craft::info($message, $category);
-    }
-
-    /**
-     * Logs a warning message.
-     *
-     * @param $message
-     * @param string  $category
-     */
-    public static function warning($message, $category = 'hubspot')
-    {
-        Craft::warning($message, $category);
-    }
-
-    /**
-     * Logs an error message.
-     *
-     * @param $message
-     * @param string  $category
-     */
-    public static function error($message, $category = 'hubspot')
-    {
-        Craft::error($message, $category);
     }
 }
