@@ -1,7 +1,7 @@
 # Changelog
 All Notable changes to `flipboxdigital/hubspot` will be documented in this file
 
-## Unreleased
+## 1.0.0-beta.7 - 2017-09-01
 ### Changed
 - Reverted log levels
 
