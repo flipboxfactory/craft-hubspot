@@ -25,9 +25,8 @@ abstract class AbstractField extends Field implements PreviewableFieldInterface
      * @param ElementInterface $element
      * @return null|string
      */
-    protected abstract function findObjectId(ElementInterface $element);
-
-
+    abstract protected function findObjectId(ElementInterface $element);
+    
     /**
      * @inheritdoc
      */
