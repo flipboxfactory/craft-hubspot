@@ -1,0 +1,12 @@
+{% import "_includes/forms" as forms %}
+
+{% set config = {
+    id: name,
+    name: name,
+    value: value,
+    class: 'nicetext',
+    showCharsLeft: false,
+    disabled: (value and (not hasErrors)) ? true : false
+} %}
+
+{{ forms.text(config) }}

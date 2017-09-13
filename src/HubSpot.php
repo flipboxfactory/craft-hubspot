@@ -84,6 +84,22 @@ class HubSpot extends Plugin implements LoggableInterface
      *******************************************/
 
     /**
+     * @return services\Company
+     */
+    public function getCompany()
+    {
+        return $this->get('company');
+    }
+
+    /**
+     * @return services\Contact
+     */
+    public function getContact()
+    {
+        return $this->get('contact');
+    }
+
+    /**
      * @return \flipbox\craft\psr6\Cache
      */
     public function cache()
