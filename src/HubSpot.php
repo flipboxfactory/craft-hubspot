@@ -4,10 +4,11 @@ namespace flipbox\hubspot;
 
 use Craft;
 use craft\base\Plugin;
-use craft\helpers\UrlHelper;
+use craft\events\RegisterComponentTypesEvent;
+use craft\services\Fields;
 use craft\web\Request;
-use flipbox\craft\psr6\Cache;
-use flipbox\craft\psr6\events\RegisterCachePools;
+use flipbox\hubspot\fields\Company;
+use flipbox\hubspot\fields\Contact;
 use flipbox\hubspot\models\Settings as SettingsModel;
 use flipbox\hubspot\patron\provider\HubSpot as HubSpotProvider;
 use flipbox\patron\modules\configuration\events\RegisterProviders;
@@ -47,9 +48,19 @@ class HubSpot extends Plugin implements LoggableInterface
             );
         }
 
+        // Register our field types
+        Event::on(
+            Fields::class,
+            Fields::EVENT_REGISTER_FIELD_TYPES,
+            function (RegisterComponentTypesEvent $event) {
+                $event->types[] = Company::class;
+                $event->types[] = Contact::class;
+            }
+        );
+
         // PSR3 logger override
         $this->logger()->logger = static::getLogger();
-        
+
         parent::init();
     }
 
@@ -58,7 +69,7 @@ class HubSpot extends Plugin implements LoggableInterface
      */
     public function isDebugModeEnabled()
     {
-        return (bool) $this->getSettings()->debugMode;
+        return (bool)$this->getSettings()->debugMode;
     }
 
     /**
