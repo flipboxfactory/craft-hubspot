@@ -111,6 +111,14 @@ class HubSpot extends Plugin implements LoggableInterface
     }
 
     /**
+     * @return services\ContactList
+     */
+    public function getContactList()
+    {
+        return $this->get('contact-list');
+    }
+
+    /**
      * @return \flipbox\craft\psr6\Cache
      */
     public function cache()

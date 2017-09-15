@@ -8,6 +8,7 @@ use flipbox\hubspot\cache\ApplicationPool;
 use flipbox\hubspot\cache\CacheStrategyInterface;
 use flipbox\hubspot\records\Company;
 use flipbox\hubspot\records\Contact;
+use flipbox\hubspot\records\ContactList;
 use yii\base\Model;
 
 class Settings extends Model
@@ -36,6 +37,11 @@ class Settings extends Model
      * @var string
      */
     public $contactTableAlias = Contact::TABLE_ALIAS;
+
+    /**
+     * @var string
+     */
+    public $contactListTableAlias = ContactList::TABLE_ALIAS;
 
     /**
      * @return AuthenticationStrategyInterface

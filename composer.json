@@ -49,6 +49,7 @@
       "client": "flipbox\\hubspot\\services\\Client",
       "company": "flipbox\\hubspot\\services\\Company",
       "contact": "flipbox\\hubspot\\services\\Contact",
+      "contact-list": "flipbox\\hubspot\\services\\ContactList",
       "logger": {
         "class": "flipbox\\craft\\psr3\\Logger",
         "category": "Hubspot"
