@@ -9,6 +9,7 @@ use craft\services\Fields;
 use craft\web\Request;
 use flipbox\hubspot\fields\Company;
 use flipbox\hubspot\fields\Contact;
+use flipbox\hubspot\fields\ContactList;
 use flipbox\hubspot\models\Settings as SettingsModel;
 use flipbox\hubspot\patron\provider\HubSpot as HubSpotProvider;
 use flipbox\patron\modules\configuration\events\RegisterProviders;
@@ -55,6 +56,7 @@ class HubSpot extends Plugin implements LoggableInterface
             function (RegisterComponentTypesEvent $event) {
                 $event->types[] = Company::class;
                 $event->types[] = Contact::class;
+                $event->types[] = ContactList::class;
             }
         );
 
