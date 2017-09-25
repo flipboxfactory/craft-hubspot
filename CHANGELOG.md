@@ -1,6 +1,10 @@
 # Changelog
 All Notable changes to `flipboxdigital/hubspot` will be documented in this file
 
+## 1.0.0-beta.8 - 2017-09-25
+### Changed
+- Conforming to Craft CMS 3.0.0-beta.28
+
 ## 1.0.0-beta.7 - 2017-09-01
 ### Changed
 - Reverted log levels
