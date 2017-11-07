@@ -1,17 +1,17 @@
 # HubSpot Plugin for Craft CMS
-[![Latest Version](https://img.shields.io/github/release/flipbox/hubspot.svg?style=flat-square)](https://github.com/flipbox/hubspot/releases)
+[![Latest Version](https://img.shields.io/github/release/flipboxfactory/craft-hubspot.svg?style=flat-square)](https://github.com/flipboxfactory/craft-hubspot/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/flipbox/hubspot/master.svg?style=flat-square)](https://travis-ci.com/flipbox/hubspot)
-[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/flipbox/hubspot.svg?style=flat-square)](https://scrutinizer-ci.com/g/flipbox/hubspot/code-structure)
-[![Quality Score](https://img.shields.io/scrutinizer/g/flipbox/hubspot.svg?style=flat-square)](https://scrutinizer-ci.com/g/flipbox/hubspot)
-[![Total Downloads](https://img.shields.io/packagist/dt/flipboxdigital/hubspot.svg?style=flat-square)](https://packagist.org/packages/flipboxdigital/hubspot)
+[![Build Status](https://img.shields.io/travis/flipboxfactory/craft-hubspot/master.svg?style=flat-square)](https://travis-ci.com/flipboxfactory/craft-hubspot)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/flipboxfactory/craft-hubspot.svg?style=flat-square)](https://scrutinizer-ci.com/g/flipboxfactory/craft-hubspot/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/g/flipboxfactory/craft-hubspot.svg?style=flat-square)](https://scrutinizer-ci.com/g/flipboxfactory/craft-hubspot)
+[![Total Downloads](https://img.shields.io/packagist/dt/flipboxfactory/craft-hubspot.svg?style=flat-square)](https://packagist.org/packages/flipboxfactory/craft-hubspot)
 
 ## Installation
 
 To install, use composer:
 
 ```
-composer require flipboxdigital/hubspot
+composer require flipboxfactory/craft-hubspot
 ```
 
 ## Testing
@@ -22,7 +22,7 @@ $ ./vendor/bin/phpunit
 
 ## Contributing
 
-Please see [CONTRIBUTING](https://github.com/flipbox/hubspot/blob/master/CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/flipboxfactory/craft-hubspot/blob/master/CONTRIBUTING.md) for details.
 
 
 ## Credits
@@ -31,4 +31,4 @@ Please see [CONTRIBUTING](https://github.com/flipbox/hubspot/blob/master/CONTRIB
 
 ## License
 
-The MIT License (MIT). Please see [License File](https://github.com/flipbox/hubspot/blob/master/LICENSE) for more information.
+The MIT License (MIT). Please see [License File](https://github.com/flipboxfactory/craft-hubspot/blob/master/LICENSE) for more information.

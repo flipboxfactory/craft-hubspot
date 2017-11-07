@@ -1,5 +1,5 @@
 {
-  "name": "flipboxdigital/hubspot",
+  "name": "flipboxfactory/craft-hubspot",
   "description": "Hubspot",
   "version": "1.0.0-beta.8",
   "type": "craft-plugin",
@@ -10,7 +10,7 @@
   },
   "require": {
     "craftcms/cms": "~3.0.0-beta",
-    "flipboxdigital/spark": "~1.0.0-beta.2",
+    "flipboxfactory/craft-spark": "~1.0.0",
     "flipboxdigital/transformer": "1.0.0-beta.3",
     "flipboxdigital/patron": "~1.0.0-beta.1",
     "flipboxdigital/oauth2-hubspot": "~1.0.0",
