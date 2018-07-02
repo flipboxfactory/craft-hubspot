@@ -473,6 +473,9 @@ class TimelineEvents extends Component
     ): callable {
         $connection = ConnectionHelper::resolveIntegrationConnection($connection);
 
+        $payload['id'] = $id;
+        $payload['eventTypeId'] = $typeId;
+
         return (new Upsert(
             $connection->getAppId(),
             $typeId,
