@@ -1,0 +1,50 @@
+{
+  "name": "flipboxfactory/craft-hubspot",
+  "description": "HubSpot integration for Craft CMS",
+  "version": "1.0.0-rc",
+  "type": "craft-plugin",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "optimize-autoloader": true
+  },
+  "require": {
+    "craftcms/cms": "^3.0.0",
+    "flipboxfactory/patron": "^1.0.0-rc.4",
+    "flipboxdigital/oauth2-hubspot": "^1.0",
+    "flipboxdigital/relay-hubspot": "^1.0",
+    "flipboxfactory/craft-ember": "^1.0.2",
+    "flipboxfactory/craft-psr16": "^1.0",
+    "flipboxfactory/craft-psr3": "^1.0",
+    "flipboxfactory/flux": "~1.0.0-rc",
+    "flipboxfactory/craft-sortable-associations": "^1.0",
+    "flipboxdigital/pipeline": "^1.0"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.2",
+    "codeception/codeception": "^2.4",
+    "vlucas/phpdotenv": "^2.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "flipbox\\hubspot\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "flipbox\\hubspot\\tests\\": "tests/src/"
+    }
+  },
+  "extra": {
+    "name": "Hubspot",
+    "handle": "hubspot",
+    "developer": "Flipbox Digital",
+    "developerUrl": "https://www.flipboxdigital.com",
+    "class": "flipbox\\hubspot\\HubSpot",
+    "changelogUrl": "https://raw.githubusercontent.com/flipboxfactory/craft-hubspot/master/CHANGELOG.md",
+    "downloadUrl": "https://github.com/flipboxfactory/craft-hubspot/archive/master.zip",
+    "hasCpSettings": true,
+    "hasCpSection": false,
+    "schemaVersion": "1.0.0"
+  }
+}

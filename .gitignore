@@ -1,0 +1,9 @@
+/node_modules
+/build
+/vendor
+/docs/_site/*
+composer.phar
+composer.lock
+.DS_Store
+.idea
+.env

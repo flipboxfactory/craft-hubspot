@@ -1,0 +1,44 @@
+language: php
+
+sudo: false
+
+php:
+  - 7.0
+  - 7.1
+  - 7.2
+
+before_install:
+  - nvm install 8
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
+
+install:
+  - composer install
+  - npm install
+  - npm run build
+
+## Cache composer
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - "node_modules"
+
+before_script:
+  - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-dist
+
+script:
+  - vendor/bin/phpcs --standard=psr2 --ignore=src/web/assets/*/dist/*,src/migrations/m* src/
+  - php vendor/bin/codecept run --coverage --coverage-xml
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover tests/_output/coverage.xml
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  target-branch: gh-pages
+  keep-history: true
+  local-dir: docs/.vuepress/dist
+  on:
+    branch: master

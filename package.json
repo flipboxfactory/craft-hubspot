@@ -1,0 +1,14 @@
+{
+  "name": "hubspot",
+  "version": "1.0.0",
+  "description": "Simple parent + child management",
+  "scripts": {
+    "dev": "vuepress dev docs",
+    "build": "vuepress build docs"
+  },
+  "author": "Flipbox Digital",
+  "license": "MIT",
+  "devDependencies": {
+    "vuepress": "^0.10.0"
+  }
+}

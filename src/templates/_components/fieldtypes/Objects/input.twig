@@ -1,0 +1,119 @@
+{% set id = "fields-"~ field.handle %}
+<div id="{{ id }}" class="element-objects">
+
+    <div class="objects">
+        {% from _self import createItem %}
+        {% for record in value.all() %}
+            {{ createItem(field, record) }}
+        {% endfor %}
+    </div>
+
+    <div class="btngroup">
+        <div class="btn add icon dashed" title="{{ 'Add'|t('app') }}">Add</div>
+    </div>
+</div>
+
+{% macro createItem(field, record) %}
+    {% set criteria = field.createResourceCriteria(record) %}
+    <div class="object{% if not record.objectId %} edit-mode{% endif %}">
+        <figure>
+            {{ svg('@vendor/flipboxfactory/craft-hubspot/src/icon-mask.svg') }}
+        </figure>
+        <div class="details">
+            <div class="meta ignore-sort">
+                {% from _self import objectViewUrl, objectListUrl %}
+                <div>
+                    <span class="light">Id:</span> <span class="objectIdLabel">{{ record.objectId }}</span>
+                    {% if field.viewUrl %}
+                        <a href="{{ objectViewUrl(field, record, criteria) }}" target="_blank" data-icon="world"
+                           title="View HubSpot Object"></a>
+                    {% endif %}
+                </div>
+                <div>
+                    <span class="light">Resource:</span> {{ field.object }}
+                    {% if field.listUrl %}
+                        <a href="{{ objectListUrl(field, record, criteria) }}" target="_blank" data-icon="world"
+                           title="View HubSpot {{ field.object }}s"></a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="upsert ignore-sort">
+                {% import "_includes/forms" as forms %}
+
+                {{ forms.textField({
+                    placeholder: "HubSpot Object Id"|t('hubspot'),
+                    name: 'objectId',
+                    class: 'objectId',
+                    value: record.objectId,
+                    type: "number"
+                }) }}
+
+                <div class="buttons">
+                    <input type="button" class="btn small submit associate" value="Save"/>
+                    <input type="button" class="btn small toggle-edit" value="Cancel"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <div class="menubtn" data-icon="settings" title="{{ 'Actions'|t('app') }}"></div>
+            <div class="menu">
+                <div class="triggers"></div>
+                <div class="edit-toggle">
+                    <ul>
+                        <li><a class="toggle-edit" data-ignore="true" href="#">Edit</a></li>
+                    </ul>
+                </div>
+                <ul>
+                    <li><a class="error remove" data-ignore="true" href="#">Remove</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% js %}
+    new Craft.HubSpotObjectsField(
+        '#{{ id|namespaceInputId|e('js') }}',
+        {
+            limit: '{{ field.max ?: null }}',
+            data: {
+                field: '{{ field.id }}',
+                element: '{{ element.id }}'
+            },
+            actions: {{ actions|json_encode|raw }},
+            itemData: {
+                field: '{{ field.id }}',
+                element: '{{ element.id }}'
+            },
+            itemSettings: {
+                data: {
+                    field: '{{ field.id }}',
+                    element: '{{ element.id }}',
+                },
+                actions: {{ itemActions|json_encode|raw }}
+            }
+        }
+    );
+{% endjs %}
+
+{% macro objectViewUrl(field, record, criteria) %}
+    {{ craft.app.view.renderString(
+        field.viewUrl,
+        {
+            hubId: criteria.connection.hubId,
+            id: record.objectId,
+            object: field.object
+        }
+    ) }}
+{% endmacro %}
+
+{% macro objectListUrl(field, record, criteria) %}
+    {{ craft.app.view.renderString(
+        field.listUrl,
+        {
+            hubId: criteria.connection.hubId,
+            object: field.object
+        }
+    ) }}
+{% endmacro %}

@@ -1,0 +1,8 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.lightswitchField({
+    label: "Debug Mode"|t('hubspot'),
+    id: 'debugMode',
+    name: 'debugMode',
+    on: hubspot.settings.debugMode
+}) }}

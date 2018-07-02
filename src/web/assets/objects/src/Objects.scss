@@ -1,0 +1,155 @@
+@charset "UTF-8";
+@import "../../../../../../../vendor/craftcms/cms/lib/craftcms-sass/mixins";
+
+/* ----------------------------------------
+/* SOBJECT
+/* ----------------------------------------*/
+
+body.ltr {
+  .element-objects {
+
+    .btngroup {
+      float: left;
+
+    }
+
+    .btn {
+      &.dashed {
+        margin-right: 0 !important;
+
+        &.menubtn {
+          margin-left: -1px;
+          border-left: none !important;
+
+        }
+
+      }
+
+    }
+
+  }
+
+}
+
+.object {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  padding: .85em 1em .85em .85em;
+  position: relative;
+  margin-bottom: .5em;
+
+  figure {
+    width: 3em;
+    padding: .5em 0;
+    float: left;
+    margin-right: 1em;
+
+    svg {
+      width: 100%;
+      height: auto;
+
+    }
+
+  }
+
+  .spinner {
+    position: absolute;
+    bottom: .3em;
+    right: .5em;
+
+  }
+
+  .details {
+
+    .field {
+      margin-bottom: 0;
+
+    }
+
+    .buttons {
+      margin-top: 6px;
+
+    }
+
+    .meta {
+      display: block;
+
+    }
+
+    .upsert {
+      display: none;
+
+    }
+
+  }
+
+  .menubtn {
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+
+    position: absolute;
+    top: .35em;
+    right: 0;
+    opacity: 0;
+
+    &:after {
+      content: '';
+
+    }
+
+  }
+
+  &:focus,
+  &:hover {
+    .menubtn {
+      opacity: .8;
+
+    }
+
+  }
+
+  .menubtn {
+    cursor: pointer;
+
+    &.active {
+      opacity: .8;
+    }
+
+  }
+
+  &.save-disabled {
+    .upsert {
+      .buttons {
+        display: none;
+
+      }
+
+    }
+
+  }
+
+  &.edit-mode {
+    .details {
+      width: 100%;
+
+    }
+
+    .menubtn {
+      display: none;
+
+    }
+
+    .meta {
+      display: none;
+
+    }
+
+    .upsert {
+      display: block;
+    }
+
+  }
+
+}
