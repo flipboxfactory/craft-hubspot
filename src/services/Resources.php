@@ -29,6 +29,7 @@ class Resources extends ServiceLocator
             resources\Contacts::HUBSPOT_RESOURCE => resources\Contacts::class,
             resources\ContactLists::HUBSPOT_RESOURCE => resources\ContactLists::class,
             resources\ContactListContacts::HUBSPOT_RESOURCE => resources\ContactListContacts::class,
+            resources\Limit::HUBSPOT_RESOURCE => resources\Limit::class,
             resources\TimelineEvents::HUBSPOT_RESOURCE => resources\TimelineEvents::class
         ]);
     }
@@ -86,6 +87,17 @@ class Resources extends ServiceLocator
         /** @noinspection PhpUnhandledExceptionInspection */
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->get(resources\ContactListContacts::HUBSPOT_RESOURCE);
+    }
+
+    /**
+     * @noinspection PhpDocMissingThrowsInspection
+     * @return resources\Limit
+     */
+    public function getLimit(): resources\Limit
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->get(resources\Limit::HUBSPOT_RESOURCE);
     }
 
     /**
