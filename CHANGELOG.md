@@ -4,6 +4,9 @@
 ### Changed
 - Altering various Object Association class method names
 
+### Added
+- Field actions to Objects field
+
 ## 1.0.0-rc.1 - 2018-07-02
 ### Added
 - API limits via settings
