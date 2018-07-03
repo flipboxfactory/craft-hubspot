@@ -22,7 +22,7 @@ use yii\base\Component;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class Contacts extends Component
+class Contacts extends Component implements CRUDInterface
 {
     use traits\SyncByElementTrait,
         traits\ReadObjectTrait,

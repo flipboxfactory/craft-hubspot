@@ -25,6 +25,8 @@ use flipbox\hubspot\records\ObjectAssociation;
 use flipbox\hubspot\services\resources\Companies;
 use flipbox\hubspot\services\resources\ContactLists;
 use flipbox\hubspot\services\resources\Contacts;
+use flipbox\hubspot\services\resources\CRUDInterface;
+use yii\base\InvalidConfigException;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -38,9 +40,19 @@ class Objects extends Field
     const EVENT_REGISTER_ACTIONS = 'registerActions';
 
     /**
+     * The action event name
+     */
+    const EVENT_REGISTER_AVAILABLE_ACTIONS = 'registerAvailableActions';
+
+    /**
      * The item action event name
      */
     const EVENT_REGISTER_ITEM_ACTIONS = 'registerItemActions';
+
+    /**
+     * The item action event name
+     */
+    const EVENT_REGISTER_AVAILABLE_ITEM_ACTIONS = 'registerAvailableItemActions';
 
     /**
      * The input template path
@@ -76,6 +88,16 @@ class Objects extends Field
      * @var string
      */
     public $listUrl = '';
+
+    /**
+     * @var array
+     */
+    public $selectedActions = [];
+
+    /**
+     * @var array
+     */
+    public $selectedItemActions = [];
 
     /**
      * @var string|null
@@ -131,6 +153,29 @@ class Objects extends Field
                 'skipOnEmpty' => false
             ]
         ];
+    }
+
+    /*******************************************
+     * CRUD
+     *******************************************/
+
+    /**
+     * @return CRUDInterface
+     * @throws InvalidConfigException
+     */
+    public function getResource(): CRUDInterface
+    {
+        $service = HubSpot::getInstance()->getResources()->get($this->object);
+
+        if (!$service instanceof CRUDInterface) {
+            throw new InvalidConfigException(sprintf(
+                "Resource must be an instance of '%s', '%s' given",
+                CRUDInterface::class,
+                get_class($service)
+            ));
+        }
+
+        return $service;
     }
 
     /*******************************************

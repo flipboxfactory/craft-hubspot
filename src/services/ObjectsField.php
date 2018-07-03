@@ -20,6 +20,8 @@ use flipbox\hubspot\db\ObjectAssociationQuery;
 use flipbox\hubspot\events\RegisterResourceFieldActionsEvent;
 use flipbox\hubspot\fields\actions\ObjectActionInterface;
 use flipbox\hubspot\fields\actions\ObjectItemActionInterface;
+use flipbox\hubspot\fields\actions\SyncItemFrom;
+use flipbox\hubspot\fields\actions\SyncItemTo;
 use flipbox\hubspot\fields\Objects;
 use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\records\ObjectAssociation;
@@ -201,7 +203,9 @@ class ObjectsField extends SortableFields
         return Craft::$app->getView()->renderTemplate(
             'hubspot/_components/fieldtypes/Objects/settings',
             [
-                'field' => $field
+                'field' => $field,
+                'availableActions' => $this->getAvailableActions($field),
+                'availableItemActions' => $this->getAvailableItemActions($field)
             ]
         );
     }
@@ -210,6 +214,26 @@ class ObjectsField extends SortableFields
     /*******************************************
      * ACTIONS
      *******************************************/
+
+    /**
+     * @param Objects $field
+     * @return ObjectActionInterface[]
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getAvailableActions(Objects $field): array
+    {
+        $event = new RegisterResourceFieldActionsEvent([
+            'actions' => []
+        ]);
+
+        $field->trigger(
+            $field::EVENT_REGISTER_AVAILABLE_ACTIONS,
+            $event
+        );
+        return $this->resolveActions($event->actions, ObjectActionInterface::class);
+    }
+
     /**
      * @param Objects $field
      * @param ElementInterface|null $element
@@ -222,7 +246,7 @@ class ObjectsField extends SortableFields
         $actions = [];
 
         $event = new RegisterResourceFieldActionsEvent([
-            'actions' => $actions,
+            'actions' => $field->selectedActions,
             'element' => $element
         ]);
 
@@ -236,6 +260,29 @@ class ObjectsField extends SortableFields
 
     /**
      * @param Objects $field
+     * @return ObjectActionInterface[]
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getAvailableItemActions(Objects $field): array
+    {
+        $event = new RegisterResourceFieldActionsEvent([
+            'actions' => [
+                SyncItemFrom::class,
+                SyncItemTo::class,
+            ]
+        ]);
+
+        $field->trigger(
+            $field::EVENT_REGISTER_AVAILABLE_ITEM_ACTIONS,
+            $event
+        );
+
+        return $this->resolveActions($event->actions, ObjectItemActionInterface::class);
+    }
+
+    /**
+     * @param Objects $field
      * @param ElementInterface|null $element
      * @return ObjectItemActionInterface[]
      * @throws \craft\errors\MissingComponentException
@@ -244,7 +291,7 @@ class ObjectsField extends SortableFields
     public function getItemActions(Objects $field, ElementInterface $element = null): array
     {
         $event = new RegisterResourceFieldActionsEvent([
-            'actions' => [],
+            'actions' => $field->selectedItemActions,
             'element' => $element
         ]);
 

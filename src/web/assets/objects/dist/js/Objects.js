@@ -312,7 +312,7 @@ Craft.HubSpotObjectsField = Craft.HubSpotObjectsActions.extend(
         },
 
         createRow: function (container) {
-            return new Craft.HubSpotResourceItem(container, $.extend({}, {
+            return new Craft.HubSpotObjectItem(container, $.extend({}, {
                 onRemove: $.proxy(function (item) {
                     this.removeObjects(item.$container);
                     item.$container.remove();
@@ -451,7 +451,7 @@ Craft.HubSpotObjectsField = Craft.HubSpotObjectsActions.extend(
     }
 );
 
-Craft.HubSpotResourceItem = Craft.HubSpotObjectsActions.extend(
+Craft.HubSpotObjectItem = Craft.HubSpotObjectsActions.extend(
     {
         $container: null,
 
@@ -469,7 +469,9 @@ Craft.HubSpotResourceItem = Craft.HubSpotObjectsActions.extend(
         id: null,
 
         init: function (container, settings) {
-            this.setSettings(settings, $.extend(Craft.HubSpotObjectsActions.defaults, Craft.HubSpotResourceItem.defaults));
+            this.setSettings(settings, $.extend(Craft.HubSpotObjectsActions.defaults, Craft.HubSpotObjectItem.defaults));
+
+            console.log(settings);
 
             this.$container = $(container);
             this.$container.data('item', this);
@@ -654,11 +656,11 @@ Craft.HubSpotResourceItem = Craft.HubSpotObjectsActions.extend(
             dissociateData: {},
             dissociateAction: 'hubspot/cp/objects/dissociate',
 
-            associationMessageError: "Failed to associate HubSpot Resource.",
-            associationMessageSuccess: "Successfully associated HubSpot Resource.",
+            associationMessageError: "Failed to associate HubSpot Object.",
+            associationMessageSuccess: "Successfully associated HubSpot Object.",
 
-            dissociationMessageError: "Failed to dissociate HubSpot Resource.",
-            dissociationMessageSuccess: "Successfully dissociated HubSpot Resource.",
+            dissociationMessageError: "Failed to dissociate HubSpot Object.",
+            dissociationMessageSuccess: "Successfully dissociated HubSpot Object.",
 
             onRemove: $.noop
         }

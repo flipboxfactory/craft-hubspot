@@ -43,7 +43,7 @@ class PerformItemAction extends Action
     {
         $field = $this->resolveField($field);
         $element = $this->resolveElement($element);
-        $criteria = $this->resolveCriteria($field, $element, $id);
+        $record = $this->resolveRecord($field, $element, $id);
 
         $availableActions = HubSpot::getInstance()->getObjectsField()->getItemActions($field, $element);
 
@@ -58,7 +58,7 @@ class PerformItemAction extends Action
             throw new HttpException(400, 'Field action is not supported by the field');
         }
 
-        return $this->runInternal($action, $field, $element, $criteria);
+        return $this->runInternal($action, $field, $element, $record);
     }
 
     /**

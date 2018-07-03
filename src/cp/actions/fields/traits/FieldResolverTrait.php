@@ -12,6 +12,7 @@ use Craft;
 use craft\base\ElementInterface;
 use flipbox\hubspot\db\ObjectAssociationQuery;
 use flipbox\hubspot\fields\Objects;
+use flipbox\hubspot\records\ObjectAssociation;
 use yii\web\HttpException;
 
 /**
@@ -46,10 +47,10 @@ trait FieldResolverTrait
      * @param Objects $field
      * @param ElementInterface $element
      * @param string $objectId
-     * @return array|mixed|null|\yii\base\BaseObject
+     * @return ObjectAssociation
      * @throws HttpException
      */
-    protected function resolveCriteria(Objects $field, ElementInterface $element, string $objectId)
+    protected function resolveRecord(Objects $field, ElementInterface $element, string $objectId): ObjectAssociation
     {
         /** @var ObjectAssociationQuery $query */
         if (null === ($query = $element->getFieldValue($field->handle))) {
