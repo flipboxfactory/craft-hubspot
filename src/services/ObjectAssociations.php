@@ -8,6 +8,7 @@
 
 namespace flipbox\hubspot\services;
 
+use Codeception\Exception\ElementNotFound;
 use Craft;
 use craft\base\Element;
 use craft\base\ElementInterface;
@@ -16,6 +17,7 @@ use craft\helpers\Json;
 use flipbox\craft\sortable\associations\db\SortableAssociationQueryInterface;
 use flipbox\craft\sortable\associations\records\SortableAssociationInterface;
 use flipbox\craft\sortable\associations\services\SortableAssociations;
+use flipbox\ember\exceptions\NotFoundException;
 use flipbox\ember\helpers\SiteHelper;
 use flipbox\ember\services\traits\records\Accessor;
 use flipbox\ember\validators\MinMaxValidator;
@@ -101,6 +103,15 @@ class ObjectAssociations extends SortableAssociations
     }
 
     /**
+     * @inheritdoc
+     * @return ObjectAssociationQuery
+     */
+    public function getQuery($config = []): SortableAssociationQueryInterface
+    {
+        return $this->parentGetQuery($config);
+    }
+
+    /**
      * @param ElementInterface $element
      * @param Objects $field
      * @return string|null
@@ -108,18 +119,18 @@ class ObjectAssociations extends SortableAssociations
     public function findObjectIdByElement(ElementInterface $element, Objects $field)
     {
         /** @var Element $element */
-        return $this->findObjectId($field->id, $element->getId(), $element->siteId);
+        return $this->findObjectId($element->getId(), $field->id, $element->siteId);
     }
 
     /**
      * @noinspection PhpDocMissingThrowsInspection
      *
-     * @param string $fieldId
      * @param string $elementId
+     * @param string $fieldId
      * @param string|null $siteId
      * @return null|string
      */
-    public function findObjectId(string $fieldId, string $elementId, string $siteId = null)
+    public function findObjectId(string $elementId, string $fieldId, string $siteId = null)
     {
         $objectId = HubSpot::getInstance()->getObjectAssociations()->getQuery([
             'select' => ['objectId'],
@@ -132,14 +143,37 @@ class ObjectAssociations extends SortableAssociations
     }
 
     /**
+     * @param string $elementId
+     * @param string $fieldId
+     * @param string|null $siteId
+     * @return string
+     * @throws NotFoundException
+     */
+    public function getObjectId(string $elementId, string $fieldId, string $siteId = null): string
+    {
+        $siteId = SiteHelper::ensureSiteId($siteId);
+
+        if(null === ($objectId = $this->findObjectId($elementId, $fieldId, $siteId))) {
+            throw new NotFoundException(sprintf(
+                "Unable to find element with: Element Id: %s, Field Id: %s, Site Id: $%s",
+                $elementId,
+                $fieldId,
+                $siteId
+            ));
+        }
+
+        return $objectId;
+    }
+
+    /**
      * @noinspection PhpDocMissingThrowsInspection
      *
-     * @param string $fieldId
      * @param string $elementId
+     * @param string $fieldId
      * @param string|null $siteId
      * @return null|string
      */
-    public function findElementId(string $fieldId, string $elementId, string $siteId = null)
+    public function findElementId(string $objectId, string $fieldId, string $siteId = null)
     {
         $elementId = HubSpot::getInstance()->getObjectAssociations()->getQuery([
             'select' => ['elementId'],
@@ -152,12 +186,64 @@ class ObjectAssociations extends SortableAssociations
     }
 
     /**
-     * @inheritdoc
-     * @return ObjectAssociationQuery
+     * @param string $objectId
+     * @param string $fieldId
+     * @param string|null $siteId
+     * @return string
+     * @throws NotFoundException
      */
-    public function getQuery($config = []): SortableAssociationQueryInterface
+    public function getElementId(string $objectId, string $fieldId, string $siteId = null): string
     {
-        return $this->parentGetQuery($config);
+        $siteId = SiteHelper::ensureSiteId($siteId);
+
+        if(null === ($elementId = $this->findElementId($objectId, $fieldId, $siteId))) {
+            throw new NotFoundException(sprintf(
+                "Unable to find element with: HubSpot Id: %s, Field Id: %s, Site Id: $%s",
+                $objectId,
+                $fieldId,
+                $siteId
+            ));
+        }
+
+        return $elementId;
+    }
+
+    /**
+     * @param string $objectId
+     * @param string $fieldId
+     * @param string|null $siteId
+     * @return ElementInterface|null
+     */
+    public function findElement(string $objectId, string $fieldId, string $siteId = null)
+    {
+        if (null === ($elementId = $this->findElementId($fieldId, $objectId, $siteId))) {
+            return null;
+        }
+
+        return Craft::$app->getElements()->getELementById($elementId, null, $siteId);
+    }
+
+    /**
+     * @param string $objectId
+     * @param string $fieldId
+     * @param string|null $siteId
+     * @return ElementInterface
+     * @throws ElementNotFoundException
+     */
+    public function getElement(string $objectId, string $fieldId, string $siteId = null): ElementInterface
+    {
+        $siteId = SiteHelper::ensureSiteId($siteId);
+
+        if (!$element = $this->findElement($fieldId, $objectId, $siteId)) {
+            throw new ElementNotFound(sprintf(
+                "Unable to find element with: HubSpot Id: %s, Field Id: %s, Site Id: $%s",
+                $objectId,
+                $fieldId,
+                $siteId
+            ));
+        }
+
+        return $element;
     }
 
     /**
@@ -194,39 +280,7 @@ class ObjectAssociations extends SortableAssociations
     }
 
 
-    /**
-     * @param string $objectId
-     * @return ElementInterface
-     * @throws ElementNotFoundException
-     */
-    public function getElementByObjectId(string $objectId): ElementInterface
-    {
-        if (!$element = $this->findElementByObjectId($objectId)) {
-            throw new ElementNotFoundException(sprintf(
-                "Unable to get element from HubSpot Id: '%s'.",
-                $objectId
-            ));
-        }
 
-        return $element;
-    }
-
-    /**
-     * @param string $objectId
-     * @return ElementInterface|null
-     */
-    public function findElementByObjectId(string $objectId)
-    {
-        $record = $this->findByCondition([
-            'objectId' => $objectId
-        ]);
-
-        if ($record === null) {
-            return null;
-        }
-
-        return $record->getElement();
-    }
 
     /**
      * Find the HubSpot Id by Element Id
