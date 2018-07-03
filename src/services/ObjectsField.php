@@ -243,8 +243,6 @@ class ObjectsField extends SortableFields
      */
     public function getActions(Objects $field, ElementInterface $element = null): array
     {
-        $actions = [];
-
         $event = new RegisterResourceFieldActionsEvent([
             'actions' => $field->selectedActions,
             'element' => $element

@@ -9,20 +9,13 @@
 namespace flipbox\hubspot\services\resources;
 
 use craft\base\ElementInterface;
-use flipbox\hubspot\builders\ContactBuilder;
 use flipbox\hubspot\builders\ObjectBuilderInterface;
 use flipbox\hubspot\connections\ConnectionInterface;
-use flipbox\hubspot\criteria\ContactCriteria;
 use flipbox\hubspot\criteria\ObjectCriteriaInterface;
 use flipbox\hubspot\fields\Objects;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
-use Flipbox\Relay\HubSpot\Builder\Resources\Contact\Create;
-use Flipbox\Relay\HubSpot\Builder\Resources\Contact\Delete;
-use Flipbox\Relay\HubSpot\Builder\Resources\Contact\ReadById;
-use Flipbox\Relay\HubSpot\Builder\Resources\Contact\Update;
 use Psr\Http\Message\ResponseInterface;
 use Psr\SimpleCache\CacheInterface;
-use yii\base\Component;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>

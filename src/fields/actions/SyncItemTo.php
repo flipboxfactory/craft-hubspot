@@ -11,11 +11,10 @@ namespace flipbox\hubspot\fields\actions;
 use Craft;
 use craft\base\ElementInterface;
 use flipbox\force\criteria\SObjectCriteria;
-use flipbox\hubspot\records\ObjectAssociation;
 use flipbox\force\fields\SObjects;
 use flipbox\force\Force;
 use flipbox\hubspot\fields\Objects;
-use flipbox\hubspot\HubSpot;
+use flipbox\hubspot\records\ObjectAssociation;
 use flipbox\hubspot\transformers\collections\TransformerCollection;
 
 class SyncItemTo extends AbstractObjectItemAction

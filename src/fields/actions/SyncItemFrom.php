@@ -10,10 +10,9 @@ namespace flipbox\hubspot\fields\actions;
 
 use Craft;
 use craft\base\ElementInterface;
+use flipbox\hubspot\fields\Objects;
 use flipbox\hubspot\records\ObjectAssociation;
 use flipbox\hubspot\transformers\collections\TransformerCollection;
-use flipbox\hubspot\fields\Objects;
-use flipbox\hubspot\HubSpot;
 
 class SyncItemFrom extends AbstractObjectItemAction
 {
