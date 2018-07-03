@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.0-rc.2 - 2018-07-03
 ### Changed
 - Altering various Object Association class method names
 
