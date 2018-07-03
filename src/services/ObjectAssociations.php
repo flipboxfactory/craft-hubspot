@@ -125,12 +125,12 @@ class ObjectAssociations extends SortableAssociations
     /**
      * @noinspection PhpDocMissingThrowsInspection
      *
-     * @param string $elementId
-     * @param string $fieldId
-     * @param string|null $siteId
+     * @param int $elementId
+     * @param int $fieldId
+     * @param int|null $siteId
      * @return null|string
      */
-    public function findObjectId(string $elementId, string $fieldId, string $siteId = null)
+    public function findObjectId(int $elementId, int $fieldId, int $siteId = null)
     {
         $objectId = HubSpot::getInstance()->getObjectAssociations()->getQuery([
             'select' => ['objectId'],
@@ -143,13 +143,13 @@ class ObjectAssociations extends SortableAssociations
     }
 
     /**
-     * @param string $elementId
-     * @param string $fieldId
-     * @param string|null $siteId
+     * @param int $elementId
+     * @param int $fieldId
+     * @param int|null $siteId
      * @return string
      * @throws NotFoundException
      */
-    public function getObjectId(string $elementId, string $fieldId, string $siteId = null): string
+    public function getObjectId(int $elementId, int $fieldId, int $siteId = null): string
     {
         $siteId = SiteHelper::ensureSiteId($siteId);
 
@@ -168,16 +168,16 @@ class ObjectAssociations extends SortableAssociations
     /**
      * @noinspection PhpDocMissingThrowsInspection
      *
-     * @param string $elementId
-     * @param string $fieldId
-     * @param string|null $siteId
+     * @param string $objectId
+     * @param int $fieldId
+     * @param int|null $siteId
      * @return null|string
      */
-    public function findElementId(string $objectId, string $fieldId, string $siteId = null)
+    public function findElementId(string $objectId, int $fieldId, int $siteId = null)
     {
         $elementId = HubSpot::getInstance()->getObjectAssociations()->getQuery([
             'select' => ['elementId'],
-            'objectId' => $elementId,
+            'objectId' => $objectId,
             'siteId' => SiteHelper::ensureSiteId($siteId),
             'fieldId' => $fieldId
         ])->scalar();
@@ -187,12 +187,12 @@ class ObjectAssociations extends SortableAssociations
 
     /**
      * @param string $objectId
-     * @param string $fieldId
-     * @param string|null $siteId
+     * @param int $fieldId
+     * @param int|null $siteId
      * @return string
      * @throws NotFoundException
      */
-    public function getElementId(string $objectId, string $fieldId, string $siteId = null): string
+    public function getElementId(string $objectId, int $fieldId, int $siteId = null): string
     {
         $siteId = SiteHelper::ensureSiteId($siteId);
 
@@ -210,11 +210,11 @@ class ObjectAssociations extends SortableAssociations
 
     /**
      * @param string $objectId
-     * @param string $fieldId
-     * @param string|null $siteId
+     * @param int $fieldId
+     * @param int|null $siteId
      * @return ElementInterface|null
      */
-    public function findElement(string $objectId, string $fieldId, string $siteId = null)
+    public function findElement(string $objectId, int $fieldId, int $siteId = null)
     {
         if (null === ($elementId = $this->findElementId($fieldId, $objectId, $siteId))) {
             return null;
@@ -225,12 +225,12 @@ class ObjectAssociations extends SortableAssociations
 
     /**
      * @param string $objectId
-     * @param string $fieldId
-     * @param string|null $siteId
+     * @param int $fieldId
+     * @param int|null $siteId
      * @return ElementInterface
      * @throws ElementNotFoundException
      */
-    public function getElement(string $objectId, string $fieldId, string $siteId = null): ElementInterface
+    public function getElement(string $objectId, int $fieldId, int $siteId = null): ElementInterface
     {
         $siteId = SiteHelper::ensureSiteId($siteId);
 
@@ -278,30 +278,6 @@ class ObjectAssociations extends SortableAssociations
 
         return $this->associations($source, $field, $site);
     }
-
-
-
-
-    /**
-     * Find the HubSpot Id by Element Id
-     *
-     * @param int $id
-     * @return string|null
-     */
-    public function findObjectIdByElementId(int $id)
-    {
-        $objectId = $this->getQuery()
-            ->select(['objectId'])
-            ->element($id)
-            ->scalar();
-
-        if (!$objectId) {
-            return null;
-        }
-
-        return $objectId;
-    }
-
 
     /**
      * @param $source
