@@ -153,7 +153,7 @@ class ObjectAssociations extends SortableAssociations
     {
         $siteId = SiteHelper::ensureSiteId($siteId);
 
-        if(null === ($objectId = $this->findObjectId($elementId, $fieldId, $siteId))) {
+        if (null === ($objectId = $this->findObjectId($elementId, $fieldId, $siteId))) {
             throw new NotFoundException(sprintf(
                 "Unable to find element with: Element Id: %s, Field Id: %s, Site Id: $%s",
                 $elementId,
@@ -196,7 +196,7 @@ class ObjectAssociations extends SortableAssociations
     {
         $siteId = SiteHelper::ensureSiteId($siteId);
 
-        if(null === ($elementId = $this->findElementId($objectId, $fieldId, $siteId))) {
+        if (null === ($elementId = $this->findElementId($objectId, $fieldId, $siteId))) {
             throw new NotFoundException(sprintf(
                 "Unable to find element with: HubSpot Id: %s, Field Id: %s, Site Id: $%s",
                 $objectId,
