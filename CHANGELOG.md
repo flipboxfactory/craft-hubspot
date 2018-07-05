@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.0-rc.3 - 2018-07-05
 ### Removed
 - Deprecated criteria interface methods
 - `ObjectCriteriaInterface::setId()` method
