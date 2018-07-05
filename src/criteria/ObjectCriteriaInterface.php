@@ -43,10 +43,4 @@ interface ObjectCriteriaInterface
      * @return TransformerCollectionInterface|null
      */
     public function getTransformer();
-
-    /**
-     * @param array $config
-     * @return mixed
-     */
-    public function fetch(array $config = []);
 }

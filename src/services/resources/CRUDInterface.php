@@ -24,6 +24,11 @@ use Psr\SimpleCache\CacheInterface;
 interface CRUDInterface
 {
     /**
+     * @return array|TransformerCollectionInterface
+     */
+    public static function defaultTransformer();
+
+    /**
      * @param array $config
      * @return ObjectCriteriaInterface
      */

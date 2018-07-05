@@ -33,6 +33,11 @@ trait UpdateObjectTrait
     protected abstract static function updateRelayBuilderClass(): string;
 
     /**
+     * @return array|TransformerCollectionInterface
+     */
+    public abstract static function defaultTransformer();
+
+    /**
      * @param ObjectBuilderInterface $builder
      * @param ConnectionInterface|string|null $connection
      * @param CacheInterface|string|null $cache
@@ -125,7 +130,7 @@ trait UpdateObjectTrait
         TransformerCollectionInterface $transformer = null
     ): PipelineBuilderInterface {
         $transformer = TransformerHelper::populateTransformerCollection(
-            TransformerHelper::resolveCollection($transformer),
+            TransformerHelper::resolveCollection($transformer, static::defaultTransformer()),
             [
                 'resource' => [static::updateRelayBuilderClass()]
             ]

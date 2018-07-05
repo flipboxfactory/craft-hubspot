@@ -12,6 +12,8 @@ use flipbox\hubspot\builders\CompanyBuilder;
 use flipbox\hubspot\builders\ObjectBuilderInterface;
 use flipbox\hubspot\criteria\CompanyCriteria;
 use flipbox\hubspot\criteria\ObjectCriteriaInterface;
+use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
+use flipbox\hubspot\transformers\DynamicModelSuccess;
 use Flipbox\Relay\HubSpot\Builder\Resources\Company\Create;
 use Flipbox\Relay\HubSpot\Builder\Resources\Company\Delete;
 use Flipbox\Relay\HubSpot\Builder\Resources\Company\Read;
@@ -33,6 +35,23 @@ class Companies extends Component implements CRUDInterface
      * The HubSpot Resource name
      */
     const HUBSPOT_RESOURCE = 'companies';
+
+    /**
+     * @return array
+     */
+    public static function defaultTransformer()
+    {
+        return [
+            'class' => DynamicTransformerCollection::class,
+            'handle' => self::HUBSPOT_RESOURCE,
+            'transformers' => [
+                TransformerCollectionInterface::SUCCESS_KEY => [
+                    'class' => DynamicModelSuccess::class,
+                    'resource' => self::HUBSPOT_RESOURCE
+                ]
+            ]
+        ];
+    }
 
     /**
      * @param array $config

@@ -12,6 +12,8 @@ use flipbox\hubspot\builders\ContactListBuilder;
 use flipbox\hubspot\builders\ObjectBuilderInterface;
 use flipbox\hubspot\criteria\ContactListCriteria;
 use flipbox\hubspot\criteria\ObjectCriteriaInterface;
+use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
+use flipbox\hubspot\transformers\DynamicModelSuccess;
 use Flipbox\Relay\HubSpot\Builder\Resources\ContactList\Create;
 use Flipbox\Relay\HubSpot\Builder\Resources\ContactList\Delete;
 use Flipbox\Relay\HubSpot\Builder\Resources\ContactList\Read;
@@ -33,6 +35,23 @@ class ContactLists extends Component implements CRUDInterface
      * The HubSpot Resource name
      */
     const HUBSPOT_RESOURCE = 'contactLists';
+
+    /**
+     * @inheritdoc
+     */
+    public static function defaultTransformer()
+    {
+        return [
+            'class' => DynamicTransformerCollection::class,
+            'handle' => ContactLists::HUBSPOT_RESOURCE,
+            'transformers' => [
+                TransformerCollectionInterface::SUCCESS_KEY => [
+                    'class' => DynamicModelSuccess::class,
+                    'resource' => ContactLists::HUBSPOT_RESOURCE
+                ]
+            ]
+        ];
+    }
 
     /**
      * @param array $config

@@ -8,11 +8,7 @@
 
 namespace flipbox\hubspot\criteria;
 
-use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\services\resources\ContactLists;
-use flipbox\hubspot\transformers\collections\DynamicTransformerCollection;
-use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
-use flipbox\hubspot\transformers\DynamicModelSuccess;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -23,28 +19,9 @@ class ContactListCriteria extends ObjectCriteria
     /**
      * @inheritdoc
      */
-    protected $transformer = [
-        'class' => DynamicTransformerCollection::class,
-        'handle' => ContactLists::HUBSPOT_RESOURCE,
-        'transformers' => [
-            TransformerCollectionInterface::SUCCESS_KEY => [
-                'class' => DynamicModelSuccess::class,
-                'resource' => ContactLists::HUBSPOT_RESOURCE
-            ]
-        ]
-    ];
-
-    /**
-     * @inheritdoc
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function fetch(array $config = [])
+    public function init()
     {
-        $this->prepare($config);
-
-        return HubSpot::getInstance()
-            ->getResources()
-            ->getContactLists()
-            ->read($this);
+        $this->transformer = ContactLists::defaultTransformer();
+        parent::init();
     }
 }

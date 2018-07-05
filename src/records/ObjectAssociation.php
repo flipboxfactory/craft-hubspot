@@ -100,7 +100,13 @@ class ObjectAssociation extends SortableAssociation
             return null;
         }
 
-        return $field->createResourceCriteria($this, $criteria)->fetch();
+        $resource = $field->getResource();
+
+        $criteria = $resource->getCriteria([
+            'id' => $this->objectId
+        ]);
+
+        return $resource->read($criteria);
     }
 
     /**

@@ -8,7 +8,6 @@
 
 namespace flipbox\hubspot\criteria;
 
-use flipbox\ember\helpers\ObjectHelper;
 use yii\base\BaseObject;
 
 /**
@@ -41,24 +40,5 @@ class ObjectCriteria extends BaseObject implements ObjectCriteriaInterface
     {
         $this->id = $id;
         return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function prepare(array $criteria = [])
-    {
-        ObjectHelper::populate(
-            $this,
-            $criteria
-        );
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function fetch(array $config = [])
-    {
-        return null;
     }
 }

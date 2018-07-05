@@ -1,12 +1,11 @@
 {% import "_includes/forms" as forms %}
 
-{{ forms.textField({
+{{ forms.selectField({
     label: "Resource"|t('hubspot'),
     id: 'object',
     name: 'object',
     value: field.object,
-    errors: field.getErrors('object'),
-    required: true
+    options: resources
 }) }}
 
 {% block minField %}

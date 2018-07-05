@@ -14,7 +14,9 @@
 </div>
 
 {% macro createItem(field, record) %}
-    {% set criteria = field.createResourceCriteria(record) %}
+    {% set criteria = field.resource.getCriteria({
+        id: record.objectId
+    }) %}
     <div class="object{% if not record.objectId %} edit-mode{% endif %}">
         <figure>
             {{ svg('@vendor/flipboxfactory/craft-hubspot/src/icon-mask.svg') }}

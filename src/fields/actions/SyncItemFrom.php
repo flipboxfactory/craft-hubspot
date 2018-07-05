@@ -11,6 +11,7 @@ namespace flipbox\hubspot\fields\actions;
 use Craft;
 use craft\base\ElementInterface;
 use flipbox\hubspot\fields\Objects;
+use flipbox\hubspot\helpers\TransformerHelper;
 use flipbox\hubspot\records\ObjectAssociation;
 use flipbox\hubspot\transformers\collections\TransformerCollection;
 
@@ -39,7 +40,21 @@ class SyncItemFrom extends AbstractObjectItemAction
     {
         $resource = $field->getResource();
 
-        if (!$resource->syncDown($element, $field, null, null, new TransformerCollection())) {
+        $transformer = $resource::defaultTransformer();
+
+        if (is_array($transformer)) {
+            $transformer['class'] = TransformerCollection::class;
+        }
+
+        if (!$resource->syncDown(
+            $element,
+            $field,
+            null,
+            null,
+            TransformerHelper::resolveCollection(
+                $transformer
+            )
+        )) {
             $this->setMessage("Failed to sync from HubSpot Object");
             return false;
         }

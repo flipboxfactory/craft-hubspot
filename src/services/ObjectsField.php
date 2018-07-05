@@ -204,10 +204,36 @@ class ObjectsField extends SortableFields
             'hubspot/_components/fieldtypes/Objects/settings',
             [
                 'field' => $field,
+                'resources' => $this->getResources(),
                 'availableActions' => $this->getAvailableActions($field),
                 'availableItemActions' => $this->getAvailableItemActions($field)
             ]
         );
+    }
+
+    /*******************************************
+     * RESOURCES
+     *******************************************/
+
+    /**
+     * @return array
+     */
+    protected function getResources(): array
+    {
+        return [
+            resources\Companies::HUBSPOT_RESOURCE => [
+                'label' => Craft::t('hubspot', 'Companies'),
+                'value' => resources\Companies::HUBSPOT_RESOURCE
+            ],
+            resources\Contacts::HUBSPOT_RESOURCE => [
+                'label' => Craft::t('hubspot', 'Contacts'),
+                'value' => resources\Contacts::HUBSPOT_RESOURCE
+            ],
+            resources\ContactLists::HUBSPOT_RESOURCE => [
+                'label' => Craft::t('hubspot', 'Contact Lists'),
+                'value' => resources\ContactLists::HUBSPOT_RESOURCE
+            ]
+        ];
     }
 
 

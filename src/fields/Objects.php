@@ -14,17 +14,8 @@ use craft\base\Field;
 use craft\elements\db\ElementQueryInterface;
 use flipbox\ember\helpers\ModelHelper;
 use flipbox\ember\validators\MinMaxValidator;
-use flipbox\hubspot\criteria\CompanyCriteria;
-use flipbox\hubspot\criteria\ContactCriteria;
-use flipbox\hubspot\criteria\ContactListCriteria;
-use flipbox\hubspot\criteria\ObjectCriteria;
-use flipbox\hubspot\criteria\ObjectCriteriaInterface;
 use flipbox\hubspot\db\ObjectAssociationQuery;
 use flipbox\hubspot\HubSpot;
-use flipbox\hubspot\records\ObjectAssociation;
-use flipbox\hubspot\services\resources\Companies;
-use flipbox\hubspot\services\resources\ContactLists;
-use flipbox\hubspot\services\resources\Contacts;
 use flipbox\hubspot\services\resources\CRUDInterface;
 use yii\base\InvalidConfigException;
 
@@ -176,73 +167,6 @@ class Objects extends Field
         }
 
         return $service;
-    }
-
-    /*******************************************
-     * CRITERIA
-     *******************************************/
-
-    /**
-     * @return array
-     */
-    protected function getResourceCriteriaMap(): array
-    {
-        return [
-            Companies::HUBSPOT_RESOURCE => function (ObjectAssociation $record = null) {
-                return [
-                    'class' => CompanyCriteria::class,
-                    'id' => $record ? $record->objectId : self::DEFAULT_HUBSPOT_ID
-                ];
-            },
-            Contacts::HUBSPOT_RESOURCE => function (ObjectAssociation $record = null) {
-                return [
-                    'class' => ContactCriteria::class,
-                    'id' => $record ? $record->objectId : self::DEFAULT_HUBSPOT_ID
-                ];
-            },
-            ContactLists::HUBSPOT_RESOURCE => function (ObjectAssociation $record = null) {
-                return [
-                    'class' => ContactListCriteria::class,
-                    'id' => $record ? $record->objectId : self::DEFAULT_HUBSPOT_ID
-                ];
-            }
-        ];
-    }
-
-    /**
-     * @param ObjectAssociation|null $record
-     * @param array $config
-     * @return ObjectCriteriaInterface
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function createResourceCriteria(
-        ObjectAssociation $record = null,
-        array $config = []
-    ): ObjectCriteriaInterface {
-        $resourceMap = $this->getResourceCriteriaMap();
-
-        $criteria = $resourceMap[$this->object] ?? ObjectCriteria::class;
-
-        // Closure check
-        if (is_callable($criteria)) {
-            $criteria = call_user_func_array($criteria, ['record' => $record]);
-        }
-
-        // Ensure Criteria
-        if (!$criteria instanceof ObjectCriteriaInterface) {
-            $criteria = \flipbox\ember\helpers\ObjectHelper::create(
-                $criteria,
-                ObjectCriteriaInterface::class
-            );
-        }
-
-        if (!$criteria instanceof ObjectCriteriaInterface) {
-            $criteria = new ObjectCriteria();
-        }
-
-        // TODO - apply the $config to the criteria
-
-        return $criteria;
     }
 
     /*******************************************

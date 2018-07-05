@@ -8,11 +8,7 @@
 
 namespace flipbox\hubspot\criteria;
 
-use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\services\resources\Companies;
-use flipbox\hubspot\transformers\collections\DynamicTransformerCollection;
-use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
-use flipbox\hubspot\transformers\DynamicModelSuccess;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -23,28 +19,9 @@ class CompanyCriteria extends ObjectCriteria
     /**
      * @inheritdoc
      */
-    protected $transformer = [
-        'class' => DynamicTransformerCollection::class,
-        'handle' => Companies::HUBSPOT_RESOURCE,
-        'transformers' => [
-            TransformerCollectionInterface::SUCCESS_KEY => [
-                'class' => DynamicModelSuccess::class,
-                'resource' => Companies::HUBSPOT_RESOURCE
-            ]
-        ]
-    ];
-
-    /**
-     * @inheritdoc
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function fetch(array $config = [])
+    public function init()
     {
-        $this->prepare($config);
-
-        return HubSpot::getInstance()
-            ->getResources()
-            ->getCompanies()
-            ->read($this);
+        $this->transformer = Companies::defaultTransformer();
+        parent::init();
     }
 }

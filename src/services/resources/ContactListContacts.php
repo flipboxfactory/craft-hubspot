@@ -20,6 +20,7 @@ use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\pipeline\Resource;
 use flipbox\hubspot\services\resources\traits\ReadObjectTrait;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
+use flipbox\hubspot\transformers\DynamicModelSuccess;
 use Flipbox\Relay\Builder\RelayBuilderInterface;
 use Flipbox\Relay\HubSpot\Builder\Resources\ContactList\Contacts\Add;
 use Flipbox\Relay\HubSpot\Builder\Resources\ContactList\Contacts\All;
@@ -41,6 +42,23 @@ class ContactListContacts extends Component
      * The HubSpot Resource name
      */
     const HUBSPOT_RESOURCE = 'contactListContacts';
+
+    /**
+     * @inheritdoc
+     */
+    public static function defaultTransformer()
+    {
+        return [
+            'class' => DynamicTransformerCollection::class,
+            'handle' => self::HUBSPOT_RESOURCE,
+            'transformers' => [
+                TransformerCollectionInterface::SUCCESS_KEY => [
+                    'class' => DynamicModelSuccess::class,
+                    'resource' => self::HUBSPOT_RESOURCE
+                ]
+            ]
+        ];
+    }
 
     /**
      * @param array $config

@@ -33,6 +33,11 @@ trait ReadObjectTrait
     protected abstract static function readRelayBuilderClass(): string;
 
     /**
+     * @return array|TransformerCollectionInterface
+     */
+    public abstract static function defaultTransformer();
+
+    /**
      * @param $id
      * @param ConnectionInterface|string|null $connection
      * @param CacheInterface|string|null $cache
@@ -131,7 +136,7 @@ trait ReadObjectTrait
         TransformerCollectionInterface $transformer = null
     ): PipelineBuilderInterface {
         $transformer = TransformerHelper::populateTransformerCollection(
-            TransformerHelper::resolveCollection($transformer),
+            TransformerHelper::resolveCollection($transformer, static::defaultTransformer()),
             [
                 'resource' => [static::readRelayBuilderClass()]
             ]

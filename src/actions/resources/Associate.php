@@ -121,7 +121,9 @@ class Associate extends AbstractAssociationAction
             return false;
         }
 
-        $criteria = $field->createResourceCriteria($record);
+        $criteria = $field->getResource()->getCriteria([
+            'id' => $record->objectId
+        ]);
 
         /** @var DynamicModel $response */
         $response = $criteria->fetch(['transformer' => TransformerCollection::class]);
