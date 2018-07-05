@@ -20,7 +20,7 @@ use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
 trait TransformerCollectionTrait
 {
     /**
-     * @var TransformerCollectionInterface|array|callable|null
+     * @var TransformerCollectionInterface|array|null
      */
     protected $transformer = ['class' => DynamicTransformerCollection::class];
 

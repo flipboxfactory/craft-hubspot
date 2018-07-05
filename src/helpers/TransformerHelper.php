@@ -58,7 +58,7 @@ class TransformerHelper extends \Flipbox\Transform\Helpers\TransformerHelper
 
     /**
      * @param TransformerCollectionInterface|array|string|null $transformer
-     * @param array|callable|TransformerCollectionInterface|null $default
+     * @param array|TransformerCollectionInterface|null $default
      * @return TransformerCollectionInterface|null
      */
     public static function resolveCollection($transformer = null, $default = ['class' => TransformerCollection::class])
