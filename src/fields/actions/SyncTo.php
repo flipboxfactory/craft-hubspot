@@ -49,10 +49,7 @@ class SyncTo extends AbstractObjectAction
 
         $resource = $field->getResource();
 
-        if (!$resource->syncUp(
-            $element,
-            $field
-        )) {
+        if (!$resource->syncUp($element, $field)) {
             $this->setMessage("Failed to sync from HubSpot Object");
             return false;
         }

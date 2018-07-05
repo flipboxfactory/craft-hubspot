@@ -51,11 +51,6 @@ class Objects extends Field
     const INPUT_TEMPLATE_PATH = 'hubspot/_components/fieldtypes/Objects/input';
 
     /**
-     * The default HubSpot Resource Id (if none exists)
-     */
-    const DEFAULT_HUBSPOT_ID = 'UNKNOWN_ID';
-
-    /**
      * @var string
      */
     public $object;

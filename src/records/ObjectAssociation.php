@@ -48,6 +48,11 @@ class ObjectAssociation extends SortableAssociation
     const SOURCE_ATTRIBUTE = 'elementId';
 
     /**
+     * The default HubSpot Resource Id (if none exists)
+     */
+    const DEFAULT_HUBSPOT_ID = 'UNKNOWN_ID';
+
+    /**
      * @inheritdoc
      * @throws \Throwable
      */
@@ -102,9 +107,8 @@ class ObjectAssociation extends SortableAssociation
 
         $resource = $field->getResource();
 
-        $criteria = $resource->getCriteria([
-            'id' => $this->objectId
-        ]);
+        $criteria = $resource->getCriteria($criteria);
+        $criteria->id = $this->objectId ?: self::DEFAULT_HUBSPOT_ID;
 
         return $resource->read($criteria);
     }

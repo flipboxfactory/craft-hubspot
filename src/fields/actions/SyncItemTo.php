@@ -15,7 +15,6 @@ use flipbox\force\fields\SObjects;
 use flipbox\force\Force;
 use flipbox\hubspot\fields\Objects;
 use flipbox\hubspot\records\ObjectAssociation;
-use flipbox\hubspot\transformers\collections\TransformerCollection;
 
 class SyncItemTo extends AbstractObjectItemAction
 {
@@ -37,12 +36,11 @@ class SyncItemTo extends AbstractObjectItemAction
 
     /**
      * @inheritdoc
+     * @throws \yii\base\InvalidConfigException
      */
     public function performAction(Objects $field, ElementInterface $element, ObjectAssociation $record): bool
     {
-        $resource = $field->getResource();
-
-        if (!$resource->syncUp($element, $field, null, null, new TransformerCollection())) {
+        if (!$field->getResource()->syncUp($element, $field)) {
             $this->setMessage("Failed to sync to HubSpot Object");
             return false;
         }

@@ -12,12 +12,13 @@ use craft\base\Element;
 use craft\base\ElementInterface;
 use flipbox\hubspot\connections\ConnectionInterface;
 use flipbox\hubspot\fields\Objects;
+use flipbox\hubspot\helpers\ConnectionHelper;
+use flipbox\hubspot\HubSpot;
+use flipbox\hubspot\pipeline\Resource;
 use flipbox\hubspot\pipeline\stages\ElementAssociationStage;
 use flipbox\hubspot\pipeline\stages\ElementSaveStage;
 use flipbox\hubspot\traits\TransformElementIdTrait;
 use flipbox\hubspot\traits\TransformElementPayloadTrait;
-use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
-use League\Pipeline\PipelineBuilderInterface;
 use Psr\SimpleCache\CacheInterface;
 
 /**
@@ -33,38 +34,36 @@ trait SyncByElementTrait
      * @param string $id
      * @param ConnectionInterface|string|null $connection
      * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
-     * @return PipelineBuilderInterface
+     * @return callable
      */
-    public abstract function rawReadPipeline(
+    public abstract function rawHttpReadRelay(
         string $id,
         ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null
-    ): PipelineBuilderInterface;
+        CacheInterface $cache = null
+    ): callable;
 
     /**
      * @param array $payload
      * @param string|null $identifier
      * @param ConnectionInterface|string|null $connection
      * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
-     * @return PipelineBuilderInterface
+     * @return callable
+     * @throws \yii\base\InvalidConfigException
      */
-    public abstract function rawUpsertPipeline(
+    public abstract function rawHttpUpsertRelay(
         array $payload,
         string $identifier = null,
         ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null
-    ): PipelineBuilderInterface;
+        CacheInterface $cache = null
+    ): callable;
 
     /**
      * @param ElementInterface $element
      * @param Objects $field
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param ConnectionInterface|null $connection
+     * @param CacheInterface|null $cache
      * @return bool
+     * @throws \yii\base\InvalidConfigException
      */
     public function syncDown(
         ElementInterface $element,
@@ -74,16 +73,19 @@ trait SyncByElementTrait
     ): bool {
         /** @var Element $element */
 
-        if (null === ($elementId = $this->transformElementId($element, $field))) {
+        if (null === ($id = $this->transformElementId($element, $field))) {
             return false;
         }
 
-        $this->rawReadPipeline(
-            $elementId,
-            $connection,
-            $cache,
-            false
-        )->build()->pipe(
+        (new Resource(
+            $this->rawHttpReadRelay(
+                $id,
+                ConnectionHelper::resolveConnection($connection),
+                $cache
+            ),
+            null,
+            HubSpot::getInstance()->getPsrLogger()
+        ))->build()->pipe(
             new ElementSaveStage($field)
         )->pipe(
             new ElementAssociationStage($field)
@@ -95,9 +97,10 @@ trait SyncByElementTrait
     /**
      * @param ElementInterface $element
      * @param Objects $field
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @return false|string
+     * @param ConnectionInterface|null $connection
+     * @param CacheInterface|null $cache
+     * @return bool
+     * @throws \yii\base\InvalidConfigException
      */
     public function syncUp(
         ElementInterface $element,
@@ -107,13 +110,16 @@ trait SyncByElementTrait
     ): bool {
         /** @var Element $element */
 
-        $this->rawUpsertPipeline(
-            $this->transformElementPayload($element, $field),
-            $this->transformElementId($element, $field),
-            $connection,
-            $cache,
-            false
-        )->build()->pipe(
+        (new Resource(
+            $this->rawHttpUpsertRelay(
+                $this->transformElementPayload($element, $field),
+                $this->transformElementId($element, $field),
+                $connection,
+                $cache
+            ),
+            null,
+            HubSpot::getInstance()->getPsrLogger()
+        ))->build()->pipe(
             new ElementAssociationStage($field)
         )(null, $element);
 
