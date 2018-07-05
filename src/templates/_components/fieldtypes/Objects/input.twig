@@ -4,7 +4,7 @@
     <div class="objects">
         {% from _self import createItem %}
         {% for record in value.all() %}
-            {{ createItem(field, record) }}
+            {{ createItem(field, record, objectLabel) }}
         {% endfor %}
     </div>
 
@@ -13,7 +13,7 @@
     </div>
 </div>
 
-{% macro createItem(field, record) %}
+{% macro createItem(field, record, objectLabel) %}
     {% set criteria = field.resource.getCriteria({
         id: record.objectId
     }) %}
@@ -32,7 +32,7 @@
                     {% endif %}
                 </div>
                 <div>
-                    <span class="light">Resource:</span> {{ field.object }}
+                    <span class="light">Object:</span> {{ objectLabel }}
                     {% if field.listUrl %}
                         <a href="{{ objectListUrl(field, record, criteria) }}" target="_blank" data-icon="world"
                            title="View HubSpot {{ field.object }}s"></a>
@@ -67,7 +67,7 @@
                     </ul>
                 </div>
                 <ul>
-                    <li><a class="error remove" data-ignore="true" href="#">Remove</a></li>
+                    <li><a class="error remove" data-ignore="true" href="#">Dissociate</a></li>
                 </ul>
             </div>
         </div>

@@ -185,6 +185,7 @@ class ObjectsField extends SortableFields
                 'field' => $field,
                 'element' => $element,
                 'value' => $query,
+                'objectLabel' => $this->getObjectLabel($field),
                 'actions' => $this->getActionHtml($field, $element),
                 'itemActions' => $this->getItemActionHtml($field, $element),
                 'static' => $static
@@ -205,7 +206,7 @@ class ObjectsField extends SortableFields
             'hubspot/_components/fieldtypes/Objects/settings',
             [
                 'field' => $field,
-                'resources' => $this->getResources(),
+                'objects' => $this->getObjects(),
                 'availableActions' => $this->getAvailableActions($field),
                 'availableItemActions' => $this->getAvailableItemActions($field)
             ]
@@ -219,7 +220,7 @@ class ObjectsField extends SortableFields
     /**
      * @return array
      */
-    protected function getResources(): array
+    protected function getObjects(): array
     {
         return [
             resources\Companies::HUBSPOT_RESOURCE => [
@@ -237,6 +238,14 @@ class ObjectsField extends SortableFields
         ];
     }
 
+    /**
+     * @param Objects $field
+     * @return null
+     */
+    protected function getObjectLabel(Objects $field)
+    {
+        return $this->getObjects()[$field->object]['label'] ?? null;
+    }
 
     /*******************************************
      * ACTIONS
