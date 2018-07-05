@@ -5,6 +5,9 @@
 - Deprecated criteria interface methods
 - `ObjectCriteriaInterface::setId()` method
 
+### Fixed
+- Contact::syncTo operation would error if contact already existed in HubSpot.
+
 ### Added
 - ObjectFromElementCriteria class which assists with getting a HubSpot object from an Element and Field.
 

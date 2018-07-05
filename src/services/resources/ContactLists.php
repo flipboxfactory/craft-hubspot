@@ -12,6 +12,7 @@ use flipbox\hubspot\builders\ContactListBuilder;
 use flipbox\hubspot\builders\ObjectBuilderInterface;
 use flipbox\hubspot\criteria\ContactListCriteria;
 use flipbox\hubspot\criteria\ObjectCriteriaInterface;
+use flipbox\hubspot\transformers\collections\DynamicTransformerCollection;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
 use flipbox\hubspot\transformers\DynamicModelSuccess;
 use Flipbox\Relay\HubSpot\Builder\Resources\ContactList\Create;

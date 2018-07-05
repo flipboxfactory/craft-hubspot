@@ -8,16 +8,27 @@
 
 namespace flipbox\hubspot\services\resources;
 
+use craft\base\Element;
+use craft\base\ElementInterface;
+use craft\helpers\ArrayHelper;
+use craft\helpers\Json;
 use flipbox\hubspot\builders\ContactBuilder;
 use flipbox\hubspot\builders\ObjectBuilderInterface;
+use flipbox\hubspot\connections\ConnectionInterface;
 use flipbox\hubspot\criteria\ContactCriteria;
 use flipbox\hubspot\criteria\ObjectCriteriaInterface;
+use flipbox\hubspot\fields\Objects;
+use flipbox\hubspot\HubSpot;
+use flipbox\hubspot\pipeline\Resource;
+use flipbox\hubspot\pipeline\stages\ElementAssociationStage;
+use flipbox\hubspot\transformers\collections\DynamicTransformerCollection;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
 use flipbox\hubspot\transformers\DynamicModelSuccess;
 use Flipbox\Relay\HubSpot\Builder\Resources\Contact\Create;
 use Flipbox\Relay\HubSpot\Builder\Resources\Contact\Delete;
 use Flipbox\Relay\HubSpot\Builder\Resources\Contact\ReadById;
 use Flipbox\Relay\HubSpot\Builder\Resources\Contact\Update;
+use Psr\SimpleCache\CacheInterface;
 use yii\base\Component;
 
 /**
@@ -102,43 +113,67 @@ class Contacts extends Component implements CRUDInterface
     {
         return Delete::class;
     }
-    /*******************************************
-     * ELEMENT SYNC JOBS
-     *******************************************/
-
-//    /**
-//     * @param ElementInterface $element
-//     * @param Objects $field
-//     * @return null|string
-//     */
-//    public function createElementSyncToJob(
-//        ElementInterface $element,
-//        Objects $field
-//    ) {
-//        return Craft::$app->getQueue()->push(new SyncElementTo([
-//            'element' => $element,
-//            'field' => $field,
-//            'resource' => self::HUBSPOT_RESOURCE
-//        ]));
-//    }
-//
-//    /**
-//     * @param ElementInterface $element
-//     * @param Objects $field
-//     * @return null|string
-//     */
-//    public function createElementSyncFromJob(
-//        ElementInterface $element,
-//        Objects $field
-//    ) {
-//        return Craft::$app->getQueue()->push(new SyncElementFrom([
-//            'element' => $element,
-//            'field' => $field,
-//            'resource' => self::HUBSPOT_RESOURCE
-//        ]));
-//    }
 
     /*******************************************
-     * READ
+     * SYNC
      *******************************************/
+
+    /**
+     * @inheritdoc
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function syncUp(
+        ElementInterface $element,
+        Objects $field,
+        ConnectionInterface $connection = null,
+        CacheInterface $cache = null
+    ): bool {
+        /** @var Element $element */
+        $httpResponse = $this->rawHttpUpsert(
+            $this->transformElementPayload($element, $field),
+            $this->transformElementId($element, $field),
+            $connection,
+            $cache
+        );
+
+        if ($httpResponse->getStatusCode() === 409) {
+            $data = Json::decodeIfJson(
+                $httpResponse->getBody()->getContents()
+            );
+
+            $contactId = ArrayHelper::getValue($data, 'identityProfile.vid');
+
+            if (!HubSpot::getInstance()->getObjectAssociations()->associateByIds(
+                $contactId,
+                $element->getId(),
+                $field->id,
+                $element->siteId
+            )) {
+                return false;
+            }
+
+            if ($field->syncToHubSpotOnMatch === true) {
+                return $this->syncUp(
+                    $element,
+                    $field,
+                    $connection,
+                    $cache
+                );
+            }
+
+            return true;
+        }
+
+        (new Resource(
+            function () use ($httpResponse) {
+                return $httpResponse;
+            },
+            null,
+            HubSpot::getInstance()->getPsrLogger()
+        ))->build()->pipe(
+            new ElementAssociationStage($field)
+        )(null, $element);
+
+        return !$element->hasErrors();
+    }
 }

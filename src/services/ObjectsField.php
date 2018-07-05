@@ -22,6 +22,7 @@ use flipbox\hubspot\fields\actions\ObjectActionInterface;
 use flipbox\hubspot\fields\actions\ObjectItemActionInterface;
 use flipbox\hubspot\fields\actions\SyncItemFrom;
 use flipbox\hubspot\fields\actions\SyncItemTo;
+use flipbox\hubspot\fields\actions\SyncTo;
 use flipbox\hubspot\fields\Objects;
 use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\records\ObjectAssociation;
@@ -250,7 +251,9 @@ class ObjectsField extends SortableFields
     public function getAvailableActions(Objects $field): array
     {
         $event = new RegisterResourceFieldActionsEvent([
-            'actions' => []
+            'actions' => [
+                SyncTo::class
+            ]
         ]);
 
         $field->trigger(

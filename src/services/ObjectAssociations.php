@@ -247,6 +247,54 @@ class ObjectAssociations extends SortableAssociations
     }
 
     /**
+     * @param string $objectId
+     * @param int $elementId
+     * @param int $fieldId
+     * @param int|null $siteId
+     * @param int|null $sortOrder
+     * @return bool
+     */
+    public function associateByIds(
+        string $objectId,
+        int $elementId,
+        int $fieldId,
+        int $siteId = null,
+        int $sortOrder = null
+    ): bool {
+        return $this->create([
+            'objectId' => $objectId,
+            'elementId' => $elementId,
+            'fieldId' => $fieldId,
+            'siteId' => SiteHelper::ensureSiteId($siteId),
+            'sortOrder' => $sortOrder
+        ])->associate();
+    }
+
+    /**
+     * @param string $objectId
+     * @param int $elementId
+     * @param int $fieldId
+     * @param int|null $siteId
+     * @param int|null $sortOrder
+     * @return bool
+     */
+    public function dissociateByIds(
+        string $objectId,
+        int $elementId,
+        int $fieldId,
+        int $siteId = null,
+        int $sortOrder = null
+    ): bool {
+        return $this->create([
+            'objectId' => $objectId,
+            'elementId' => $elementId,
+            'fieldId' => $fieldId,
+            'siteId' => SiteHelper::ensureSiteId($siteId),
+            'sortOrder' => $sortOrder
+        ])->dissociate();
+    }
+
+    /**
      * @inheritdoc
      * @return ObjectAssociationQuery
      */

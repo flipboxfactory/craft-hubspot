@@ -30,7 +30,7 @@ trait UpsertObjectTrait
      */
     protected function upsertHasId(string $identifier = null): bool
     {
-        return empty($identifier);
+        return !empty($identifier);
     }
 
     /**
@@ -138,7 +138,8 @@ trait UpsertObjectTrait
         if (!$this->upsertHasId($identifier)) {
             return $this->rawCreatePipeline(
                 $payload,
-                $connection
+                $connection,
+                $transformer
             );
         }
 

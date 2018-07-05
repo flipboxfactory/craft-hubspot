@@ -18,6 +18,7 @@ use flipbox\hubspot\services\resources\Companies;
 use flipbox\hubspot\services\resources\Contacts;
 use Flipbox\Skeleton\Logger\AutoLoggerTrait;
 use League\Pipeline\StageInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\InvalidArgumentException;
 use yii\base\BaseObject;
 
@@ -48,16 +49,24 @@ class ElementAssociationStage extends BaseObject implements StageInterface
     }
 
     /**
-     * @param mixed $payload
+     * @param mixed $response
      * @param ElementInterface|null $source
      * @return string|null
      * @throws \Throwable
      */
-    public function __invoke($payload, ElementInterface $source = null)
+    public function __invoke($response, ElementInterface $source = null)
     {
         /** @var Element $source */
         if ($source === null) {
             throw new InvalidArgumentException("Source must be an element.");
+        }
+
+        /** @var Element $source */
+        if (!$response instanceof ResponseInterface) {
+            throw new InvalidArgumentException(sprintf(
+                "Data must be an instance of '%s'.",
+                ResponseInterface::class
+            ));
         }
 
         if (null === $source->getId()) {
@@ -70,10 +79,10 @@ class ElementAssociationStage extends BaseObject implements StageInterface
             return null;
         }
 
-        if (null === ($objectId = $this->getObjectIdFromPayload($payload, $this->field->object))) {
+        if (null === ($objectId = $this->getObjectIdFromResponse($response, $this->field->object))) {
             HubSpot::error(sprintf(
                 "Unable to identify HubSpot id from payload: %s",
-                (string)Json::encode($payload)
+                (string)Json::encode($response)
             ));
             return null;
         }
@@ -92,7 +101,7 @@ class ElementAssociationStage extends BaseObject implements StageInterface
         ));
 
 
-        return $payload;
+        return $response;
     }
 
     /**
@@ -133,21 +142,25 @@ class ElementAssociationStage extends BaseObject implements StageInterface
     }
 
     /**
-     * @param mixed $payload
+     * @param ResponseInterface $response
      * @param string $resource
      * @return string|null
      */
-    protected function getObjectIdFromPayload($payload, string $resource)
+    protected function getObjectIdFromResponse(ResponseInterface $response, string $resource)
     {
         $id = null;
 
+        $data = Json::decodeIfJson(
+            $response->getBody()->getContents()
+        );
+
         switch ($resource) {
             case Companies::HUBSPOT_RESOURCE:
-                $id = $payload['companyId'] ?? null;
+                $id = $data['companyId'] ?? null;
                 break;
 
             case Contacts::HUBSPOT_RESOURCE:
-                $id = $payload['vid'] ?? null;
+                $id = $data['vid'] ?? null;
                 break;
         }
 

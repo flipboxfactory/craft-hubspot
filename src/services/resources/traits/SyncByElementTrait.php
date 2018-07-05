@@ -64,15 +64,13 @@ trait SyncByElementTrait
      * @param Objects $field
      * @param ConnectionInterface|string|null $connection
      * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
      * @return bool
      */
     public function syncDown(
         ElementInterface $element,
         Objects $field,
         ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null
+        CacheInterface $cache = null
     ): bool {
         /** @var Element $element */
 
@@ -84,7 +82,7 @@ trait SyncByElementTrait
             $elementId,
             $connection,
             $cache,
-            $transformer
+            false
         )->build()->pipe(
             new ElementSaveStage($field)
         )->pipe(
@@ -99,15 +97,13 @@ trait SyncByElementTrait
      * @param Objects $field
      * @param ConnectionInterface|string|null $connection
      * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
      * @return false|string
      */
     public function syncUp(
         ElementInterface $element,
         Objects $field,
         ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null
+        CacheInterface $cache = null
     ): bool {
         /** @var Element $element */
 
@@ -116,7 +112,7 @@ trait SyncByElementTrait
             $this->transformElementId($element, $field),
             $connection,
             $cache,
-            $transformer
+            false
         )->build()->pipe(
             new ElementAssociationStage($field)
         )(null, $element);

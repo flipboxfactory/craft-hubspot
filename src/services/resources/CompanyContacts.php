@@ -19,6 +19,7 @@ use flipbox\hubspot\helpers\TransformerHelper;
 use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\pipeline\Resource;
 use flipbox\hubspot\services\resources\traits\ReadObjectTrait;
+use flipbox\hubspot\transformers\collections\DynamicTransformerCollection;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
 use flipbox\hubspot\transformers\DynamicModelSuccess;
 use Flipbox\Relay\Builder\RelayBuilderInterface;

@@ -96,6 +96,15 @@ class Objects extends Field
     public $selectionLabel;
 
     /**
+     * Indicates whether the full sync operation should be preformed if a matching HubSpot Object was found but not
+     * currently associated to the element.  For example, when attempting to Sync a Craft User to a HubSpot Contact, if
+     * the HubSpot Contact already exists; true would override data in HubSpot while false would just perform
+     * an association (note, a subsequent sync operation could be preformed)
+     * @var bool
+     */
+    public $syncToHubSpotOnMatch = false;
+
+    /**
      * @inheritdoc
      */
     public static function displayName(): string
