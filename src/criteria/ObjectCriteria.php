@@ -32,13 +32,4 @@ class ObjectCriteria extends BaseObject implements ObjectCriteriaInterface
     {
         return $this->id;
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function setId(string $id = null)
-    {
-        $this->id = $id;
-        return $this;
-    }
 }

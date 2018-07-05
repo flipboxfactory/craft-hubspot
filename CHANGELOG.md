@@ -3,6 +3,10 @@
 ## Unreleased
 ### Removed
 - Deprecated criteria interface methods
+- `ObjectCriteriaInterface::setId()` method
+
+### Added
+- ObjectFromElementCriteria class which assists with getting a HubSpot object from an Element and Field.
 
 ## 1.0.0-rc.2 - 2018-07-03
 ### Changed

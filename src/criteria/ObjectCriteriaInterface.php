@@ -24,12 +24,6 @@ interface ObjectCriteriaInterface
     public function getId();
 
     /**
-     * @param string $id
-     * @return static
-     */
-    public function setId(string $id = null);
-
-    /**
      * @return ConnectionInterface
      */
     public function getConnection(): ConnectionInterface;
