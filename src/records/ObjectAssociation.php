@@ -107,10 +107,11 @@ class ObjectAssociation extends SortableAssociation
 
         $resource = $field->getResource();
 
-        $criteria = $resource->getCriteria($criteria);
-        $criteria->id = $this->objectId ?: self::DEFAULT_HUBSPOT_ID;
+        $criteria['id'] = $this->objectId ?: self::DEFAULT_HUBSPOT_ID;
 
-        return $resource->read($criteria);
+        return $resource->read(
+            $resource->getCriteria($criteria)
+        );
     }
 
     /**
