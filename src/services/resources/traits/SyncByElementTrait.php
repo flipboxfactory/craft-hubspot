@@ -73,6 +73,7 @@ trait SyncByElementTrait
     ): bool {
         /** @var Element $element */
 
+        /** @var string $id */
         if (null === ($id = $this->transformElementId($element, $field))) {
             return false;
         }
