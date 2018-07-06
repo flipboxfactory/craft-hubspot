@@ -77,6 +77,33 @@ trait SyncByElementTrait
             return false;
         }
 
+        return $this->rawSyncDown(
+            $element,
+            $field,
+            $id,
+            $connection,
+            $cache
+        );
+    }
+
+    /**
+     * @param ElementInterface $element
+     * @param Objects $field
+     * @param string $id
+     * @param ConnectionInterface|null $connection
+     * @param CacheInterface|null $cache
+     * @return bool
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function rawSyncDown(
+        ElementInterface $element,
+        Objects $field,
+        string $id,
+        ConnectionInterface $connection = null,
+        CacheInterface $cache = null
+    ): bool {
+        /** @var Element $element */
+
         (new Resource(
             $this->rawHttpReadRelay(
                 $id,
@@ -102,9 +129,38 @@ trait SyncByElementTrait
      * @return bool
      * @throws \yii\base\InvalidConfigException
      */
+
     public function syncUp(
         ElementInterface $element,
         Objects $field,
+        ConnectionInterface $connection = null,
+        CacheInterface $cache = null
+    ): bool {
+        return $this->rawSyncUp(
+            $element,
+            $field,
+            $this->transformElementPayload($element, $field),
+            $this->transformElementId($element, $field),
+            $connection,
+            $cache
+        );
+    }
+
+    /**
+     * @param ElementInterface $element
+     * @param Objects $field
+     * @param array $payload
+     * @param string|null $id
+     * @param ConnectionInterface|null $connection
+     * @param CacheInterface|null $cache
+     * @return bool
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function rawSyncUp(
+        ElementInterface $element,
+        Objects $field,
+        array $payload,
+        string $id = null,
         ConnectionInterface $connection = null,
         CacheInterface $cache = null
     ): bool {
@@ -112,8 +168,8 @@ trait SyncByElementTrait
 
         (new Resource(
             $this->rawHttpUpsertRelay(
-                $this->transformElementPayload($element, $field),
-                $this->transformElementId($element, $field),
+                $payload,
+                $id,
                 $connection,
                 $cache
             ),

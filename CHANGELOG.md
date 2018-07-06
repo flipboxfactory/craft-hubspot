@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+### Added
+- Contact batch support
+- Raw sync methods
+
 ## 1.0.0-rc.3 - 2018-07-05
 ### Removed
 - Deprecated criteria interface methods

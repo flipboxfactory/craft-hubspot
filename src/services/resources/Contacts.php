@@ -12,22 +12,29 @@ use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\helpers\ArrayHelper;
 use craft\helpers\Json;
+use flipbox\hubspot\builders\ContactBatchBuilderInterface;
 use flipbox\hubspot\builders\ContactBuilder;
 use flipbox\hubspot\builders\ObjectBuilderInterface;
 use flipbox\hubspot\connections\ConnectionInterface;
 use flipbox\hubspot\criteria\ContactCriteria;
 use flipbox\hubspot\criteria\ObjectCriteriaInterface;
 use flipbox\hubspot\fields\Objects;
+use flipbox\hubspot\helpers\CacheHelper;
+use flipbox\hubspot\helpers\ConnectionHelper;
 use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\pipeline\Resource;
 use flipbox\hubspot\pipeline\stages\ElementAssociationStage;
 use flipbox\hubspot\transformers\collections\DynamicTransformerCollection;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
 use flipbox\hubspot\transformers\DynamicModelSuccess;
+use Flipbox\Relay\Builder\RelayBuilderInterface;
+use Flipbox\Relay\HubSpot\Builder\Resources\Contact\Batch;
 use Flipbox\Relay\HubSpot\Builder\Resources\Contact\Create;
 use Flipbox\Relay\HubSpot\Builder\Resources\Contact\Delete;
 use Flipbox\Relay\HubSpot\Builder\Resources\Contact\ReadById;
 use Flipbox\Relay\HubSpot\Builder\Resources\Contact\Update;
+use League\Pipeline\PipelineBuilderInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\SimpleCache\CacheInterface;
 use yii\base\Component;
 
@@ -114,24 +121,40 @@ class Contacts extends Component implements CRUDInterface
         return Delete::class;
     }
 
+    /**
+     * @inheritdoc
+     */
+    protected static function batchRelayBuilderClass(): string
+    {
+        return Batch::class;
+    }
+
     /*******************************************
-     * SYNC
+     * SYNC (OVERRIDE)
      *******************************************/
 
     /**
-     * @inheritdoc
+     * @param ElementInterface $element
+     * @param Objects $field
+     * @param array $payload
+     * @param string $id
+     * @param ConnectionInterface|null $connection
+     * @param CacheInterface|null $cache
+     * @return bool
      * @throws \yii\base\InvalidConfigException
      */
-    public function syncUp(
+    public function rawSyncUp(
         ElementInterface $element,
         Objects $field,
+        array $payload,
+        string $id = null,
         ConnectionInterface $connection = null,
         CacheInterface $cache = null
     ): bool {
         /** @var Element $element */
         $httpResponse = $this->rawHttpUpsert(
-            $this->transformElementPayload($element, $field),
-            $this->transformElementId($element, $field),
+            $payload,
+            $id,
             $connection,
             $cache
         );
@@ -175,5 +198,81 @@ class Contacts extends Component implements CRUDInterface
         )(null, $element);
 
         return !$element->hasErrors();
+    }
+
+    /*******************************************
+     * BATCH
+     *******************************************/
+
+
+
+    /**
+     * @param ContactBatchBuilderInterface $batch
+     * @param ConnectionInterface $connection = null
+     * @return ResponseInterface
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function httpBatch(
+        ContactBatchBuilderInterface $batch,
+        ConnectionInterface $connection = null
+    ): ResponseInterface {
+        return $this->rawHttpBatch(
+            $batch->getPayload(),
+            $connection
+        )();
+    }
+
+    /**
+     * @param array $payload
+     * @param ConnectionInterface|string|null $connection
+     * @return ResponseInterface
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function rawHttpBatch(
+        array $payload,
+        ConnectionInterface $connection = null
+    ): ResponseInterface {
+        return $this->rawHttpBatchRelay(
+            $payload,
+            $connection
+        )();
+    }
+
+    /**
+     * @param ContactBatchBuilderInterface $batch
+     * @param ConnectionInterface|string|null $connection
+     * @return callable
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function httpBatchRelay(
+        ContactBatchBuilderInterface $batch,
+        ConnectionInterface $connection = null
+    ): callable {
+        return $this->rawHttpBatchRelay(
+            $batch->getPayload(),
+            $connection
+        );
+    }
+
+    /**
+     * @param array $payload
+     * @param ConnectionInterface|string|null $connection
+     * @return callable
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function rawHttpBatchRelay(
+        array $payload,
+        ConnectionInterface $connection = null
+    ): callable {
+        $class = static::batchRelayBuilderClass();
+
+        /** @var RelayBuilderInterface $builder */
+        $builder = new $class(
+            $payload,
+            ConnectionHelper::resolveConnection($connection),
+            HubSpot::getInstance()->getPsrLogger()
+        );
+
+        return $builder->build();
     }
 }
