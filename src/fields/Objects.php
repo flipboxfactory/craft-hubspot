@@ -135,8 +135,8 @@ class Objects extends Field
         return [
             [
                 MinMaxValidator::class,
-                'min' => $this->min,
-                'max' => $this->max,
+                'min' => $this->min ? (int)$this->min : null,
+                'max' => $this->max ? (int)$this->max : null,
                 'tooFew' => Craft::t(
                     'hubspot',
                     '{attribute} should contain at least {min, number} {min, plural, one{domain} other{domains}}.'

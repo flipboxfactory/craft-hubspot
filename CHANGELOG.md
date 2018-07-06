@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Fixed
+- Issue when no min or max values are set, the association query is aborted.
+
 ## 1.0.0-rc.4 - 2018-07-06
 ### Added
 - Contact batch support
