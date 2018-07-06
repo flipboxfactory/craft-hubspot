@@ -42,3 +42,4 @@ deploy:
   local-dir: docs/.vuepress/dist
   on:
     branch: master
+  fqdn: hubspot.flipboxfactory.com
