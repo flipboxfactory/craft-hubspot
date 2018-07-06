@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.0-rc.4 - 2018-07-06
 ### Added
 - Contact batch support
 - Raw sync methods

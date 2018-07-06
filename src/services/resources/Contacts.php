@@ -19,7 +19,6 @@ use flipbox\hubspot\connections\ConnectionInterface;
 use flipbox\hubspot\criteria\ContactCriteria;
 use flipbox\hubspot\criteria\ObjectCriteriaInterface;
 use flipbox\hubspot\fields\Objects;
-use flipbox\hubspot\helpers\CacheHelper;
 use flipbox\hubspot\helpers\ConnectionHelper;
 use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\pipeline\Resource;
@@ -33,7 +32,6 @@ use Flipbox\Relay\HubSpot\Builder\Resources\Contact\Create;
 use Flipbox\Relay\HubSpot\Builder\Resources\Contact\Delete;
 use Flipbox\Relay\HubSpot\Builder\Resources\Contact\ReadById;
 use Flipbox\Relay\HubSpot\Builder\Resources\Contact\Update;
-use League\Pipeline\PipelineBuilderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\SimpleCache\CacheInterface;
 use yii\base\Component;
@@ -203,7 +201,6 @@ class Contacts extends Component implements CRUDInterface
     /*******************************************
      * BATCH
      *******************************************/
-
 
 
     /**
