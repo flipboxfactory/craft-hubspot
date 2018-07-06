@@ -471,8 +471,6 @@ Craft.HubSpotObjectItem = Craft.HubSpotObjectsActions.extend(
         init: function (container, settings) {
             this.setSettings(settings, $.extend(Craft.HubSpotObjectsActions.defaults, Craft.HubSpotObjectItem.defaults));
 
-            console.log(settings);
-
             this.$container = $(container);
             this.$container.data('item', this);
 
