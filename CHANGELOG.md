@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.0-rc.6 - 2018-07-09
 ### Fixed
 - Error were not getting set properly on failed resource sync up/down operations 
 - Bug when no saving object field settings without selecting any actions
