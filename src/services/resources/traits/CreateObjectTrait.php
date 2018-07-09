@@ -8,8 +8,8 @@
 
 namespace flipbox\hubspot\services\resources\traits;
 
-use flipbox\hubspot\criteria\ObjectMutatorInterface;
 use flipbox\hubspot\connections\ConnectionInterface;
+use flipbox\hubspot\criteria\ObjectMutatorInterface;
 use flipbox\hubspot\helpers\ConnectionHelper;
 use flipbox\hubspot\helpers\TransformerHelper;
 use flipbox\hubspot\HubSpot;

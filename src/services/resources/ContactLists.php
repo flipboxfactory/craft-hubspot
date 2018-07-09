@@ -8,10 +8,10 @@
 
 namespace flipbox\hubspot\services\resources;
 
-use flipbox\hubspot\criteria\ContactListMutator;
-use flipbox\hubspot\criteria\ObjectMutatorInterface;
 use flipbox\hubspot\criteria\ContactListAccessor;
+use flipbox\hubspot\criteria\ContactListMutator;
 use flipbox\hubspot\criteria\ObjectAccessorInterface;
+use flipbox\hubspot\criteria\ObjectMutatorInterface;
 use flipbox\hubspot\transformers\collections\DynamicTransformerCollection;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
 use flipbox\hubspot\transformers\DynamicModelSuccess;

@@ -9,9 +9,9 @@
 namespace flipbox\hubspot\services\resources;
 
 use Craft;
-use flipbox\hubspot\criteria\TimelineEventMutatorInterface;
 use flipbox\hubspot\connections\IntegrationConnectionInterface;
 use flipbox\hubspot\criteria\TimelineEventAccessorInterface;
+use flipbox\hubspot\criteria\TimelineEventMutatorInterface;
 use flipbox\hubspot\helpers\CacheHelper;
 use flipbox\hubspot\helpers\ConnectionHelper;
 use flipbox\hubspot\helpers\TransformerHelper;

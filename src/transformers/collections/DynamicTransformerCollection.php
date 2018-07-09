@@ -128,10 +128,12 @@ class DynamicTransformerCollection extends TransformerCollection
     protected function resolveTransformer(string $eventName)
     {
         foreach ($this->resource as $class) {
-            if (null !== ($transformer = HubSpot::getInstance()->getTransformers()->find(
+            $transformer = HubSpot::getInstance()->getTransformers()->find(
                 $eventName,
                 $class
-            ))) {
+            );
+
+            if ($transformer !== null) {
                 return $transformer;
             }
         }

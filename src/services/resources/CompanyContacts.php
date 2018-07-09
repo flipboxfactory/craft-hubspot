@@ -8,10 +8,10 @@
 
 namespace flipbox\hubspot\services\resources;
 
-use flipbox\hubspot\criteria\CompanyContactsMutator;
-use flipbox\hubspot\criteria\CompanyContactsMutatorInterface;
 use flipbox\hubspot\connections\ConnectionInterface;
 use flipbox\hubspot\criteria\CompanyContactsAccessor;
+use flipbox\hubspot\criteria\CompanyContactsMutator;
+use flipbox\hubspot\criteria\CompanyContactsMutatorInterface;
 use flipbox\hubspot\criteria\ObjectAccessorInterface;
 use flipbox\hubspot\helpers\CacheHelper;
 use flipbox\hubspot\helpers\ConnectionHelper;

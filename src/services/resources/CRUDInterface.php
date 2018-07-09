@@ -9,9 +9,9 @@
 namespace flipbox\hubspot\services\resources;
 
 use craft\base\ElementInterface;
-use flipbox\hubspot\criteria\ObjectMutatorInterface;
 use flipbox\hubspot\connections\ConnectionInterface;
 use flipbox\hubspot\criteria\ObjectAccessorInterface;
+use flipbox\hubspot\criteria\ObjectMutatorInterface;
 use flipbox\hubspot\fields\Objects;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
 use Psr\Http\Message\ResponseInterface;
