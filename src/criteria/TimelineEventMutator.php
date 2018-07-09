@@ -9,6 +9,8 @@
 namespace flipbox\hubspot\criteria;
 
 use craft\helpers\StringHelper;
+use flipbox\ember\helpers\ObjectHelper;
+use flipbox\hubspot\HubSpot;
 use yii\base\BaseObject;
 
 /**
@@ -106,5 +108,28 @@ class TimelineEventMutator extends BaseObject implements TimelineEventMutatorInt
         }
 
         return (array)$this->object;
+    }
+
+    /**
+     * @param array $config
+     * @param null $source
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function upsert(array $config = [], $source = null)
+    {
+        $this->prepare($config);
+        return HubSpot::getInstance()->getResources()->getTimelineEvents()->upsert($this, $source);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function prepare(array $criteria = [])
+    {
+        ObjectHelper::populate(
+            $this,
+            $criteria
+        );
     }
 }

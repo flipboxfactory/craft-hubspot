@@ -8,6 +8,8 @@
 
 namespace flipbox\hubspot\criteria;
 
+use flipbox\ember\helpers\ObjectHelper;
+use flipbox\hubspot\HubSpot;
 use yii\base\BaseObject;
 
 /**
@@ -48,5 +50,28 @@ class TimelineEventAccessor extends BaseObject implements TimelineEventAccessorI
     public function getId(): string
     {
         return (string)$this->id;
+    }
+
+    /**
+     * @param array $config
+     * @param null $source
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function read(array $config = [], $source = null)
+    {
+        $this->prepare($config);
+        return HubSpot::getInstance()->getResources()->getTimelineEvents()->read($this, $source);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function prepare(array $criteria = [])
+    {
+        ObjectHelper::populate(
+            $this,
+            $criteria
+        );
     }
 }

@@ -8,6 +8,8 @@
 
 namespace flipbox\hubspot\criteria;
 
+use flipbox\ember\helpers\ObjectHelper;
+use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\services\resources\ContactListContacts;
 
 /**
@@ -23,5 +25,28 @@ class ContactListContactsAccessor extends ObjectAccessor
     {
         $this->transformer = ContactListContacts::defaultTransformer();
         parent::init();
+    }
+
+    /**
+     * @param array $config
+     * @param null $source
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function read(array $config = [], $source = null)
+    {
+        $this->prepare($config);
+        return HubSpot::getInstance()->getResources()->getContactListContacts()->read($this, $source);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function prepare(array $criteria = [])
+    {
+        ObjectHelper::populate(
+            $this,
+            $criteria
+        );
     }
 }

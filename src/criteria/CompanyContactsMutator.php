@@ -8,6 +8,8 @@
 
 namespace flipbox\hubspot\criteria;
 
+use flipbox\ember\helpers\ObjectHelper;
+use flipbox\hubspot\HubSpot;
 use yii\base\BaseObject;
 
 /**
@@ -44,5 +46,40 @@ class CompanyContactsMutator extends BaseObject implements CompanyContactsMutato
     public function getContactId(): string
     {
         return (string)$this->contactId;
+    }
+
+    /**
+     * @param array $config
+     * @param null $source
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function add(array $config = [], $source = null)
+    {
+        $this->prepare($config);
+        return HubSpot::getInstance()->getResources()->getCompanyContacts()->add($this, $source);
+    }
+
+    /**
+     * @param array $config
+     * @param null $source
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function remove(array $config = [], $source = null)
+    {
+        $this->prepare($config);
+        return HubSpot::getInstance()->getResources()->getCompanyContacts()->remove($this, $source);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function prepare(array $criteria = [])
+    {
+        ObjectHelper::populate(
+            $this,
+            $criteria
+        );
     }
 }
