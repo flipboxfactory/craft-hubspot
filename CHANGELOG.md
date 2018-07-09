@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+### Fixed
+- Ensure a string is returned when calling ObjectFromElementAccessor::getId
+
+
 ## 1.0.0-rc.6 - 2018-07-09
 ### Fixed
 - Error were not getting set properly on failed resource sync up/down operations 

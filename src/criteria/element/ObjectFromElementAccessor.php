@@ -93,7 +93,7 @@ class ObjectFromElementAccessor extends BaseObject implements ObjectAccessorInte
      */
     public function getId(): string
     {
-        return $this->transformElementId(
+        return (string) $this->transformElementId(
             $this->getElement(),
             $this->getField()
         );
