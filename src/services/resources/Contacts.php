@@ -185,17 +185,11 @@ class Contacts extends Component implements CRUDInterface
             return true;
         }
 
-        (new Resource(
-            function () use ($httpResponse) {
-                return $httpResponse;
-            },
-            null,
-            HubSpot::getInstance()->getPsrLogger()
-        ))->build()->pipe(
-            new ElementAssociationStage($field)
-        )(null, $element);
-
-        return !$element->hasErrors();
+        return $this->handleSyncUpResponse(
+            $httpResponse,
+            $element,
+            $field
+        );
     }
 
     /*******************************************
