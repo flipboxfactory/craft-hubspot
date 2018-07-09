@@ -14,7 +14,7 @@
 </div>
 
 {% macro createItem(field, record, objectLabel) %}
-    {% set criteria = field.resource.getCriteria({
+    {% set criteria = field.resource.getAccessorCriteria({
         id: record.objectId
     }) %}
     <div class="object{% if not record.objectId %} edit-mode{% endif %}">
