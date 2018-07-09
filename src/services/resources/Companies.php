@@ -8,10 +8,10 @@
 
 namespace flipbox\hubspot\services\resources;
 
-use flipbox\hubspot\builders\CompanyBuilder;
-use flipbox\hubspot\builders\ObjectBuilderInterface;
-use flipbox\hubspot\criteria\CompanyCriteria;
-use flipbox\hubspot\criteria\ObjectCriteriaInterface;
+use flipbox\hubspot\criteria\CompanyMutator;
+use flipbox\hubspot\criteria\ObjectMutatorInterface;
+use flipbox\hubspot\criteria\CompanyAccessor;
+use flipbox\hubspot\criteria\ObjectAccessorInterface;
 use flipbox\hubspot\transformers\collections\DynamicTransformerCollection;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
 use flipbox\hubspot\transformers\DynamicModelSuccess;
@@ -56,20 +56,20 @@ class Companies extends Component implements CRUDInterface
 
     /**
      * @param array $config
-     * @return ObjectCriteriaInterface
+     * @return ObjectAccessorInterface
      */
-    public function getCriteria(array $config = []): ObjectCriteriaInterface
+    public function getAccessorCriteria(array $config = []): ObjectAccessorInterface
     {
-        return new CompanyCriteria($config);
+        return new CompanyAccessor($config);
     }
 
     /**
      * @param array $config
-     * @return ObjectBuilderInterface
+     * @return ObjectMutatorInterface
      */
-    public function getBuilder(array $config = []): ObjectBuilderInterface
+    public function getMutatorCriteria(array $config = []): ObjectMutatorInterface
     {
-        return new CompanyBuilder($config);
+        return new CompanyMutator($config);
     }
 
     /**

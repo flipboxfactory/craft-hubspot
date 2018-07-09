@@ -6,7 +6,7 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\builders\element;
+namespace flipbox\hubspot\criteria\element;
 
 use Craft;
 use craft\base\ElementInterface;
@@ -16,7 +16,7 @@ use craft\errors\ElementNotFoundException;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class ObjectFromUserBuilder extends ObjectFromElementBuilder
+class ObjectFromUserMutator extends ObjectFromElementMutator
 {
     /**
      * @return ElementInterface

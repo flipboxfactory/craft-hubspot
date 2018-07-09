@@ -9,7 +9,7 @@
 namespace flipbox\hubspot\services\resources;
 
 use flipbox\hubspot\connections\ConnectionInterface;
-use flipbox\hubspot\criteria\IntegrationCriteriaInterface;
+use flipbox\hubspot\criteria\IntegrationAccessorInterface;
 use flipbox\hubspot\helpers\CacheHelper;
 use flipbox\hubspot\helpers\ConnectionHelper;
 use flipbox\hubspot\helpers\TransformerHelper;
@@ -65,13 +65,13 @@ class Limit extends Component
     }
 
     /**
-     * @param IntegrationCriteriaInterface $criteria
+     * @param IntegrationAccessorInterface $criteria
      * @param null $source
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function readDaily(
-        IntegrationCriteriaInterface $criteria,
+        IntegrationAccessorInterface $criteria,
         $source = null
     ) {
         return $this->rawReadDaily(
@@ -104,12 +104,12 @@ class Limit extends Component
     }
 
     /**
-     * @param IntegrationCriteriaInterface $criteria
+     * @param IntegrationAccessorInterface $criteria
      * @return PipelineBuilderInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function readDailyPipeline(
-        IntegrationCriteriaInterface $criteria
+        IntegrationAccessorInterface $criteria
     ): PipelineBuilderInterface {
         return $this->rawReadDailyPipeline(
             $criteria->getConnection(),
@@ -148,12 +148,12 @@ class Limit extends Component
     }
 
     /**
-     * @param IntegrationCriteriaInterface $criteria
+     * @param IntegrationAccessorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpReadDaily(
-        IntegrationCriteriaInterface $criteria
+        IntegrationAccessorInterface $criteria
     ): ResponseInterface {
         return $this->rawHttpReadDaily(
             $criteria->getConnection(),
@@ -178,12 +178,12 @@ class Limit extends Component
     }
 
     /**
-     * @param IntegrationCriteriaInterface $criteria
+     * @param IntegrationAccessorInterface $criteria
      * @return callable
      * @throws \yii\base\InvalidConfigException
      */
     public function httpReadDailyRelay(
-        IntegrationCriteriaInterface $criteria
+        IntegrationAccessorInterface $criteria
     ): callable {
         return $this->rawHttpReadDailyRelay(
             $criteria->getConnection(),

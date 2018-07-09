@@ -6,7 +6,7 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\builders;
+namespace flipbox\hubspot\criteria;
 
 use yii\base\BaseObject;
 
@@ -14,8 +14,12 @@ use yii\base\BaseObject;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class CompanyContactsBuilder extends BaseObject implements CompanyContactsBuilderInterface
+class CompanyContactsMutator extends BaseObject implements CompanyContactsMutatorInterface
 {
+    use traits\TransformerCollectionTrait,
+        traits\ConnectionTrait,
+        traits\CacheTrait;
+
     /**
      * @var string
      */

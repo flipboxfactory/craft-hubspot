@@ -8,7 +8,7 @@
 
 namespace flipbox\hubspot\services\resources\traits;
 
-use flipbox\hubspot\builders\ObjectBuilderInterface;
+use flipbox\hubspot\criteria\ObjectMutatorInterface;
 use flipbox\hubspot\connections\ConnectionInterface;
 use flipbox\hubspot\helpers\CacheHelper;
 use flipbox\hubspot\helpers\ConnectionHelper;
@@ -38,26 +38,20 @@ trait DeleteObjectTrait
     public abstract static function defaultTransformer();
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param ObjectMutatorInterface $criteria
      * @param null $source
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function delete(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null,
+        ObjectMutatorInterface $criteria,
         $source = null
     ) {
         return $this->rawDelete(
-            $builder->getId(),
-            $connection,
-            $cache,
-            $transformer,
+            $criteria->getId(),
+            $criteria->getConnection(),
+            $criteria->getCache(),
+            $criteria->getTransformer(),
             $source
         );
     }
@@ -87,24 +81,18 @@ trait DeleteObjectTrait
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param ObjectMutatorInterface $criteria
      * @return PipelineBuilderInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function deletePipeline(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null
+        ObjectMutatorInterface $criteria
     ): PipelineBuilderInterface {
         return $this->rawDeletePipeline(
-            $builder->getId(),
-            $connection,
-            $cache,
-            $transformer
+            $criteria->getId(),
+            $criteria->getConnection(),
+            $criteria->getCache(),
+            $criteria->getTransformer()
         );
     }
 
@@ -141,21 +129,17 @@ trait DeleteObjectTrait
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param ObjectMutatorInterface $criteria
      * @return callable
      * @throws \yii\base\InvalidConfigException
      */
     public function httpDeleteRelay(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null
+        ObjectMutatorInterface $criteria
     ): callable {
         return $this->rawHttpDeleteRelay(
-            $builder->getId(),
-            $connection,
-            $cache
+            $criteria->getId(),
+            $criteria->getConnection(),
+            $criteria->getCache()
         );
     }
 
@@ -173,33 +157,29 @@ trait DeleteObjectTrait
     ): callable {
         $class = static::deleteRelayBuilderClass();
 
-        /** @var RelayBuilderInterface $builder */
-        $builder = new $class(
+        /** @var RelayBuilderInterface $criteria */
+        $criteria = new $class(
             $id,
             ConnectionHelper::resolveConnection($connection),
             CacheHelper::resolveCache($cache),
             HubSpot::getInstance()->getPsrLogger()
         );
 
-        return $builder->build();
+        return $criteria->build();
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param ObjectMutatorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpDelete(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null
+        ObjectMutatorInterface $criteria
     ): ResponseInterface {
         return $this->rawHttpDelete(
-            $builder->getId(),
-            $connection,
-            $cache
+            $criteria->getId(),
+            $criteria->getConnection(),
+            $criteria->getCache()
         );
     }
 

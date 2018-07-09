@@ -8,10 +8,10 @@
 
 namespace flipbox\hubspot\services\resources;
 
-use flipbox\hubspot\builders\ContactListBuilder;
-use flipbox\hubspot\builders\ObjectBuilderInterface;
-use flipbox\hubspot\criteria\ContactListCriteria;
-use flipbox\hubspot\criteria\ObjectCriteriaInterface;
+use flipbox\hubspot\criteria\ContactListMutator;
+use flipbox\hubspot\criteria\ObjectMutatorInterface;
+use flipbox\hubspot\criteria\ContactListAccessor;
+use flipbox\hubspot\criteria\ObjectAccessorInterface;
 use flipbox\hubspot\transformers\collections\DynamicTransformerCollection;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
 use flipbox\hubspot\transformers\DynamicModelSuccess;
@@ -56,20 +56,20 @@ class ContactLists extends Component implements CRUDInterface
 
     /**
      * @param array $config
-     * @return ObjectCriteriaInterface
+     * @return ObjectAccessorInterface
      */
-    public function getCriteria(array $config = []): ObjectCriteriaInterface
+    public function getAccessorCriteria(array $config = []): ObjectAccessorInterface
     {
-        return new ContactListCriteria($config);
+        return new ContactListAccessor($config);
     }
 
     /**
      * @param array $config
-     * @return ObjectBuilderInterface
+     * @return ObjectMutatorInterface
      */
-    public function getBuilder(array $config = []): ObjectBuilderInterface
+    public function getMutatorCriteria(array $config = []): ObjectMutatorInterface
     {
-        return new ContactListBuilder($config);
+        return new ContactListMutator($config);
     }
 
     /**

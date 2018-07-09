@@ -6,26 +6,30 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\builders\element;
+namespace flipbox\hubspot\criteria\element;
 
 use Craft;
 use craft\base\ElementInterface;
 use craft\errors\ElementNotFoundException;
 use craft\errors\FieldNotFoundException;
-use flipbox\hubspot\builders\ObjectBuilderInterface;
+use flipbox\hubspot\criteria\ObjectAccessorInterface;
+use flipbox\hubspot\criteria\traits\CacheTrait;
+use flipbox\hubspot\criteria\traits\ConnectionTrait;
+use flipbox\hubspot\criteria\traits\TransformerCollectionTrait;
 use flipbox\hubspot\fields\Objects;
 use flipbox\hubspot\traits\TransformElementIdTrait;
-use flipbox\hubspot\traits\TransformElementPayloadTrait;
 use yii\base\BaseObject;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class ObjectFromElementBuilder extends BaseObject implements ObjectBuilderInterface
+class ObjectFromElementAccessor extends BaseObject implements ObjectAccessorInterface
 {
     use TransformElementIdTrait,
-        TransformElementPayloadTrait;
+        TransformerCollectionTrait,
+        ConnectionTrait,
+        CacheTrait;
 
     /**
      * @var ElementInterface
@@ -90,19 +94,6 @@ class ObjectFromElementBuilder extends BaseObject implements ObjectBuilderInterf
     public function getId(): string
     {
         return $this->transformElementId(
-            $this->getElement(),
-            $this->getField()
-        );
-    }
-
-    /**
-     * @inheritdoc
-     * @throws FieldNotFoundException
-     * @throws ElementNotFoundException
-     */
-    public function getPayload(): array
-    {
-        return $this->transformElementPayload(
             $this->getElement(),
             $this->getField()
         );

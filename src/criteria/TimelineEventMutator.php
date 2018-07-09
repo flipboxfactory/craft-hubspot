@@ -6,7 +6,7 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\builders;
+namespace flipbox\hubspot\criteria;
 
 use craft\helpers\StringHelper;
 use yii\base\BaseObject;
@@ -15,8 +15,12 @@ use yii\base\BaseObject;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class TimelineEventBuilder extends BaseObject implements TimelineEventBuilderInterface
+class TimelineEventMutator extends BaseObject implements TimelineEventMutatorInterface
 {
+    use traits\TransformerCollectionTrait,
+        traits\ConnectionTrait,
+        traits\CacheTrait;
+
     /**
      * @var string
      */

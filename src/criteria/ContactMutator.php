@@ -6,12 +6,12 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\builders;
+namespace flipbox\hubspot\criteria;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class ContactBuilder extends ObjectBuilder
+class ContactMutator extends ObjectMutator
 {
 }

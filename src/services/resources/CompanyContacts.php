@@ -8,11 +8,11 @@
 
 namespace flipbox\hubspot\services\resources;
 
-use flipbox\hubspot\builders\CompanyContactsBuilder;
-use flipbox\hubspot\builders\CompanyContactsBuilderInterface;
+use flipbox\hubspot\criteria\CompanyContactsMutator;
+use flipbox\hubspot\criteria\CompanyContactsMutatorInterface;
 use flipbox\hubspot\connections\ConnectionInterface;
-use flipbox\hubspot\criteria\CompanyContactsCriteria;
-use flipbox\hubspot\criteria\ObjectCriteriaInterface;
+use flipbox\hubspot\criteria\CompanyContactsAccessor;
+use flipbox\hubspot\criteria\ObjectAccessorInterface;
 use flipbox\hubspot\helpers\CacheHelper;
 use flipbox\hubspot\helpers\ConnectionHelper;
 use flipbox\hubspot\helpers\TransformerHelper;
@@ -63,20 +63,20 @@ class CompanyContacts extends Component
 
     /**
      * @param array $config
-     * @return ObjectCriteriaInterface
+     * @return ObjectAccessorInterface
      */
-    public function getCriteria(array $config = []): ObjectCriteriaInterface
+    public function getCriteria(array $config = []): ObjectAccessorInterface
     {
-        return new CompanyContactsCriteria($config);
+        return new CompanyContactsAccessor($config);
     }
 
     /**
      * @param array $config
-     * @return CompanyContactsBuilderInterface
+     * @return CompanyContactsMutatorInterface
      */
-    public function getBuilder(array $config = []): CompanyContactsBuilderInterface
+    public function getBuilder(array $config = []): CompanyContactsMutatorInterface
     {
-        return new CompanyContactsBuilder($config);
+        return new CompanyContactsMutator($config);
     }
 
     /**
@@ -109,7 +109,28 @@ class CompanyContacts extends Component
      *******************************************/
 
     /**
-     * @param CompanyContactsBuilderInterface $builder
+     * @param CompanyContactsMutatorInterface $criteria
+     * @param null $source
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function add(
+        CompanyContactsMutatorInterface $criteria,
+        $source = null
+    ) {
+        return $this->rawAdd(
+            $criteria->getCompanyId(),
+            $criteria->getContactId(),
+            $criteria->getConnection(),
+            $criteria->getCache(),
+            $criteria->getTransformer(),
+            $source
+        );
+    }
+
+    /**
+     * @param string $companyId
+     * @param string $contactId
      * @param ConnectionInterface|string|null $connection
      * @param CacheInterface|string|null $cache
      * @param TransformerCollectionInterface|array|null $transformer
@@ -117,20 +138,37 @@ class CompanyContacts extends Component
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
-    public function add(
-        CompanyContactsBuilderInterface $builder,
+    public function rawAdd(
+        string $companyId,
+        string $contactId,
         ConnectionInterface $connection = null,
         CacheInterface $cache = null,
         TransformerCollectionInterface $transformer = null,
         $source = null
     ) {
-        return $this->rawAdd(
-            $builder->getCompanyId(),
-            $builder->getContactId(),
+        return $this->rawAddPipeline(
+            $companyId,
+            $contactId,
             $connection,
             $cache,
-            $transformer,
-            $source
+            $transformer
+        )($source);
+    }
+
+    /**
+     * @param CompanyContactsMutatorInterface $criteria
+     * @return PipelineBuilderInterface
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function addPipeline(
+        CompanyContactsMutatorInterface $criteria
+    ): PipelineBuilderInterface {
+        return $this->rawAddPipeline(
+            $criteria->getCompanyId(),
+            $criteria->getContactId(),
+            $criteria->getConnection(),
+            $criteria->getCache(),
+            $criteria->getTransformer()
         );
     }
 
@@ -170,73 +208,18 @@ class CompanyContacts extends Component
     }
 
     /**
-     * @param string $companyId
-     * @param string $contactId
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
-     * @param null $source
-     * @return mixed
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function rawAdd(
-        string $companyId,
-        string $contactId,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null,
-        $source = null
-    ) {
-        return $this->rawAddPipeline(
-            $companyId,
-            $contactId,
-            $connection,
-            $cache,
-            $transformer
-        )($source);
-    }
-
-
-    /**
-     * @param CompanyContactsBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
-     * @return PipelineBuilderInterface
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function addPipeline(
-        CompanyContactsBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null
-    ): PipelineBuilderInterface {
-        return $this->rawAddPipeline(
-            $builder->getCompanyId(),
-            $builder->getContactId(),
-            $connection,
-            $cache,
-            $transformer
-        );
-    }
-
-    /**
-     * @param CompanyContactsBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param CompanyContactsMutatorInterface $criteria
      * @return callable
      * @throws \yii\base\InvalidConfigException
      */
     public function httpAddRelay(
-        CompanyContactsBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null
+        CompanyContactsMutatorInterface $criteria
     ): callable {
         return $this->rawHttpAddRelay(
-            $builder->getCompanyId(),
-            $builder->getContactId(),
-            $connection,
-            $cache
+            $criteria->getCompanyId(),
+            $criteria->getContactId(),
+            $criteria->getConnection(),
+            $criteria->getCache()
         );
     }
 
@@ -269,22 +252,18 @@ class CompanyContacts extends Component
     }
 
     /**
-     * @param CompanyContactsBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param CompanyContactsMutatorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpAdd(
-        CompanyContactsBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null
+        CompanyContactsMutatorInterface $criteria
     ): ResponseInterface {
         return $this->rawHttpAdd(
-            $builder->getCompanyId(),
-            $builder->getContactId(),
-            $connection,
-            $cache
+            $criteria->getCompanyId(),
+            $criteria->getContactId(),
+            $criteria->getConnection(),
+            $criteria->getCache()
         );
     }
 
@@ -316,27 +295,21 @@ class CompanyContacts extends Component
      *******************************************/
 
     /**
-     * @param CompanyContactsBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param CompanyContactsMutatorInterface $criteria
      * @param null $source
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function remove(
-        CompanyContactsBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null,
+        CompanyContactsMutatorInterface $criteria,
         $source = null
     ) {
         return $this->rawRemove(
-            $builder->getCompanyId(),
-            $builder->getContactId(),
-            $connection,
-            $cache,
-            $transformer,
+            $criteria->getCompanyId(),
+            $criteria->getContactId(),
+            $criteria->getConnection(),
+            $criteria->getCache(),
+            $criteria->getTransformer(),
             $source
         );
     }
@@ -369,25 +342,19 @@ class CompanyContacts extends Component
     }
 
     /**
-     * @param CompanyContactsBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param CompanyContactsMutatorInterface $criteria
      * @return PipelineBuilderInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function removePipeline(
-        CompanyContactsBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null
+        CompanyContactsMutatorInterface $criteria
     ): PipelineBuilderInterface {
         return $this->rawRemovePipeline(
-            $builder->getCompanyId(),
-            $builder->getContactId(),
-            $connection,
-            $cache,
-            $transformer
+            $criteria->getCompanyId(),
+            $criteria->getContactId(),
+            $criteria->getConnection(),
+            $criteria->getCache(),
+            $criteria->getTransformer()
         );
     }
 
@@ -427,22 +394,18 @@ class CompanyContacts extends Component
     }
 
     /**
-     * @param CompanyContactsBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param CompanyContactsMutatorInterface $criteria
      * @return callable
      * @throws \yii\base\InvalidConfigException
      */
     public function httpRemoveRelay(
-        CompanyContactsBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null
+        CompanyContactsMutatorInterface $criteria
     ): callable {
         return $this->rawHttpRemoveRelay(
-            $builder->getCompanyId(),
-            $builder->getContactId(),
-            $connection,
-            $cache
+            $criteria->getCompanyId(),
+            $criteria->getContactId(),
+            $criteria->getConnection(),
+            $criteria->getCache()
         );
     }
 
@@ -475,22 +438,18 @@ class CompanyContacts extends Component
     }
 
     /**
-     * @param CompanyContactsBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param CompanyContactsMutatorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpRemove(
-        CompanyContactsBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null
+        CompanyContactsMutatorInterface $criteria
     ): ResponseInterface {
         return $this->rawHttpRemove(
-            $builder->getCompanyId(),
-            $builder->getContactId(),
-            $connection,
-            $cache
+            $criteria->getCompanyId(),
+            $criteria->getContactId(),
+            $criteria->getConnection(),
+            $criteria->getCache()
         );
     }
 

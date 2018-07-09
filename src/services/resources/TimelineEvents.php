@@ -9,9 +9,9 @@
 namespace flipbox\hubspot\services\resources;
 
 use Craft;
-use flipbox\hubspot\builders\TimelineEventBuilderInterface;
+use flipbox\hubspot\criteria\TimelineEventMutatorInterface;
 use flipbox\hubspot\connections\IntegrationConnectionInterface;
-use flipbox\hubspot\criteria\TimelineEventCriteriaInterface;
+use flipbox\hubspot\criteria\TimelineEventAccessorInterface;
 use flipbox\hubspot\helpers\CacheHelper;
 use flipbox\hubspot\helpers\ConnectionHelper;
 use flipbox\hubspot\helpers\TransformerHelper;
@@ -42,20 +42,18 @@ class TimelineEvents extends Component
      *******************************************/
 
     /**
-     * @param TimelineEventBuilderInterface $builder
-     * @param IntegrationConnectionInterface $connection
+     * @param TimelineEventMutatorInterface $criteria
      * @return null|string
      * @throws \yii\base\InvalidConfigException
      */
     public function upsertJob(
-        TimelineEventBuilderInterface $builder,
-        IntegrationConnectionInterface $connection
+        TimelineEventMutatorInterface $criteria
     ) {
         return $this->rawUpsertJob(
-            $builder->getId(),
-            $builder->getTypeId(),
-            $builder->getPayload(),
-            $connection
+            $criteria->getId(),
+            $criteria->getTypeId(),
+            $criteria->getPayload(),
+            $criteria->getConnection()
         );
     }
 
@@ -86,13 +84,13 @@ class TimelineEvents extends Component
      *******************************************/
 
     /**
-     * @param TimelineEventCriteriaInterface $criteria
+     * @param TimelineEventAccessorInterface $criteria
      * @param null $source
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function read(
-        TimelineEventCriteriaInterface $criteria,
+        TimelineEventAccessorInterface $criteria,
         $source = null
     ) {
         return $this->rawRead(
@@ -133,12 +131,12 @@ class TimelineEvents extends Component
     }
 
     /**
-     * @param TimelineEventCriteriaInterface $criteria
+     * @param TimelineEventAccessorInterface $criteria
      * @return PipelineBuilderInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function readPipeline(
-        TimelineEventCriteriaInterface $criteria
+        TimelineEventAccessorInterface $criteria
     ): PipelineBuilderInterface {
         return $this->rawReadPipeline(
             $criteria->getId(),
@@ -185,12 +183,12 @@ class TimelineEvents extends Component
     }
 
     /**
-     * @param TimelineEventCriteriaInterface $criteria
+     * @param TimelineEventAccessorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpRead(
-        TimelineEventCriteriaInterface $criteria
+        TimelineEventAccessorInterface $criteria
     ): ResponseInterface {
         return $this->rawHttpRead(
             $criteria->getId(),
@@ -223,12 +221,12 @@ class TimelineEvents extends Component
     }
 
     /**
-     * @param TimelineEventCriteriaInterface $criteria
+     * @param TimelineEventAccessorInterface $criteria
      * @return callable
      * @throws \yii\base\InvalidConfigException
      */
     public function httpReadRelay(
-        TimelineEventCriteriaInterface $criteria
+        TimelineEventAccessorInterface $criteria
     ): callable {
         return $this->rawHttpReadRelay(
             $criteria->getId(),
@@ -270,28 +268,22 @@ class TimelineEvents extends Component
      *******************************************/
 
     /**
-     * @param TimelineEventBuilderInterface $builder
-     * @param IntegrationConnectionInterface $connection
-     * @param CacheInterface $cache
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param TimelineEventMutatorInterface $criteria
      * @param mixed|null $source
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function upsert(
-        TimelineEventBuilderInterface $builder,
-        IntegrationConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null,
+        TimelineEventMutatorInterface $criteria,
         $source = null
     ) {
         return $this->rawUpsert(
-            $builder->getTypeId(),
-            $builder->getId(),
-            $builder->getPayload(),
-            $connection,
-            $cache,
-            $transformer,
+            $criteria->getTypeId(),
+            $criteria->getId(),
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getCache(),
+            $criteria->getTransformer(),
             $source
         );
     }
@@ -327,26 +319,20 @@ class TimelineEvents extends Component
     }
 
     /**
-     * @param TimelineEventBuilderInterface $builder
-     * @param IntegrationConnectionInterface|null $connection
-     * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param TimelineEventMutatorInterface $criteria
      * @return PipelineBuilderInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function upsertPipeline(
-        TimelineEventBuilderInterface $builder,
-        IntegrationConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null
+        TimelineEventMutatorInterface $criteria
     ): PipelineBuilderInterface {
         return $this->rawUpsertPipeline(
-            $builder->getTypeId(),
-            $builder->getId(),
-            $builder->getPayload(),
-            $connection,
-            $cache,
-            $transformer
+            $criteria->getTypeId(),
+            $criteria->getId(),
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getCache(),
+            $criteria->getTransformer()
         );
     }
 
@@ -389,23 +375,19 @@ class TimelineEvents extends Component
     }
 
     /**
-     * @param TimelineEventBuilderInterface $builder
-     * @param IntegrationConnectionInterface|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param TimelineEventMutatorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpUpsert(
-        TimelineEventBuilderInterface $builder,
-        IntegrationConnectionInterface $connection = null,
-        CacheInterface $cache = null
+        TimelineEventMutatorInterface $criteria
     ): ResponseInterface {
         return $this->rawHttpUpsert(
-            $builder->getTypeId(),
-            $builder->getId(),
-            $builder->getPayload(),
-            $connection,
-            $cache
+            $criteria->getTypeId(),
+            $criteria->getId(),
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getCache()
         );
     }
 
@@ -435,23 +417,19 @@ class TimelineEvents extends Component
     }
 
     /**
-     * @param TimelineEventBuilderInterface $builder
-     * @param IntegrationConnectionInterface|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param TimelineEventMutatorInterface $criteria
      * @return callable
      * @throws \yii\base\InvalidConfigException
      */
     public function httpUpsertRelay(
-        TimelineEventBuilderInterface $builder,
-        IntegrationConnectionInterface $connection = null,
-        CacheInterface $cache = null
+        TimelineEventMutatorInterface $criteria
     ): callable {
         return $this->rawHttpUpsertRelay(
-            $builder->getTypeId(),
-            $builder->getId(),
-            $builder->getPayload(),
-            $connection,
-            $cache
+            $criteria->getTypeId(),
+            $criteria->getId(),
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getCache()
         );
     }
 

@@ -121,7 +121,7 @@ class Associate extends AbstractAssociationAction
             return false;
         }
 
-        $criteria = $field->getResource()->getCriteria([
+        $criteria = $field->getResource()->getAccessorCriteria([
             'id' => $record->objectId,
             'transformer' => TransformerCollection::class
         ]);

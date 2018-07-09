@@ -6,26 +6,22 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\builders;
+namespace flipbox\hubspot\criteria;
+
+use flipbox\hubspot\services\resources\Contacts;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-interface TimelineEventBuilderInterface
+class ContactAccessor extends ObjectAccessor
 {
     /**
-     * @return string
+     * @inheritdoc
      */
-    public function getId(): string;
-
-    /**
-     * @return string
-     */
-    public function getTypeId(): string;
-
-    /**
-     * @return array
-     */
-    public function getPayload(): array;
+    public function init()
+    {
+        $this->transformer = Contacts::defaultTransformer();
+        parent::init();
+    }
 }

@@ -4,6 +4,11 @@
 ### Fixed
 - Issue when no min or max values are set, the association query is aborted.
 
+### Changed
+- Converted criteria to 'accessor' criteria which is intended to retrieve data
+- Moved converted the concept of 'builders' as mutator criteria
+- Aligned resource services to new 'mutator' criteria which is intended to alter data
+ 
 ## 1.0.0-rc.4 - 2018-07-06
 ### Added
 - Contact batch support

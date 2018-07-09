@@ -8,7 +8,7 @@
 
 namespace flipbox\hubspot\services\resources\traits;
 
-use flipbox\hubspot\builders\ObjectBuilderInterface;
+use flipbox\hubspot\criteria\ObjectMutatorInterface;
 use flipbox\hubspot\connections\ConnectionInterface;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
 use League\Pipeline\PipelineBuilderInterface;
@@ -34,27 +34,21 @@ trait UpsertObjectTrait
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param ObjectMutatorInterface $criteria
      * @param null $source
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function upsert(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null,
+        ObjectMutatorInterface $criteria,
         $source = null
     ) {
         return $this->rawUpsert(
-            $builder->getPayload(),
-            $builder->getId(),
-            $connection,
-            $cache,
-            $transformer,
+            $criteria->getPayload(),
+            $criteria->getId(),
+            $criteria->getConnection(),
+            $criteria->getCache(),
+            $criteria->getTransformer(),
             $source
         );
     }
@@ -97,25 +91,19 @@ trait UpsertObjectTrait
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param ObjectMutatorInterface $criteria
      * @return PipelineBuilderInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function upsertPipeline(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null
+        ObjectMutatorInterface $criteria
     ): PipelineBuilderInterface {
         return $this->rawUpsertPipeline(
-            $builder->getPayload(),
-            $builder->getId(),
-            $connection,
-            $cache,
-            $transformer
+            $criteria->getPayload(),
+            $criteria->getId(),
+            $criteria->getConnection(),
+            $criteria->getCache(),
+            $criteria->getTransformer()
         );
     }
 
@@ -153,18 +141,17 @@ trait UpsertObjectTrait
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
+     * @param ObjectMutatorInterface $criteria
      * @return callable
      * @throws \yii\base\InvalidConfigException
      */
     public function httpUpsertRelay(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null
+        ObjectMutatorInterface $criteria
     ): callable {
         return $this->rawHttpUpsertRelay(
-            $builder->getPayload(),
-            $connection
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getCache()
         );
     }
 
@@ -198,22 +185,18 @@ trait UpsertObjectTrait
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param ObjectMutatorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpUpsert(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null
+        ObjectMutatorInterface $criteria
     ): ResponseInterface {
         return $this->rawHttpUpsert(
-            $builder->getPayload(),
-            $builder->getId(),
-            $connection,
-            $cache
+            $criteria->getPayload(),
+            $criteria->getId(),
+            $criteria->getConnection(),
+            $criteria->getCache()
         );
     }
 

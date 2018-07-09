@@ -6,7 +6,7 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\builders;
+namespace flipbox\hubspot\criteria;
 
 use craft\base\ElementInterface;
 use flipbox\hubspot\fields\Objects;
@@ -17,7 +17,7 @@ use yii\base\BaseObject;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class ContactListContactsBuilder extends BaseObject implements ObjectBuilderInterface
+class ContactListContactsMutator extends BaseObject implements ObjectMutatorInterface
 {
     /**
      * @var string

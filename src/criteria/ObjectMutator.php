@@ -6,7 +6,7 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\builders;
+namespace flipbox\hubspot\criteria;
 
 use yii\base\BaseObject;
 
@@ -14,18 +14,35 @@ use yii\base\BaseObject;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class ContactBatchBuilder extends BaseObject implements ContactBatchBuilderInterface
+class ObjectMutator extends BaseObject implements ObjectMutatorInterface
 {
+    use traits\TransformerCollectionTrait,
+        traits\ConnectionTrait,
+        traits\CacheTrait;
+
+    /**
+     * @var string
+     */
+    public $id;
+
     /**
      * @var array|null
      */
     public $payload;
 
     /**
+     * @return string
+     */
+    public function getId()
+    {
+        return empty($this->id) ? null : (string)$this->id;
+    }
+
+    /**
      * @return array
      */
     public function getPayload(): array
     {
-        return (array)$this->payload;
+        return array_filter((array)$this->payload);
     }
 }

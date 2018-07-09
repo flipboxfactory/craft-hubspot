@@ -8,7 +8,7 @@
 
 namespace flipbox\hubspot\services\resources\traits;
 
-use flipbox\hubspot\builders\ObjectBuilderInterface;
+use flipbox\hubspot\criteria\ObjectMutatorInterface;
 use flipbox\hubspot\connections\ConnectionInterface;
 use flipbox\hubspot\helpers\ConnectionHelper;
 use flipbox\hubspot\helpers\TransformerHelper;
@@ -36,23 +36,19 @@ trait CreateObjectTrait
     public abstract static function defaultTransformer();
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param ObjectMutatorInterface $criteria
      * @param null $source
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function create(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        TransformerCollectionInterface $transformer = null,
+        ObjectMutatorInterface $criteria,
         $source = null
     ) {
         return $this->rawCreate(
-            $builder->getPayload(),
-            $connection,
-            $transformer,
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getTransformer(),
             $source
         );
     }
@@ -79,21 +75,17 @@ trait CreateObjectTrait
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param ObjectMutatorInterface $criteria
      * @return PipelineBuilderInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function createPipeline(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        TransformerCollectionInterface $transformer = null
+        ObjectMutatorInterface $criteria
     ): PipelineBuilderInterface {
         return $this->rawCreatePipeline(
-            $builder->getPayload(),
-            $connection,
-            $transformer
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getTransformer()
         );
     }
 
@@ -127,18 +119,16 @@ trait CreateObjectTrait
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
+     * @param ObjectMutatorInterface $criteria
      * @return callable
      * @throws \yii\base\InvalidConfigException
      */
     public function httpCreateRelay(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null
+        ObjectMutatorInterface $criteria
     ): callable {
         return $this->rawHttpCreateRelay(
-            $builder->getPayload(),
-            $connection
+            $criteria->getPayload(),
+            $criteria->getConnection()
         );
     }
 
@@ -154,29 +144,27 @@ trait CreateObjectTrait
     ): callable {
         $class = static::createRelayBuilderClass();
 
-        /** @var RelayBuilderInterface $builder */
-        $builder = new $class(
+        /** @var RelayBuilderInterface $criteria */
+        $criteria = new $class(
             $payload,
             ConnectionHelper::resolveConnection($connection),
             HubSpot::getInstance()->getPsrLogger()
         );
 
-        return $builder->build();
+        return $criteria->build();
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
+     * @param ObjectMutatorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpCreate(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null
+        ObjectMutatorInterface $criteria
     ): ResponseInterface {
         return $this->rawHttpCreateRelay(
-            $builder->getPayload(),
-            $connection
+            $criteria->getPayload(),
+            $criteria->getConnection()
         )();
     }
 

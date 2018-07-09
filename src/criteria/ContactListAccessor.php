@@ -6,21 +6,22 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\builders;
+namespace flipbox\hubspot\criteria;
+
+use flipbox\hubspot\services\resources\ContactLists;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-interface ObjectBuilderInterface
+class ContactListAccessor extends ObjectAccessor
 {
     /**
-     * @return string
+     * @inheritdoc
      */
-    public function getId();
-
-    /**
-     * @return array
-     */
-    public function getPayload(): array;
+    public function init()
+    {
+        $this->transformer = ContactLists::defaultTransformer();
+        parent::init();
+    }
 }

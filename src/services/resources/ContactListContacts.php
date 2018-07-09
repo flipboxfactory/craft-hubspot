@@ -8,11 +8,11 @@
 
 namespace flipbox\hubspot\services\resources;
 
-use flipbox\hubspot\builders\ContactListContactsBuilder;
-use flipbox\hubspot\builders\ObjectBuilderInterface;
+use flipbox\hubspot\criteria\ContactListContactsMutator;
+use flipbox\hubspot\criteria\ObjectMutatorInterface;
 use flipbox\hubspot\connections\ConnectionInterface;
-use flipbox\hubspot\criteria\ContactListContactsCriteria;
-use flipbox\hubspot\criteria\ObjectCriteriaInterface;
+use flipbox\hubspot\criteria\ContactListContactsAccessor;
+use flipbox\hubspot\criteria\ObjectAccessorInterface;
 use flipbox\hubspot\helpers\CacheHelper;
 use flipbox\hubspot\helpers\ConnectionHelper;
 use flipbox\hubspot\helpers\TransformerHelper;
@@ -63,20 +63,20 @@ class ContactListContacts extends Component
 
     /**
      * @param array $config
-     * @return ObjectCriteriaInterface
+     * @return ObjectAccessorInterface
      */
-    public function getCriteria(array $config = []): ObjectCriteriaInterface
+    public function getCriteria(array $config = []): ObjectAccessorInterface
     {
-        return new ContactListContactsCriteria($config);
+        return new ContactListContactsAccessor($config);
     }
 
     /**
      * @param array $config
-     * @return ObjectBuilderInterface
+     * @return ObjectMutatorInterface
      */
-    public function getBuilder(array $config = []): ObjectBuilderInterface
+    public function getBuilder(array $config = []): ObjectMutatorInterface
     {
-        return new ContactListContactsBuilder($config);
+        return new ContactListContactsMutator($config);
     }
 
     /**
@@ -109,27 +109,21 @@ class ContactListContacts extends Component
      *******************************************/
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param ObjectMutatorInterface $criteria
      * @param null $source
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function add(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null,
+        ObjectMutatorInterface $criteria,
         $source = null
     ) {
         return $this->rawAdd(
-            $builder->getId(),
-            $builder->getPayload(),
-            $connection,
-            $cache,
-            $transformer,
+            $criteria->getId(),
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getCache(),
+            $criteria->getTransformer(),
             $source
         );
     }
@@ -162,25 +156,19 @@ class ContactListContacts extends Component
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param ObjectMutatorInterface $criteria
      * @return PipelineBuilderInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function addPipeline(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null
+        ObjectMutatorInterface $criteria
     ): PipelineBuilderInterface {
         return $this->rawAddPipeline(
-            $builder->getId(),
-            $builder->getPayload(),
-            $connection,
-            $cache,
-            $transformer
+            $criteria->getId(),
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getCache(),
+            $criteria->getTransformer()
         );
     }
 
@@ -220,22 +208,18 @@ class ContactListContacts extends Component
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param ObjectMutatorInterface $criteria
      * @return callable
      * @throws \yii\base\InvalidConfigException
      */
     public function httpAddRelay(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null
+        ObjectMutatorInterface $criteria
     ): callable {
         return $this->rawHttpAddRelay(
-            $builder->getId(),
-            $builder->getPayload(),
-            $connection,
-            $cache
+            $criteria->getId(),
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getCache()
         );
     }
 
@@ -268,22 +252,18 @@ class ContactListContacts extends Component
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param ObjectMutatorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpAdd(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null
+        ObjectMutatorInterface $criteria
     ): ResponseInterface {
         return $this->rawHttpAdd(
-            $builder->getId(),
-            $builder->getPayload(),
-            $connection,
-            $cache
+            $criteria->getId(),
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getCache()
         );
     }
 
@@ -315,27 +295,21 @@ class ContactListContacts extends Component
      *******************************************/
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param ObjectMutatorInterface $criteria
      * @param null $source
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function remove(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null,
+        ObjectMutatorInterface $criteria,
         $source = null
     ) {
         return $this->rawRemove(
-            $builder->getId(),
-            $builder->getPayload(),
-            $connection,
-            $cache,
-            $transformer,
+            $criteria->getId(),
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getCache(),
+            $criteria->getTransformer(),
             $source
         );
     }
@@ -368,25 +342,19 @@ class ContactListContacts extends Component
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param ObjectMutatorInterface $criteria
      * @return PipelineBuilderInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function removePipeline(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null
+        ObjectMutatorInterface $criteria
     ): PipelineBuilderInterface {
         return $this->rawRemovePipeline(
-            $builder->getId(),
-            $builder->getPayload(),
-            $connection,
-            $cache,
-            $transformer
+            $criteria->getId(),
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getCache(),
+            $criteria->getTransformer()
         );
     }
 
@@ -426,22 +394,18 @@ class ContactListContacts extends Component
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param ObjectMutatorInterface $criteria
      * @return callable
      * @throws \yii\base\InvalidConfigException
      */
     public function httpRemoveRelay(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null
+        ObjectMutatorInterface $criteria
     ): callable {
         return $this->rawHttpRemoveRelay(
-            $builder->getId(),
-            $builder->getPayload(),
-            $connection,
-            $cache
+            $criteria->getId(),
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getCache()
         );
     }
 
@@ -474,22 +438,18 @@ class ContactListContacts extends Component
     }
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param ObjectMutatorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpRemove(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null
+        ObjectMutatorInterface $criteria
     ): ResponseInterface {
         return $this->rawHttpRemove(
-            $builder->getId(),
-            $builder->getPayload(),
-            $connection,
-            $cache
+            $criteria->getId(),
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getCache()
         );
     }
 

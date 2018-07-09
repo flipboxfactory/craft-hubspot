@@ -9,7 +9,7 @@
 namespace flipbox\hubspot\services\resources\traits;
 
 use flipbox\hubspot\connections\ConnectionInterface;
-use flipbox\hubspot\criteria\ObjectCriteriaInterface;
+use flipbox\hubspot\criteria\ObjectAccessorInterface;
 use flipbox\hubspot\helpers\CacheHelper;
 use flipbox\hubspot\helpers\ConnectionHelper;
 use flipbox\hubspot\helpers\TransformerHelper;
@@ -38,38 +38,13 @@ trait ReadObjectTrait
     public abstract static function defaultTransformer();
 
     /**
-     * @param $id
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @return callable
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function rawHttpReadRelay(
-        string $id,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null
-    ): callable {
-        $class = static::readRelayBuilderClass();
-
-        /** @var RelayBuilderInterface $builder */
-        $builder = new $class(
-            $id,
-            ConnectionHelper::resolveConnection($connection),
-            CacheHelper::resolveCache($cache),
-            HubSpot::getInstance()->getPsrLogger()
-        );
-
-        return $builder->build();
-    }
-
-    /**
-     * @param ObjectCriteriaInterface $criteria
+     * @param ObjectAccessorInterface $criteria
      * @param null $source
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function read(
-        ObjectCriteriaInterface $criteria,
+        ObjectAccessorInterface $criteria,
         $source = null
     ) {
         return $this->rawRead(
@@ -106,12 +81,12 @@ trait ReadObjectTrait
     }
 
     /**
-     * @param ObjectCriteriaInterface $criteria
+     * @param ObjectAccessorInterface $criteria
      * @return PipelineBuilderInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function readPipeline(
-        ObjectCriteriaInterface $criteria
+        ObjectAccessorInterface $criteria
     ): PipelineBuilderInterface {
         return $this->rawReadPipeline(
             $criteria->getId(),
@@ -154,12 +129,12 @@ trait ReadObjectTrait
     }
 
     /**
-     * @param ObjectCriteriaInterface $criteria
+     * @param ObjectAccessorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpRead(
-        ObjectCriteriaInterface $criteria
+        ObjectAccessorInterface $criteria
     ): ResponseInterface {
         return $this->rawHttpRead(
             $criteria->getId(),
@@ -188,17 +163,42 @@ trait ReadObjectTrait
     }
 
     /**
-     * @param ObjectCriteriaInterface $criteria
+     * @param ObjectAccessorInterface $criteria
      * @return callable
      * @throws \yii\base\InvalidConfigException
      */
     public function httpReadRelay(
-        ObjectCriteriaInterface $criteria
+        ObjectAccessorInterface $criteria
     ): callable {
         return $this->rawHttpReadRelay(
             $criteria->getId(),
             $criteria->getConnection(),
             $criteria->getCache()
         );
+    }
+
+    /**
+     * @param $id
+     * @param ConnectionInterface|string|null $connection
+     * @param CacheInterface|string|null $cache
+     * @return callable
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function rawHttpReadRelay(
+        string $id,
+        ConnectionInterface $connection = null,
+        CacheInterface $cache = null
+    ): callable {
+        $class = static::readRelayBuilderClass();
+
+        /** @var RelayBuilderInterface $criteria */
+        $criteria = new $class(
+            $id,
+            ConnectionHelper::resolveConnection($connection),
+            CacheHelper::resolveCache($cache),
+            HubSpot::getInstance()->getPsrLogger()
+        );
+
+        return $criteria->build();
     }
 }

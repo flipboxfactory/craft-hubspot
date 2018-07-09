@@ -6,16 +6,12 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\builders;
+namespace flipbox\hubspot\criteria;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-interface ContactBatchBuilderInterface
+class ContactListMutator extends ObjectMutator
 {
-    /**
-     * @return array
-     */
-    public function getPayload(): array;
 }

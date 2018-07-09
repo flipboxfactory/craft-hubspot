@@ -9,9 +9,9 @@
 namespace flipbox\hubspot\services\resources;
 
 use craft\base\ElementInterface;
-use flipbox\hubspot\builders\ObjectBuilderInterface;
+use flipbox\hubspot\criteria\ObjectMutatorInterface;
 use flipbox\hubspot\connections\ConnectionInterface;
-use flipbox\hubspot\criteria\ObjectCriteriaInterface;
+use flipbox\hubspot\criteria\ObjectAccessorInterface;
 use flipbox\hubspot\fields\Objects;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -30,15 +30,15 @@ interface CRUDInterface
 
     /**
      * @param array $config
-     * @return ObjectCriteriaInterface
+     * @return ObjectAccessorInterface
      */
-    public function getCriteria(array $config = []): ObjectCriteriaInterface;
+    public function getAccessorCriteria(array $config = []): ObjectAccessorInterface;
 
     /**
      * @param array $config
-     * @return ObjectBuilderInterface
+     * @return ObjectMutatorInterface
      */
-    public function getBuilder(array $config = []): ObjectBuilderInterface;
+    public function getMutatorCriteria(array $config = []): ObjectMutatorInterface;
 
     /**
      * @param ElementInterface $element
@@ -69,108 +69,82 @@ interface CRUDInterface
     ): bool;
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param ObjectMutatorInterface $criteria
      * @param null $source
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function create(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        TransformerCollectionInterface $transformer = null,
+        ObjectMutatorInterface $criteria,
         $source = null
     );
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
+     * @param ObjectMutatorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpCreate(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null
+        ObjectMutatorInterface $criteria
     ): ResponseInterface;
 
     /**
-     * @param ObjectCriteriaInterface $criteria
+     * @param ObjectAccessorInterface $criteria
      * @param null $source
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function read(
-        ObjectCriteriaInterface $criteria,
+        ObjectAccessorInterface $criteria,
         $source = null
     );
 
     /**
-     * @param ObjectCriteriaInterface $criteria
+     * @param ObjectAccessorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpRead(
-        ObjectCriteriaInterface $criteria
+        ObjectAccessorInterface $criteria
     ): ResponseInterface;
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param ObjectMutatorInterface $criteria
      * @param null $source
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function update(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null,
+        ObjectMutatorInterface $criteria,
         $source = null
     );
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param ObjectMutatorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpUpdate(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null
+        ObjectMutatorInterface $criteria
     ): ResponseInterface;
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
-     * @param TransformerCollectionInterface|array|null $transformer
+     * @param ObjectMutatorInterface $criteria
      * @param null $source
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function delete(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null,
-        TransformerCollectionInterface $transformer = null,
+        ObjectMutatorInterface $criteria,
         $source = null
     );
 
     /**
-     * @param ObjectBuilderInterface $builder
-     * @param ConnectionInterface|string|null $connection
-     * @param CacheInterface|string|null $cache
+     * @param ObjectMutatorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpDelete(
-        ObjectBuilderInterface $builder,
-        ConnectionInterface $connection = null,
-        CacheInterface $cache = null
+        ObjectMutatorInterface $criteria
     ): ResponseInterface;
 }

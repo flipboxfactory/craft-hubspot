@@ -12,12 +12,12 @@ use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\helpers\ArrayHelper;
 use craft\helpers\Json;
-use flipbox\hubspot\builders\ContactBatchBuilderInterface;
-use flipbox\hubspot\builders\ContactBuilder;
-use flipbox\hubspot\builders\ObjectBuilderInterface;
+use flipbox\hubspot\criteria\ContactBatchMutatorInterface;
+use flipbox\hubspot\criteria\ContactMutator;
+use flipbox\hubspot\criteria\ObjectMutatorInterface;
 use flipbox\hubspot\connections\ConnectionInterface;
-use flipbox\hubspot\criteria\ContactCriteria;
-use flipbox\hubspot\criteria\ObjectCriteriaInterface;
+use flipbox\hubspot\criteria\ContactAccessor;
+use flipbox\hubspot\criteria\ObjectAccessorInterface;
 use flipbox\hubspot\fields\Objects;
 use flipbox\hubspot\helpers\ConnectionHelper;
 use flipbox\hubspot\HubSpot;
@@ -71,20 +71,20 @@ class Contacts extends Component implements CRUDInterface
 
     /**
      * @param array $config
-     * @return ObjectCriteriaInterface
+     * @return ObjectAccessorInterface
      */
-    public function getCriteria(array $config = []): ObjectCriteriaInterface
+    public function getAccessorCriteria(array $config = []): ObjectAccessorInterface
     {
-        return new ContactCriteria($config);
+        return new ContactAccessor($config);
     }
 
     /**
      * @param array $config
-     * @return ObjectBuilderInterface
+     * @return ObjectMutatorInterface
      */
-    public function getBuilder(array $config = []): ObjectBuilderInterface
+    public function getMutatorCriteria(array $config = []): ObjectMutatorInterface
     {
-        return new ContactBuilder($config);
+        return new ContactMutator($config);
     }
 
     /**
@@ -204,18 +204,16 @@ class Contacts extends Component implements CRUDInterface
 
 
     /**
-     * @param ContactBatchBuilderInterface $batch
-     * @param ConnectionInterface $connection = null
+     * @param ContactBatchMutatorInterface $criteria
      * @return ResponseInterface
      * @throws \yii\base\InvalidConfigException
      */
     public function httpBatch(
-        ContactBatchBuilderInterface $batch,
-        ConnectionInterface $connection = null
+        ContactBatchMutatorInterface $criteria
     ): ResponseInterface {
         return $this->rawHttpBatch(
-            $batch->getPayload(),
-            $connection
+            $criteria->getPayload(),
+            $criteria->getConnection()
         )();
     }
 
@@ -236,18 +234,16 @@ class Contacts extends Component implements CRUDInterface
     }
 
     /**
-     * @param ContactBatchBuilderInterface $batch
-     * @param ConnectionInterface|string|null $connection
+     * @param ContactBatchMutatorInterface $criteria
      * @return callable
      * @throws \yii\base\InvalidConfigException
      */
     public function httpBatchRelay(
-        ContactBatchBuilderInterface $batch,
-        ConnectionInterface $connection = null
+        ContactBatchMutatorInterface $criteria
     ): callable {
         return $this->rawHttpBatchRelay(
-            $batch->getPayload(),
-            $connection
+            $criteria->getPayload(),
+            $criteria->getConnection()
         );
     }
 

@@ -110,7 +110,7 @@ class ObjectAssociation extends SortableAssociation
         $criteria['id'] = $this->objectId ?: self::DEFAULT_HUBSPOT_ID;
 
         return $resource->read(
-            $resource->getCriteria($criteria)
+            $resource->getAccessorCriteria($criteria)
         );
     }
 
