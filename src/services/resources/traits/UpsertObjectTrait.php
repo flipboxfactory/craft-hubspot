@@ -150,6 +150,7 @@ trait UpsertObjectTrait
     ): callable {
         return $this->rawHttpUpsertRelay(
             $criteria->getPayload(),
+            $criteria->getId(),
             $criteria->getConnection(),
             $criteria->getCache()
         );

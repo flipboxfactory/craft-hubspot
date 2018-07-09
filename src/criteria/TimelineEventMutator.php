@@ -20,7 +20,7 @@ use yii\base\BaseObject;
 class TimelineEventMutator extends BaseObject implements TimelineEventMutatorInterface
 {
     use traits\TransformerCollectionTrait,
-        traits\ConnectionTrait,
+        traits\IntegrationConnectionTrait,
         traits\CacheTrait;
 
     /**

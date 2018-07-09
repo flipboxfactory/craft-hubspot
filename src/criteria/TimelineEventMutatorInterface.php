@@ -8,7 +8,7 @@
 
 namespace flipbox\hubspot\criteria;
 
-use flipbox\hubspot\connections\ConnectionInterface;
+use flipbox\hubspot\connections\IntegrationConnectionInterface;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
 use Psr\SimpleCache\CacheInterface;
 
@@ -34,9 +34,9 @@ interface TimelineEventMutatorInterface
     public function getPayload(): array;
 
     /**
-     * @return ConnectionInterface
+     * @return IntegrationConnectionInterface
      */
-    public function getConnection(): ConnectionInterface;
+    public function getConnection(): IntegrationConnectionInterface;
 
     /**
      * @return CacheInterface

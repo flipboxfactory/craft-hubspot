@@ -19,6 +19,10 @@ use yii\base\BaseObject;
  */
 class ContactListContactsMutator extends BaseObject implements ObjectMutatorInterface
 {
+    use traits\TransformerCollectionTrait,
+        traits\ConnectionTrait,
+        traits\CacheTrait;
+
     /**
      * @var string
      */
