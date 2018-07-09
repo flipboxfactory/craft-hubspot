@@ -13,7 +13,7 @@
     "craftcms/cms": "^3.0.14",
     "flipboxfactory/patron": "^1.0.0-rc.4",
     "flipboxdigital/oauth2-hubspot": "^1.0",
-    "flipboxdigital/relay-hubspot": "^1.0.4",
+    "flipboxdigital/relay-hubspot": "^1.0.3",
     "flipboxfactory/craft-ember": "^1.0.6",
     "flipboxfactory/craft-psr16": "^1.0",
     "flipboxfactory/craft-psr3": "^1.0",
