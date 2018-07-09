@@ -125,8 +125,12 @@ class ObjectsField extends SortableFields
      *******************************************/
 
     /**
-     * @inheritdoc
-     * @throws Exception
+     * @param FieldInterface $field
+     * @param $value
+     * @param int $sortOrder
+     * @param ElementInterface|null $element
+     * @return SortableAssociationInterface
+     * @throws \Throwable
      */
     protected function normalizeQueryInputValue(
         FieldInterface $field,
@@ -134,16 +138,22 @@ class ObjectsField extends SortableFields
         int &$sortOrder,
         ElementInterface $element = null
     ): SortableAssociationInterface {
+        /** @var Objects $field */
+        $this->ensureField($field);
+
         if (is_array($value)) {
             $value = StringHelper::toString($value);
         }
 
-        $query = $this->baseQuery($field, $element)
-            ->sortOrder($sortOrder++);
-
-        $query->{ObjectAssociation::TARGET_ATTRIBUTE} = $value;
-
-        return $query;
+        return new ObjectAssociation(
+            [
+                'fieldId' => $field->id,
+                'objectId' => $value,
+                'elementId' => $element ? $element->getId() : null,
+                'siteId' => $this->targetSiteId($element),
+                'sortOrder' => $sortOrder++
+            ]
+        );
     }
 
     /**

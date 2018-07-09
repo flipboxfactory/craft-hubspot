@@ -3,7 +3,7 @@
 ## Unreleased
 ### Fixed
 - Ensure a string is returned when calling ObjectFromElementAccessor::getId
-
+- ObjectsField::normalizeQueryInputValue should return a record, not a query 
 
 ## 1.0.0-rc.6 - 2018-07-09
 ### Fixed
