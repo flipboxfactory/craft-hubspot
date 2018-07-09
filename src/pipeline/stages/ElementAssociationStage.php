@@ -15,6 +15,7 @@ use flipbox\hubspot\db\ObjectAssociationQuery;
 use flipbox\hubspot\fields\Objects;
 use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\services\resources\Companies;
+use flipbox\hubspot\services\resources\ContactLists;
 use flipbox\hubspot\services\resources\Contacts;
 use Flipbox\Skeleton\Logger\AutoLoggerTrait;
 use League\Pipeline\StageInterface;
@@ -161,6 +162,10 @@ class ElementAssociationStage extends BaseObject implements StageInterface
 
             case Contacts::HUBSPOT_RESOURCE:
                 $id = $data['vid'] ?? null;
+                break;
+
+            case ContactLists::HUBSPOT_RESOURCE:
+                $id = $data['listId'] ?? null;
                 break;
         }
 

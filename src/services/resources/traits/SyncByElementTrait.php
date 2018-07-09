@@ -10,15 +10,19 @@ namespace flipbox\hubspot\services\resources\traits;
 
 use craft\base\Element;
 use craft\base\ElementInterface;
+use craft\helpers\Json;
 use flipbox\hubspot\connections\ConnectionInterface;
 use flipbox\hubspot\fields\Objects;
 use flipbox\hubspot\helpers\ConnectionHelper;
 use flipbox\hubspot\HubSpot;
-use flipbox\hubspot\pipeline\Resource;
 use flipbox\hubspot\pipeline\stages\ElementAssociationStage;
 use flipbox\hubspot\pipeline\stages\ElementSaveStage;
 use flipbox\hubspot\traits\TransformElementIdTrait;
 use flipbox\hubspot\traits\TransformElementPayloadTrait;
+use flipbox\hubspot\transformers\error\Interpret;
+use Flipbox\Pipeline\Pipelines\Pipeline;
+use Flipbox\Transform\Factory;
+use Psr\Http\Message\ResponseInterface;
 use Psr\SimpleCache\CacheInterface;
 
 /**
@@ -105,21 +109,47 @@ trait SyncByElementTrait
     ): bool {
         /** @var Element $element */
 
-        (new Resource(
-            $this->rawHttpReadRelay(
-                $id,
-                ConnectionHelper::resolveConnection($connection),
-                $cache
-            ),
-            null,
-            HubSpot::getInstance()->getPsrLogger()
-        ))->build()->pipe(
-            new ElementSaveStage($field)
-        )->pipe(
-            new ElementAssociationStage($field)
-        )(null, $element);
+        /** @var ResponseInterface $response */
+        $response = $this->rawHttpReadRelay(
+            $id,
+            ConnectionHelper::resolveConnection($connection),
+            $cache
+        )();
 
-        return !$element->hasErrors();
+        return $this->handleSyncDownResponse(
+            $response,
+            $element,
+            $field
+        );
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @param ElementInterface $element
+     * @param Objects $field
+     * @return bool
+     */
+    protected function handleSyncDownResponse(
+        ResponseInterface $response,
+        ElementInterface $element,
+        Objects $field
+    ): bool {
+        $logger = HubSpot::getInstance()->getPsrLogger();
+
+        if ($response->getStatusCode() >= 200 && $response->getStatusCode() <= 299) {
+            $pipeline = new Pipeline([
+                'stages' => [
+                    new ElementSaveStage($field, ['logger' => $logger]),
+                    new ElementAssociationStage($field, ['logger' => $logger])
+                ]
+            ]);
+
+            return $pipeline->process($response, $element) instanceof ResponseInterface;
+        }
+
+        $this->handleResponseErrors($response, $element);
+
+        return false;
     }
 
     /**
@@ -167,19 +197,70 @@ trait SyncByElementTrait
     ): bool {
         /** @var Element $element */
 
-        (new Resource(
-            $this->rawHttpUpsertRelay(
-                $payload,
-                $id,
-                $connection,
-                $cache
-            ),
-            null,
-            HubSpot::getInstance()->getPsrLogger()
-        ))->build()->pipe(
-            new ElementAssociationStage($field)
-        )(null, $element);
+        /** @var ResponseInterface $response */
+        $response = $this->rawHttpUpsertRelay(
+            $payload,
+            $id,
+            $connection,
+            $cache
+        )();
 
-        return !$element->hasErrors();
+        return $this->handleSyncUpResponse(
+            $response,
+            $element,
+            $field
+        );
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @param ElementInterface $element
+     * @param Objects $field
+     * @return bool
+     */
+    protected function handleSyncUpResponse(
+        ResponseInterface $response,
+        ElementInterface $element,
+        Objects $field
+    ): bool {
+        $logger = HubSpot::getInstance()->getPsrLogger();
+
+        if ($response->getStatusCode() >= 200 && $response->getStatusCode() <= 299) {
+            $pipeline = new Pipeline([
+                'stages' => [
+                    new ElementAssociationStage($field, ['logger' => $logger])
+                ]
+            ]);
+
+            return $pipeline->process($response, $element) instanceof ResponseInterface;
+        }
+
+        $this->handleResponseErrors($response, $element);
+
+        return false;
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @param ElementInterface $element
+     */
+    protected function handleResponseErrors(ResponseInterface $response, ElementInterface $element)
+    {
+        /** @var Element $element */
+
+        $data = Json::decodeIfJson(
+            $response->getBody()->getContents()
+        );
+
+        $errors = (array)Factory::item(
+            new Interpret(),
+            $data
+        );
+
+        $errors = array_filter($errors);
+
+        if (empty($errors)) {
+            $element->addErrors($errors);
+        }
     }
 }

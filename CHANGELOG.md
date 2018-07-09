@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+### Fixed
+- Error were not getting set properly on failed resource sync up/down operations 
+- Bug when no saving object field settings without selecting any actions
+
 ## 1.0.0-rc.5 - 2018-07-09
 ### Fixed
 - Issue when no min or max values are set, the association query is aborted.

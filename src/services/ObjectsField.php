@@ -269,7 +269,11 @@ class ObjectsField extends SortableFields
             $field::EVENT_REGISTER_AVAILABLE_ACTIONS,
             $event
         );
-        return $this->resolveActions($event->actions, ObjectActionInterface::class);
+
+        return $this->resolveActions(
+            array_filter((array) $event->actions),
+            ObjectActionInterface::class
+        );
     }
 
     /**
@@ -291,7 +295,10 @@ class ObjectsField extends SortableFields
             $event
         );
 
-        return $this->resolveActions($event->actions, ObjectActionInterface::class);
+        return $this->resolveActions(
+            array_filter((array) $event->actions),
+            ObjectActionInterface::class
+        );
     }
 
     /**
@@ -314,7 +321,10 @@ class ObjectsField extends SortableFields
             $event
         );
 
-        return $this->resolveActions($event->actions, ObjectItemActionInterface::class);
+        return $this->resolveActions(
+            array_filter((array) $event->actions),
+            ObjectItemActionInterface::class
+        );
     }
 
     /**
@@ -336,7 +346,10 @@ class ObjectsField extends SortableFields
             $event
         );
 
-        return $this->resolveActions($event->actions, ObjectItemActionInterface::class);
+        return $this->resolveActions(
+            array_filter((array) $event->actions),
+            ObjectItemActionInterface::class
+        );
     }
 
     /**
