@@ -29,7 +29,7 @@ use Psr\SimpleCache\CacheInterface;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-trait SyncByElementTrait
+trait SyncElementTrait
 {
     use TransformElementIdTrait,
         TransformElementPayloadTrait;
@@ -208,7 +208,8 @@ trait SyncByElementTrait
         return $this->handleSyncUpResponse(
             $response,
             $element,
-            $field
+            $field,
+            $id
         );
     }
 
@@ -216,23 +217,27 @@ trait SyncByElementTrait
      * @param ResponseInterface $response
      * @param ElementInterface $element
      * @param Objects $field
+     * @param string|null $id
      * @return bool
      */
     protected function handleSyncUpResponse(
         ResponseInterface $response,
         ElementInterface $element,
-        Objects $field
+        Objects $field,
+        string $id = null
     ): bool {
         $logger = HubSpot::getInstance()->getPsrLogger();
 
         if ($response->getStatusCode() >= 200 && $response->getStatusCode() <= 299) {
-            $pipeline = new Pipeline([
-                'stages' => [
-                    new ElementAssociationStage($field, ['logger' => $logger])
-                ]
-            ]);
+            if(empty($id)) {
+                $pipeline = new Pipeline([
+                    'stages' => [
+                        new ElementAssociationStage($field, ['logger' => $logger])
+                    ]
+                ]);
 
-            return $pipeline->process($response, $element) instanceof ResponseInterface;
+                return $pipeline->process($response, $element) instanceof ResponseInterface;
+            }
         }
 
         $this->handleResponseErrors($response, $element);
