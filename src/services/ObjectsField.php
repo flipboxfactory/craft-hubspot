@@ -207,8 +207,9 @@ class ObjectsField extends SortableFields
         );
     }
 
+
     /*******************************************
-     * RESOURCES
+     * OBJECTS
      *******************************************/
 
     /**
@@ -236,7 +237,7 @@ class ObjectsField extends SortableFields
      * @param Objects $field
      * @return null
      */
-    protected function getObjectLabel(Objects $field)
+    public function getObjectLabel(Objects $field)
     {
         return $this->getObjects()[$field->object]['label'] ?? null;
     }

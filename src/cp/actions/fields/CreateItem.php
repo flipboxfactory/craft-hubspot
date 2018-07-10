@@ -45,6 +45,7 @@ class CreateItem extends Action
         $element = $this->resolveElement($element);
 
         $record = HubSpot::getInstance()->getObjectAssociations()->create([
+            'fieldId' => $field->id,
             'objectId' => $id,
             'elementId' => $element->getId(),
             'siteId' => SiteHelper::ensureSiteId($element->siteId),
@@ -97,7 +98,8 @@ class CreateItem extends Action
                 'createItem',
                 [
                     'field' => $field,
-                    'record' => $record
+                    'record' => $record,
+                    'objectLabel' => HubSpot::getInstance()->getObjectsField()->getObjectLabel($field)
                 ]
             ),
             'headHtml' => $view->getHeadHtml(),
