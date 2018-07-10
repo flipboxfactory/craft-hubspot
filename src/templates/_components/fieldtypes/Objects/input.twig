@@ -14,9 +14,6 @@
 </div>
 
 {% macro createItem(field, record, objectLabel) %}
-    {% set criteria = field.resource.getAccessorCriteria({
-        id: record.objectId
-    }) %}
     <div class="object{% if not record.objectId %} edit-mode{% endif %}">
         <figure>
             {{ svg('@vendor/flipboxfactory/craft-hubspot/src/icon-mask.svg') }}
@@ -27,14 +24,14 @@
                 <div>
                     <span class="light">Id:</span> <span class="objectIdLabel">{{ record.objectId }}</span>
                     {% if field.viewUrl %}
-                        <a href="{{ objectViewUrl(field, record, criteria) }}" target="_blank" data-icon="world"
+                        <a href="{{ objectViewUrl(field, record) }}" target="_blank" data-icon="world"
                            title="View HubSpot Object"></a>
                     {% endif %}
                 </div>
                 <div>
                     <span class="light">Object:</span> {{ objectLabel }}
                     {% if field.listUrl %}
-                        <a href="{{ objectListUrl(field, record, criteria) }}" target="_blank" data-icon="world"
+                        <a href="{{ objectListUrl(field, record) }}" target="_blank" data-icon="world"
                            title="View HubSpot {{ field.object }}s"></a>
                     {% endif %}
                 </div>
@@ -99,22 +96,22 @@
     );
 {% endjs %}
 
-{% macro objectViewUrl(field, record, criteria) %}
+{% macro objectViewUrl(field, record) %}
     {{ craft.app.view.renderString(
         field.viewUrl,
         {
-            hubId: criteria.connection.hubId,
+            hubId: field.connection.hubId,
             id: record.objectId,
             object: field.object
         }
     ) }}
 {% endmacro %}
 
-{% macro objectListUrl(field, record, criteria) %}
+{% macro objectListUrl(field, record) %}
     {{ craft.app.view.renderString(
         field.listUrl,
         {
-            hubId: criteria.connection.hubId,
+            hubId: field.connection.hubId,
             object: field.object
         }
     ) }}

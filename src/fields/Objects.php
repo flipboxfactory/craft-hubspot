@@ -14,9 +14,11 @@ use craft\base\Field;
 use craft\elements\db\ElementQueryInterface;
 use flipbox\ember\helpers\ModelHelper;
 use flipbox\ember\validators\MinMaxValidator;
+use flipbox\hubspot\connections\ConnectionInterface;
 use flipbox\hubspot\db\ObjectAssociationQuery;
 use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\services\resources\CRUDInterface;
+use Psr\SimpleCache\CacheInterface;
 use yii\base\InvalidConfigException;
 
 /**
@@ -148,6 +150,34 @@ class Objects extends Field
                 'skipOnEmpty' => false
             ]
         ];
+    }
+
+    /*******************************************
+     * CONNECTION
+     *******************************************/
+
+    /**
+     * @return ConnectionInterface
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getConnection(): ConnectionInterface
+    {
+        $service = HubSpot::getInstance()->getConnections();
+        return $service->get($service::DEFAULT_CONNECTION);
+    }
+
+    /*******************************************
+     * CACHE
+     *******************************************/
+
+    /**
+     * @return CacheInterface
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getCache(): CacheInterface
+    {
+        $service = HubSpot::getInstance()->getCache();
+        return $service->get($service::DEFAULT_CACHE);
     }
 
     /*******************************************
