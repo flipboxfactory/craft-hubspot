@@ -8,7 +8,7 @@
 
 namespace flipbox\hubspot\actions\objects;
 
-use Craft;
+use flipbox\ember\helpers\SiteHelper;
 use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\records\ObjectAssociation;
 use flipbox\hubspot\transformers\collections\TransformerCollection;
@@ -51,29 +51,21 @@ class Associate extends AbstractAssociationAction
         $field = $this->resolveField($field);
 
         // Resolve Element
-        if (null === ($sourceElement = Craft::$app->getElements()->getElementById($element))) {
-            return $this->handleInvalidElementResponse($element);
-        }
-
-        // Resolve Site Id
-        if (null === $siteId) {
-            $siteId = Craft::$app->getSites()->currentSite->id;
-        }
+        $element = $this->resolveElement($element);
 
         // Find existing?
         if (!empty($objectId)) {
             $association = HubSpot::getInstance()->getObjectAssociations()->getByCondition([
                 'objectId' => $objectId,
-                'elementId' => $sourceElement->getId(),
+                'elementId' => $element->getId(),
                 'fieldId' => $field->id,
-                'siteId' => $siteId,
+                'siteId' => SiteHelper::ensureSiteId($siteId ?: $element->siteId),
             ]);
         } else {
             $association = HubSpot::getInstance()->getObjectAssociations()->create([
-                'elementId' => $sourceElement->getId(),
+                'elementId' => $element->getId(),
                 'fieldId' => $field->id,
-                'siteId' => $siteId,
-
+                'siteId' => SiteHelper::ensureSiteId($siteId ?: $element->siteId),
             ]);
         }
 

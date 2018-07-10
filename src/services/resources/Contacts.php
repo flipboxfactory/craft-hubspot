@@ -42,7 +42,7 @@ use yii\base\Component;
  */
 class Contacts extends Component implements CRUDInterface
 {
-    use traits\SyncByElementTrait,
+    use traits\SyncElementTrait,
         traits\ReadObjectTrait,
         traits\UpsertObjectTrait,
         traits\DeleteObjectTrait;

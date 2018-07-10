@@ -8,7 +8,7 @@
 
 namespace flipbox\hubspot\actions\objects;
 
-use Craft;
+use flipbox\ember\helpers\SiteHelper;
 use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\records\ObjectAssociation;
 use yii\base\Model;
@@ -38,21 +38,13 @@ class Dissociate extends AbstractAssociationAction
         $field = $this->resolveField($field);
 
         // Resolve Element
-        if (null === ($sourceElement = Craft::$app->getElements()->getElementById($element))) {
-            return $this->handleInvalidElementResponse($element);
-        }
+        $element = $this->resolveElement($element);
 
-        // Resolve Site Id
-        if (null === $siteId) {
-            $siteId = Craft::$app->getSites()->currentSite->id;
-        }
-
-        // Find existing?
         return $this->runInternal(HubSpot::getInstance()->getObjectAssociations()->create([
             'objectId' => $objectId,
-            'elementId' => $sourceElement->getId(),
+            'elementId' => $element->getId(),
             'fieldId' => $field->id,
-            'siteId' => $siteId,
+            'siteId' => SiteHelper::ensureSiteId($siteId ?: $element->siteId),
         ]));
     }
 

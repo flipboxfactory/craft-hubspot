@@ -8,15 +8,13 @@
 
 namespace flipbox\hubspot\actions\objects;
 
-use craft\base\ElementInterface;
 use flipbox\ember\actions\model\traits\Manage;
 use flipbox\ember\exceptions\RecordNotFoundException;
-use flipbox\hubspot\fields\Objects;
-use flipbox\hubspot\HubSpot;
+use flipbox\hubspot\actions\traits\ElementResolverTrait;
+use flipbox\hubspot\actions\traits\FieldResolverTrait;
 use flipbox\hubspot\records\ObjectAssociation;
 use yii\base\Action;
 use yii\base\Model;
-use yii\web\HttpException;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -24,21 +22,9 @@ use yii\web\HttpException;
  */
 abstract class AbstractAssociationAction extends Action
 {
-    use Manage;
-
-    /**
-     * @param string $field
-     * @return Objects
-     * @throws HttpException
-     */
-    protected function resolveField(string $field): Objects
-    {
-        if (null === ($resourcesField = HubSpot::getInstance()->getObjectsField()->findById($field))) {
-            return $this->handleInvalidFieldResponse($field);
-        }
-
-        return $resourcesField;
-    }
+    use Manage,
+        FieldResolverTrait,
+        ElementResolverTrait;
 
     /**
      * @param Model $model
@@ -56,31 +42,5 @@ abstract class AbstractAssociationAction extends Action
         }
 
         return true;
-    }
-
-    /**
-     * @param int $fieldId
-     * @throws HttpException
-     */
-    protected function handleInvalidFieldResponse(int $fieldId)
-    {
-        throw new HttpException(sprintf(
-            "The provided field '%s' must be an instance of '%s'",
-            (string)$fieldId,
-            (string)Objects::class
-        ));
-    }
-
-    /**
-     * @param int $elementId
-     * @throws HttpException
-     */
-    protected function handleInvalidElementResponse(int $elementId)
-    {
-        throw new HttpException(sprintf(
-            "The provided source '%s' must be an instance of '%s'",
-            (string)$elementId,
-            (string)ElementInterface::class
-        ));
     }
 }

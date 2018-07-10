@@ -50,7 +50,7 @@ class ObjectAssociation extends SortableAssociation
     /**
      * The default HubSpot Resource Id (if none exists)
      */
-    const DEFAULT_HUBSPOT_ID = 'UNKNOWN_ID';
+    const DEFAULT_ID = 'UNKNOWN_ID';
 
     /**
      * @inheritdoc
@@ -110,12 +110,24 @@ class ObjectAssociation extends SortableAssociation
             return null;
         }
 
+        $base = [
+            'connection' => $field->getConnection(),
+            'cache' => $field->getCache()
+        ];
+        
         $resource = $field->getResource();
 
-        $criteria['id'] = $this->objectId ?: self::DEFAULT_HUBSPOT_ID;
+        // Can't override these...
+        $criteria['id'] = $this->{self::TARGET_ATTRIBUTE} ?: self::DEFAULT_ID;
+        $criteria['object'] = $field->object;
 
         return $resource->read(
-            $resource->getAccessorCriteria($criteria)
+            $resource->getAccessorCriteria(
+                array_merge(
+                    $base,
+                    $criteria
+                )
+            )
         );
     }
 
