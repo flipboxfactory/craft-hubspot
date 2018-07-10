@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Changed
+- ObjectAssociation record will interpret the objects when trying to resolve attribute ids
+
 ## 1.0.0-rc.7 - 2018-07-09
 ### Fixed
 - Ensure a string is returned when calling ObjectFromElementAccessor::getId

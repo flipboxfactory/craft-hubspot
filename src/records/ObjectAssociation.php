@@ -54,6 +54,11 @@ class ObjectAssociation extends SortableAssociation
 
     /**
      * @inheritdoc
+     */
+    protected $getterPriorityAttributes = ['fieldId', 'elementId', 'siteId'];
+
+    /**
+     * @inheritdoc
      * @throws \Throwable
      */
     public function __construct($config = [])

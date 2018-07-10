@@ -147,30 +147,14 @@ class ObjectsField extends SortableFields
 
         return new ObjectAssociation(
             [
-                'fieldId' => $field->id,
+                'field' => $field,
+                'element' => $element,
                 'objectId' => $value,
-                'elementId' => $element ? $element->getId() : null,
                 'siteId' => $this->targetSiteId($element),
                 'sortOrder' => $sortOrder++
             ]
         );
     }
-
-    /**
-     * @param FieldInterface $field
-     * @throws Exception
-     */
-    private function ensureField(FieldInterface $field)
-    {
-        if (!$field instanceof Objects) {
-            throw new Exception(sprintf(
-                "The field must be an instance of '%s', '%s' given.",
-                (string)Objects::class,
-                (string)get_class($field)
-            ));
-        }
-    }
-
 
     /**
      * @param Objects $field
@@ -433,5 +417,20 @@ class ObjectsField extends SortableFields
         }
 
         return $actionData;
+    }
+
+    /**
+     * @param FieldInterface $field
+     * @throws Exception
+     */
+    private function ensureField(FieldInterface $field)
+    {
+        if (!$field instanceof Objects) {
+            throw new Exception(sprintf(
+                "The field must be an instance of '%s', '%s' given.",
+                (string)Objects::class,
+                (string)get_class($field)
+            ));
+        }
     }
 }
