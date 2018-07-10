@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.0-rc.8 - 2018-07-09
 ### Changed
 - ObjectAssociation record will interpret the objects when trying to resolve attribute ids
 
