@@ -10,6 +10,8 @@ namespace flipbox\hubspot\cp\actions\fields;
 
 use craft\base\ElementInterface;
 use flipbox\ember\actions\traits\Manage;
+use flipbox\hubspot\actions\traits\ElementResolverTrait;
+use flipbox\hubspot\actions\traits\FieldResolverTrait;
 use flipbox\hubspot\fields\actions\ObjectItemActionInterface;
 use flipbox\hubspot\fields\Objects;
 use flipbox\hubspot\HubSpot;
@@ -25,8 +27,8 @@ use yii\web\HttpException;
  */
 class PerformItemAction extends Action
 {
-    use traits\ElementResolverTrait,
-        traits\FieldResolverTrait,
+    use ElementResolverTrait,
+        FieldResolverTrait,
         Manage;
 
     /**

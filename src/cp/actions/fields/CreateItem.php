@@ -12,6 +12,8 @@ use Craft;
 use craft\base\ElementInterface;
 use flipbox\ember\actions\traits\Manage;
 use flipbox\ember\helpers\SiteHelper;
+use flipbox\hubspot\actions\traits\ElementResolverTrait;
+use flipbox\hubspot\actions\traits\FieldResolverTrait;
 use flipbox\hubspot\fields\Objects;
 use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\records\ObjectAssociation;
@@ -24,8 +26,8 @@ use yii\web\HttpException;
  */
 class CreateItem extends Action
 {
-    use traits\ElementResolverTrait,
-        traits\FieldResolverTrait,
+    use ElementResolverTrait,
+        FieldResolverTrait,
         Manage;
 
     /**

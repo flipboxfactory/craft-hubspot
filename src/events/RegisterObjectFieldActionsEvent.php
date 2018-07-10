@@ -17,10 +17,10 @@ use yii\base\Event;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class RegisterResourceFieldActionsEvent extends Event
+class RegisterObjectFieldActionsEvent extends Event
 {
     /**
-     * @var array|ObjectActionInterface[]|ObjectItemActionInterface[]
+     * @var ObjectActionInterface[]|ObjectItemActionInterface[]
      */
     public $actions = [];
 

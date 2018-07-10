@@ -6,7 +6,7 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\cp\actions\fields\traits;
+namespace flipbox\hubspot\actions\traits;
 
 use Craft;
 use craft\base\Element;

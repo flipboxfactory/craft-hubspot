@@ -10,8 +10,8 @@ namespace flipbox\hubspot\cp\controllers;
 
 use Craft;
 use craft\helpers\ArrayHelper;
-use flipbox\hubspot\actions\resources\Associate;
-use flipbox\hubspot\actions\resources\Dissociate;
+use flipbox\hubspot\actions\objects\Associate;
+use flipbox\hubspot\actions\objects\Dissociate;
 use flipbox\hubspot\records\ObjectAssociation;
 
 /**

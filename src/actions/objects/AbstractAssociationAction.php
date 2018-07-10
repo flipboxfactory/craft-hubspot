@@ -6,7 +6,7 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\actions\resources;
+namespace flipbox\hubspot\actions\objects;
 
 use craft\base\ElementInterface;
 use flipbox\ember\actions\model\traits\Manage;

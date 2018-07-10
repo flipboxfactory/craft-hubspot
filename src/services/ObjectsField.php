@@ -17,7 +17,7 @@ use flipbox\craft\sortable\associations\db\SortableAssociationQueryInterface;
 use flipbox\craft\sortable\associations\records\SortableAssociationInterface;
 use flipbox\craft\sortable\associations\services\SortableFields;
 use flipbox\hubspot\db\ObjectAssociationQuery;
-use flipbox\hubspot\events\RegisterResourceFieldActionsEvent;
+use flipbox\hubspot\events\RegisterObjectFieldActionsEvent;
 use flipbox\hubspot\fields\actions\ObjectActionInterface;
 use flipbox\hubspot\fields\actions\ObjectItemActionInterface;
 use flipbox\hubspot\fields\actions\SyncItemFrom;
@@ -269,7 +269,7 @@ class ObjectsField extends SortableFields
      */
     public function getAvailableActions(Objects $field): array
     {
-        $event = new RegisterResourceFieldActionsEvent([
+        $event = new RegisterObjectFieldActionsEvent([
             'actions' => [
                 SyncTo::class
             ]
@@ -295,7 +295,7 @@ class ObjectsField extends SortableFields
      */
     public function getActions(Objects $field, ElementInterface $element = null): array
     {
-        $event = new RegisterResourceFieldActionsEvent([
+        $event = new RegisterObjectFieldActionsEvent([
             'actions' => $field->selectedActions,
             'element' => $element
         ]);
@@ -319,7 +319,7 @@ class ObjectsField extends SortableFields
      */
     public function getAvailableItemActions(Objects $field): array
     {
-        $event = new RegisterResourceFieldActionsEvent([
+        $event = new RegisterObjectFieldActionsEvent([
             'actions' => [
                 SyncItemFrom::class,
                 SyncItemTo::class,
@@ -346,7 +346,7 @@ class ObjectsField extends SortableFields
      */
     public function getItemActions(Objects $field, ElementInterface $element = null): array
     {
-        $event = new RegisterResourceFieldActionsEvent([
+        $event = new RegisterObjectFieldActionsEvent([
             'actions' => $field->selectedItemActions,
             'element' => $element
         ]);
