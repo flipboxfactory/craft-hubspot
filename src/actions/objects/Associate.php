@@ -92,7 +92,7 @@ class Associate extends AbstractAssociationAction
     protected function performAction(Model $model): bool
     {
         if (true === $this->ensureAssociation($model)) {
-            if ($this->validate === true && !$this->validateResource($model)) {
+            if ($this->validate === true && !$this->validate($model)) {
                 return false;
             }
 
@@ -109,7 +109,7 @@ class Associate extends AbstractAssociationAction
      * @return bool
      * @throws \Exception
      */
-    protected function validateResource(
+    protected function validate(
         ObjectAssociation $record
     ): bool {
 

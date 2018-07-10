@@ -76,6 +76,22 @@ class ObjectAssociations extends SortableAssociations
     }
 
     /**
+     * @inheritdoc
+     */
+    protected static function tableAlias(): string
+    {
+        return ObjectAssociation::tableAlias();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function recordClass(): string
+    {
+        return ObjectAssociation::class;
+    }
+
+    /**
      * @throws \Throwable
      */
     public function ensureTableExists()
@@ -403,21 +419,5 @@ class ObjectAssociations extends SortableAssociations
         }
 
         return HubSpot::getInstance()->getObjectsField()->findById($fieldId);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected static function tableAlias(): string
-    {
-        return ObjectAssociation::tableAlias();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function recordClass(): string
-    {
-        return ObjectAssociation::class;
     }
 }
