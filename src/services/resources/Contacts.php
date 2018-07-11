@@ -188,7 +188,8 @@ class Contacts extends Component implements CRUDInterface
         return $this->handleSyncUpResponse(
             $httpResponse,
             $element,
-            $field
+            $field,
+            $id
         );
     }
 

@@ -238,6 +238,8 @@ trait SyncElementTrait
 
                 return $pipeline->process($response, $element) instanceof ResponseInterface;
             }
+
+            return true;
         }
 
         $this->handleResponseErrors($response, $element);
