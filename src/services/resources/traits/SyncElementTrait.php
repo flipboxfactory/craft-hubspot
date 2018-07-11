@@ -229,7 +229,7 @@ trait SyncElementTrait
         $logger = HubSpot::getInstance()->getPsrLogger();
 
         if ($response->getStatusCode() >= 200 && $response->getStatusCode() <= 299) {
-            if(empty($id)) {
+            if (empty($id)) {
                 $pipeline = new Pipeline([
                     'stages' => [
                         new ElementAssociationStage($field, ['logger' => $logger])
