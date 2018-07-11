@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-rc.9 - 2018-07-10
+### Fixed
+- Issue when syncing to HubSpot a false positive response would show to the user
+
 ## 1.0.0-rc.8 - 2018-07-09
 ### Changed
 - ObjectAssociation record will interpret the objects when trying to resolve attribute ids
