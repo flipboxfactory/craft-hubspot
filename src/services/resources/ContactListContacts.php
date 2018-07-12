@@ -386,7 +386,7 @@ class ContactListContacts extends Component
                 $id,
                 $payload,
                 ConnectionHelper::resolveConnection($connection),
-                CacheHelper::$cache($connection)
+                CacheHelper::resolveCache($cache)
             ),
             $transformer,
             HubSpot::getInstance()->getPsrLogger()

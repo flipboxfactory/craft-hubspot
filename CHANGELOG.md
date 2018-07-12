@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Fixed
+- Cache was not getting properly created when removing from contact list
+
 ## 1.0.0-rc.9 - 2018-07-10
 ### Fixed
 - Issue when syncing to HubSpot a false positive response would show to the user
