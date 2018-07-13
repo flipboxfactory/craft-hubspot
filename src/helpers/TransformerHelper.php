@@ -12,27 +12,22 @@ use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\transformers\collections\TransformerCollection;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
 use Flipbox\Skeleton\Helpers\ObjectHelper;
-use Flipbox\Transform\Transformers\TransformerInterface;
+use Flipbox\Transform\Helpers\TransformerHelper as BaseTransformerHelper;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class TransformerHelper extends \Flipbox\Transform\Helpers\TransformerHelper
+class TransformerHelper extends BaseTransformerHelper
 {
     /**
-     * @param array|TransformerInterface|callable|null $transformer
-     * @return TransformerInterface|callable|null
-     * @throws \Flipbox\Skeleton\Exceptions\InvalidConfigurationException
+     * @param array|callable|null $transformer
+     * @return callable|null
      */
     public static function resolve($transformer = null)
     {
         if (empty($transformer)) {
             return null;
-        }
-
-        if (is_string($transformer) || is_array($transformer)) {
-            return static::resolve(ObjectHelper::create($transformer));
         }
 
         return parent::resolve($transformer);

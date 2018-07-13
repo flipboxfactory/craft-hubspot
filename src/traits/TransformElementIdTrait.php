@@ -29,10 +29,9 @@ trait TransformElementIdTrait
         Objects $field
     ) {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return Factory::simpleItem(
+        return Factory::item(
             new ObjectId($field),
-            $element,
-            []
+            $element
         );
     }
 }

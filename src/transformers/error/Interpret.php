@@ -9,22 +9,20 @@
 namespace flipbox\hubspot\transformers\error;
 
 use Flipbox\Skeleton\Helpers\ArrayHelper;
-use Flipbox\Transform\Scope;
 use Flipbox\Transform\Traits\MapperTrait;
-use Flipbox\Transform\Transformers\AbstractTransformer;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class Interpret extends AbstractTransformer
+class Interpret
 {
     use MapperTrait;
 
     /**
      * @inheritdoc
      */
-    public function __invoke($data, Scope $scope, string $identifier = null, $source = null)
+    public function __invoke(array $data)
     {
         if (empty($data)) {
             return [
@@ -32,22 +30,9 @@ class Interpret extends AbstractTransformer
             ];
         }
 
-        return $this->transform(
-            $this->mapFrom(
-                $this->normalizeErrors($data)
-            ),
-            $source
+        return $this->mapFrom(
+            $this->normalizeErrors($data)
         );
-    }
-
-    /**
-     * @param array $errors
-     * @param $source
-     * @return array
-     */
-    public function transform(array $errors, $source = null)
-    {
-        return $errors;
     }
 
     /**

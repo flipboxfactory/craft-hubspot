@@ -8,8 +8,6 @@
 
 namespace flipbox\hubspot\transformers\collections;
 
-use Flipbox\Transform\Transformers\TransformerInterface;
-
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
@@ -28,7 +26,7 @@ interface TransformerCollectionInterface
 
     /**
      * @param string $key
-     * @return TransformerInterface|callable|null
+     * @return callable|null
      */
     public function getTransformer(string $key);
 }

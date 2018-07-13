@@ -43,10 +43,10 @@ class TransformerCollectionStage implements StageInterface
 
     /**
      * @param mixed $payload
-     * @param null $source
+     * @param array $extra
      * @return array|mixed|null
      */
-    public function __invoke($payload, $source = null)
+    public function __invoke($payload, array $extra = [])
     {
         if (!$this->payloadIsResponse($payload)) {
             return $payload;
@@ -60,11 +60,10 @@ class TransformerCollectionStage implements StageInterface
             return $this->processPayload($payload);
         }
 
-        return Factory::Item(
+        return Factory::item(
             $transformer,
             $this->processPayload($payload),
-            [],
-            ['source' => $source]
+            $extra
         );
     }
 

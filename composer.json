@@ -4,11 +4,12 @@
   "version": "1.0.0-rc.10",
   "type": "craft-plugin",
   "license": "proprietary",
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "config": {
-    "optimize-autoloader": true
-  },
+  "keywords": [
+    "cms",
+    "craftcms",
+    "hubspot",
+    "yii2"
+  ],
   "require": {
     "craftcms/cms": "^3.0.14",
     "flipboxfactory/patron": "^1.0.0-rc.4",
@@ -17,9 +18,9 @@
     "flipboxfactory/craft-ember": "^1.0.6",
     "flipboxfactory/craft-psr16": "^1.0",
     "flipboxfactory/craft-psr3": "^1.0",
-    "flipboxfactory/flux": "~1.0.0-rc",
+    "flipboxfactory/flux": "~1.0.0-rc.5",
     "flipboxfactory/craft-sortable-associations": "^1.0",
-    "flipboxdigital/pipeline": "^1.0"
+    "flipboxdigital/pipeline": "^1.1"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.2",
@@ -35,6 +36,13 @@
     "psr-4": {
       "flipbox\\hubspot\\tests\\": "tests/src/"
     }
+  },
+  "support": {
+    "email": "support@flipboxfactory.com",
+    "issues": "https://github.com/flipboxfactory/craft-hubspot/issues?state=open",
+    "source": "https://github.com/flipboxfactory/craft-hubspot",
+    "docs": "https://github.com/flipboxfactory/craft-hubspot",
+    "rss": "https://github.com/flipboxfactory/craft-hubspot/commits/master.atom"
   },
   "extra": {
     "name": "HubSpot",

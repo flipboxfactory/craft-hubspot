@@ -9,7 +9,6 @@
 namespace flipbox\hubspot\services;
 
 use flipbox\flux\Flux;
-use Flipbox\Transform\Transformers\TransformerInterface;
 use yii\base\Component;
 
 /**
@@ -27,7 +26,7 @@ class Transformers extends Component
      * @param string $identifier
      * @param string $class
      * @param null $default
-     * @return callable|TransformerInterface|null
+     * @return callable|null
      */
     public function find(
         string $identifier,
