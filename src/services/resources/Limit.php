@@ -66,19 +66,19 @@ class Limit extends Component
 
     /**
      * @param IntegrationAccessorInterface $criteria
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function readDaily(
         IntegrationAccessorInterface $criteria,
-        $source = null
+        array $extra = []
     ) {
         return $this->rawReadDaily(
             $criteria->getConnection(),
             $criteria->getCache(),
             $criteria->getTransformer(),
-            $source
+            $extra
         );
     }
 
@@ -86,7 +86,7 @@ class Limit extends Component
      * @param ConnectionInterface|string|null $connection
      * @param CacheInterface|string|null $cache
      * @param TransformerCollectionInterface|array|null $transformer
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
@@ -94,13 +94,13 @@ class Limit extends Component
         ConnectionInterface $connection = null,
         CacheInterface $cache = null,
         TransformerCollectionInterface $transformer = null,
-        $source = null
+        array $extra = []
     ) {
         return $this->rawReadDailyPipeline(
             $connection,
             $cache,
             $transformer
-        )($source);
+        )($extra);
     }
 
     /**

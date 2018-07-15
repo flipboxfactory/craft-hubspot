@@ -110,13 +110,13 @@ class CompanyContacts extends Component
 
     /**
      * @param CompanyContactsMutatorInterface $criteria
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function add(
         CompanyContactsMutatorInterface $criteria,
-        $source = null
+        array $extra = []
     ) {
         return $this->rawAdd(
             $criteria->getCompanyId(),
@@ -124,7 +124,7 @@ class CompanyContacts extends Component
             $criteria->getConnection(),
             $criteria->getCache(),
             $criteria->getTransformer(),
-            $source
+            $extra
         );
     }
 
@@ -134,7 +134,7 @@ class CompanyContacts extends Component
      * @param ConnectionInterface|string|null $connection
      * @param CacheInterface|string|null $cache
      * @param TransformerCollectionInterface|array|null $transformer
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
@@ -144,7 +144,7 @@ class CompanyContacts extends Component
         ConnectionInterface $connection = null,
         CacheInterface $cache = null,
         TransformerCollectionInterface $transformer = null,
-        $source = null
+        array $extra = []
     ) {
         return $this->rawAddPipeline(
             $companyId,
@@ -152,7 +152,7 @@ class CompanyContacts extends Component
             $connection,
             $cache,
             $transformer
-        )($source);
+        )($extra);
     }
 
     /**
@@ -296,13 +296,13 @@ class CompanyContacts extends Component
 
     /**
      * @param CompanyContactsMutatorInterface $criteria
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function remove(
         CompanyContactsMutatorInterface $criteria,
-        $source = null
+        array $extra = []
     ) {
         return $this->rawRemove(
             $criteria->getCompanyId(),
@@ -310,7 +310,7 @@ class CompanyContacts extends Component
             $criteria->getConnection(),
             $criteria->getCache(),
             $criteria->getTransformer(),
-            $source
+            $extra
         );
     }
 
@@ -320,7 +320,7 @@ class CompanyContacts extends Component
      * @param ConnectionInterface|string|null $connection
      * @param CacheInterface|string|null $cache
      * @param TransformerCollectionInterface|array|null $transformer
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
@@ -330,7 +330,7 @@ class CompanyContacts extends Component
         ConnectionInterface $connection = null,
         CacheInterface $cache = null,
         TransformerCollectionInterface $transformer = null,
-        $source = null
+        array $extra = []
     ) {
         return $this->rawRemovePipeline(
             $companyId,
@@ -338,7 +338,7 @@ class CompanyContacts extends Component
             $connection,
             $cache,
             $transformer
-        )($source);
+        )($extra);
     }
 
     /**

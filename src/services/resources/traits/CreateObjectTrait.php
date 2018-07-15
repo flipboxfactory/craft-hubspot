@@ -37,19 +37,19 @@ trait CreateObjectTrait
 
     /**
      * @param ObjectMutatorInterface $criteria
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function create(
         ObjectMutatorInterface $criteria,
-        $source = null
+        array $extra = []
     ) {
         return $this->rawCreate(
             $criteria->getPayload(),
             $criteria->getConnection(),
             $criteria->getTransformer(),
-            $source
+            $extra
         );
     }
 
@@ -57,7 +57,7 @@ trait CreateObjectTrait
      * @param array $payload
      * @param ConnectionInterface|string|null $connection
      * @param TransformerCollectionInterface|array|null $transformer
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
@@ -65,13 +65,13 @@ trait CreateObjectTrait
         array $payload,
         ConnectionInterface $connection = null,
         TransformerCollectionInterface $transformer = null,
-        $source = null
+        array $extra = []
     ) {
         return $this->rawCreatePipeline(
             $payload,
             $connection,
             $transformer
-        )($source);
+        )($extra);
     }
 
     /**

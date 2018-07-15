@@ -110,13 +110,13 @@ class ContactListContacts extends Component
 
     /**
      * @param ObjectMutatorInterface $criteria
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function add(
         ObjectMutatorInterface $criteria,
-        $source = null
+        array $extra = []
     ) {
         return $this->rawAdd(
             $criteria->getId(),
@@ -124,7 +124,7 @@ class ContactListContacts extends Component
             $criteria->getConnection(),
             $criteria->getCache(),
             $criteria->getTransformer(),
-            $source
+            $extra
         );
     }
 
@@ -134,7 +134,7 @@ class ContactListContacts extends Component
      * @param ConnectionInterface|string|null $connection
      * @param CacheInterface|string|null $cache
      * @param TransformerCollectionInterface|array|null $transformer
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
@@ -144,7 +144,7 @@ class ContactListContacts extends Component
         ConnectionInterface $connection = null,
         CacheInterface $cache = null,
         TransformerCollectionInterface $transformer = null,
-        $source = null
+        array $extra = []
     ) {
         return $this->rawAddPipeline(
             $id,
@@ -152,7 +152,7 @@ class ContactListContacts extends Component
             $connection,
             $cache,
             $transformer
-        )($source);
+        )($extra);
     }
 
     /**
@@ -296,13 +296,13 @@ class ContactListContacts extends Component
 
     /**
      * @param ObjectMutatorInterface $criteria
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function remove(
         ObjectMutatorInterface $criteria,
-        $source = null
+        array $extra = []
     ) {
         return $this->rawRemove(
             $criteria->getId(),
@@ -310,7 +310,7 @@ class ContactListContacts extends Component
             $criteria->getConnection(),
             $criteria->getCache(),
             $criteria->getTransformer(),
-            $source
+            $extra
         );
     }
 
@@ -320,7 +320,7 @@ class ContactListContacts extends Component
      * @param ConnectionInterface|string|null $connection
      * @param CacheInterface|string|null $cache
      * @param TransformerCollectionInterface|array|null $transformer
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
@@ -330,7 +330,7 @@ class ContactListContacts extends Component
         ConnectionInterface $connection = null,
         CacheInterface $cache = null,
         TransformerCollectionInterface $transformer = null,
-        $source = null
+        array $extra = []
     ) {
         return $this->rawRemovePipeline(
             $id,
@@ -338,7 +338,7 @@ class ContactListContacts extends Component
             $connection,
             $cache,
             $transformer
-        )($source);
+        )($extra);
     }
 
     /**

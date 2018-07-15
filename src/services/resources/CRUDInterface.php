@@ -70,13 +70,13 @@ interface CRUDInterface
 
     /**
      * @param ObjectMutatorInterface $criteria
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function create(
         ObjectMutatorInterface $criteria,
-        $source = null
+        array $extra = []
     );
 
     /**
@@ -90,13 +90,13 @@ interface CRUDInterface
 
     /**
      * @param ObjectAccessorInterface $criteria
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function read(
         ObjectAccessorInterface $criteria,
-        $source = null
+        array $extra = []
     );
 
     /**
@@ -110,13 +110,13 @@ interface CRUDInterface
 
     /**
      * @param ObjectMutatorInterface $criteria
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function update(
         ObjectMutatorInterface $criteria,
-        $source = null
+        array $extra = []
     );
 
     /**
@@ -130,13 +130,13 @@ interface CRUDInterface
 
     /**
      * @param ObjectMutatorInterface $criteria
-     * @param null $source
+     * @param array $extra
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
     public function delete(
         ObjectMutatorInterface $criteria,
-        $source = null
+        array $extra = []
     );
 
     /**
