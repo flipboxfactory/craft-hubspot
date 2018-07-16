@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-rc.11 - 2018-07-15
+### Changed
+- Using Transform v3 package
+
 ## 1.0.0-rc.10 - 2018-07-12
 ### Fixed
 - Cache was not getting properly created when removing from contact list
