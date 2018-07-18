@@ -10,11 +10,12 @@ namespace flipbox\hubspot\fields\actions;
 
 use Craft;
 use craft\base\ElementInterface;
+use flipbox\craft\integration\fields\actions\AbstractIntegrationAction;
+use flipbox\craft\integration\fields\Integrations;
 use flipbox\hubspot\db\ObjectAssociationQuery;
-use flipbox\hubspot\fields\Objects;
 use yii\web\HttpException;
 
-class SyncTo extends AbstractObjectAction
+class SyncTo extends AbstractIntegrationAction
 {
     /**
      * @inheritdoc
@@ -40,7 +41,7 @@ class SyncTo extends AbstractObjectAction
      * @throws HttpException
      * @throws \yii\base\InvalidConfigException
      */
-    public function performAction(Objects $field, ElementInterface $element): bool
+    public function performAction(Integrations $field, ElementInterface $element): bool
     {
         /** @var ObjectAssociationQuery $query */
         if (null === ($query = $element->getFieldValue($field->handle))) {

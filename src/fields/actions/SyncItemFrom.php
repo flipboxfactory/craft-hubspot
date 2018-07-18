@@ -10,10 +10,11 @@ namespace flipbox\hubspot\fields\actions;
 
 use Craft;
 use craft\base\ElementInterface;
-use flipbox\hubspot\fields\Objects;
-use flipbox\hubspot\records\ObjectAssociation;
+use flipbox\craft\integration\fields\actions\AbstractIntegrationItemAction;
+use flipbox\craft\integration\fields\Integrations;
+use flipbox\craft\integration\records\IntegrationAssociation;
 
-class SyncItemFrom extends AbstractObjectItemAction
+class SyncItemFrom extends AbstractIntegrationItemAction
 {
     /**
      * @inheritdoc
@@ -35,7 +36,7 @@ class SyncItemFrom extends AbstractObjectItemAction
      * @inheritdoc
      * @throws \yii\base\InvalidConfigException
      */
-    public function performAction(Objects $field, ElementInterface $element, ObjectAssociation $record): bool
+    public function performAction(Integrations $field, ElementInterface $element, IntegrationAssociation $record): bool
     {
         if (!$field->getResource()->syncDown($element, $field)) {
             $this->setMessage("Failed to sync from HubSpot Object");

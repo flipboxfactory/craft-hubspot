@@ -9,11 +9,8 @@
 namespace flipbox\hubspot\records;
 
 use Craft;
-use flipbox\craft\sortable\associations\records\SortableAssociation;
+use flipbox\craft\integration\records\IntegrationAssociation;
 use flipbox\craft\sortable\associations\services\SortableAssociations;
-use flipbox\ember\helpers\ModelHelper;
-use flipbox\ember\records\traits\ElementAttribute;
-use flipbox\ember\records\traits\SiteAttribute;
 use flipbox\hubspot\db\ObjectAssociationQuery;
 use flipbox\hubspot\fields\Objects;
 use flipbox\hubspot\HubSpot;
@@ -26,36 +23,12 @@ use flipbox\hubspot\services\ObjectAssociations;
  * @property int $fieldId
  * @property string $objectId
  */
-class ObjectAssociation extends SortableAssociation
+class ObjectAssociation extends IntegrationAssociation
 {
-    use SiteAttribute,
-        ElementAttribute,
-        traits\FieldAttribute;
-
     /**
      * The table alias
      */
     const TABLE_ALIAS = 'hubspot_objects';
-
-    /**
-     * @inheritdoc
-     */
-    const TARGET_ATTRIBUTE = 'objectId';
-
-    /**
-     * @inheritdoc
-     */
-    const SOURCE_ATTRIBUTE = 'elementId';
-
-    /**
-     * The default HubSpot Resource Id (if none exists)
-     */
-    const DEFAULT_ID = 'UNKNOWN_ID';
-
-    /**
-     * @inheritdoc
-     */
-    protected $getterPriorityAttributes = ['fieldId', 'elementId', 'siteId'];
 
     /**
      * @inheritdoc
@@ -65,17 +38,6 @@ class ObjectAssociation extends SortableAssociation
     {
         HubSpot::getInstance()->getObjectAssociations()->ensureTableExists();
         parent::__construct($config);
-    }
-
-    /**
-     * @noinspection PhpDocMissingThrowsInspection
-     * @return ObjectAssociationQuery
-     */
-    public static function find(): ObjectAssociationQuery
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        /** @noinspection PhpUnhandledExceptionInspection */
-        return Craft::createObject(ObjectAssociationQuery::class, [get_called_class()]);
     }
 
     /**
@@ -96,11 +58,22 @@ class ObjectAssociation extends SortableAssociation
     }
 
     /**
+     * @noinspection PhpDocMissingThrowsInspection
+     * @return ObjectAssociationQuery
+     */
+    public static function find(): ObjectAssociationQuery
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return Craft::createObject(ObjectAssociationQuery::class, [get_called_class()]);
+    }
+
+    /**
      * @param array $criteria
      * @return mixed|null
      * @throws \yii\base\InvalidConfigException
      */
-    public function getResource(array $criteria = [])
+    public function getObject(array $criteria = [])
     {
         if (null === ($field = $this->getField())) {
             return null;
@@ -114,7 +87,7 @@ class ObjectAssociation extends SortableAssociation
             'connection' => $field->getConnection(),
             'cache' => $field->getCache()
         ];
-        
+
         $resource = $field->getResource();
 
         // Can't override these...
@@ -128,46 +101,6 @@ class ObjectAssociation extends SortableAssociation
                     $criteria
                 )
             )
-        );
-    }
-
-    /**
-     * @return array
-     */
-    public function rules(): array
-    {
-        return array_merge(
-            parent::rules(),
-            $this->siteRules(),
-            $this->elementRules(),
-            $this->fieldRules(),
-            [
-                [
-                    [
-                        self::TARGET_ATTRIBUTE,
-                    ],
-                    'required'
-                ],
-                [
-                    self::TARGET_ATTRIBUTE,
-                    'unique',
-                    'targetAttribute' => [
-                        'elementId',
-                        'fieldId',
-                        'siteId',
-                        self::TARGET_ATTRIBUTE
-                    ]
-                ],
-                [
-                    [
-                        self::TARGET_ATTRIBUTE
-                    ],
-                    'safe',
-                    'on' => [
-                        ModelHelper::SCENARIO_DEFAULT
-                    ]
-                ]
-            ]
         );
     }
 }

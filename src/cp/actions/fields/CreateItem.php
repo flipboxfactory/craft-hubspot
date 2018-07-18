@@ -8,102 +8,23 @@
 
 namespace flipbox\hubspot\cp\actions\fields;
 
-use Craft;
-use craft\base\ElementInterface;
-use flipbox\ember\actions\traits\Manage;
-use flipbox\ember\helpers\SiteHelper;
-use flipbox\hubspot\actions\traits\ElementResolverTrait;
-use flipbox\hubspot\actions\traits\FieldResolverTrait;
-use flipbox\hubspot\fields\Objects;
+use flipbox\craft\integration\actions\fields\CreateItem as CreateItemIntegration;
+use flipbox\craft\integration\services\IntegrationAssociations;
 use flipbox\hubspot\HubSpot;
-use flipbox\hubspot\records\ObjectAssociation;
-use yii\base\Action;
-use yii\web\HttpException;
+use flipbox\hubspot\services\ObjectAssociations;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class CreateItem extends Action
+class CreateItem extends CreateItemIntegration
 {
-    use ElementResolverTrait,
-        FieldResolverTrait,
-        Manage;
-
     /**
-     * @param string $field
-     * @param string $element
-     * @param string|null $id
-     * @return mixed
-     * @throws HttpException
-     * @throws \yii\base\Exception
-     * @throws \yii\web\UnauthorizedHttpException
+     * @inheritdoc
+     * @return ObjectAssociations
      */
-    public function run(string $field, string $element, string $id = null)
+    public function associationService(): IntegrationAssociations
     {
-        $field = $this->resolveField($field);
-        $element = $this->resolveElement($element);
-
-        $record = HubSpot::getInstance()->getObjectAssociations()->create([
-            'fieldId' => $field->id,
-            'objectId' => $id,
-            'elementId' => $element->getId(),
-            'siteId' => SiteHelper::ensureSiteId($element->siteId),
-        ]);
-
-        return $this->runInternal($field, $element, $record);
-    }
-
-    /**
-     * @param Objects $field
-     * @param ElementInterface $element
-     * @param ObjectAssociation $record
-     * @return mixed
-     * @throws \yii\base\Exception
-     * @throws \yii\web\UnauthorizedHttpException
-     */
-    protected function runInternal(
-        Objects $field,
-        ElementInterface $element,
-        ObjectAssociation $record
-    ) {
-        // Check access
-        if (($access = $this->checkAccess($field, $element, $record)) !== true) {
-            return $access;
-        }
-
-        if (null === ($html = $this->performAction($field, $record))) {
-            return $this->handleFailResponse($html);
-        }
-
-        return $this->handleSuccessResponse($html);
-    }
-
-    /**
-     * @param Objects $field
-     * @param ObjectAssociation $record
-     * @return array
-     * @throws \yii\base\Exception
-     */
-    public function performAction(
-        Objects $field,
-        ObjectAssociation $record
-    ): array {
-
-        $view = Craft::$app->getView();
-
-        return [
-            'html' => $view->renderTemplateMacro(
-                Objects::INPUT_TEMPLATE_PATH,
-                'createItem',
-                [
-                    'field' => $field,
-                    'record' => $record,
-                    'objectLabel' => HubSpot::getInstance()->getObjectsField()->getObjectLabel($field)
-                ]
-            ),
-            'headHtml' => $view->getHeadHtml(),
-            'footHtml' => $view->getBodyHtml()
-        ];
+        return HubSpot::getInstance()->getObjectAssociations();
     }
 }

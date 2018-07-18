@@ -9,14 +9,13 @@
 namespace flipbox\hubspot\fields;
 
 use Craft;
-use craft\base\ElementInterface;
-use craft\base\Field;
-use craft\elements\db\ElementQueryInterface;
-use flipbox\ember\helpers\ModelHelper;
-use flipbox\ember\validators\MinMaxValidator;
+use flipbox\craft\integration\fields\Integrations;
+use flipbox\craft\integration\services\IntegrationAssociations;
+use flipbox\craft\integration\services\IntegrationField;
 use flipbox\hubspot\connections\ConnectionInterface;
-use flipbox\hubspot\db\ObjectAssociationQuery;
 use flipbox\hubspot\HubSpot;
+use flipbox\hubspot\services\ObjectAssociations;
+use flipbox\hubspot\services\ObjectsField;
 use flipbox\hubspot\services\resources\CRUDInterface;
 use Psr\SimpleCache\CacheInterface;
 use yii\base\InvalidConfigException;
@@ -25,72 +24,52 @@ use yii\base\InvalidConfigException;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class Objects extends Field
+class Objects extends Integrations
 {
     /**
-     * The action event name
+     * @inheritdoc
      */
-    const EVENT_REGISTER_ACTIONS = 'registerActions';
+    const TRANSLATION_CATEGORY = 'hubspot';
 
     /**
-     * The action event name
-     */
-    const EVENT_REGISTER_AVAILABLE_ACTIONS = 'registerAvailableActions';
-
-    /**
-     * The item action event name
-     */
-    const EVENT_REGISTER_ITEM_ACTIONS = 'registerItemActions';
-
-    /**
-     * The item action event name
-     */
-    const EVENT_REGISTER_AVAILABLE_ITEM_ACTIONS = 'registerAvailableItemActions';
-
-    /**
-     * The input template path
+     * @inheritdoc
      */
     const INPUT_TEMPLATE_PATH = 'hubspot/_components/fieldtypes/Objects/input';
 
     /**
-     * @var string
+     * @inheritdoc
      */
-    public $object;
+    const INPUT_ITEM_TEMPLATE_PATH = 'hubspot/_components/fieldtypes/Objects/_inputItem';
 
     /**
-     * @var int|null
+     * @inheritdoc
      */
-    public $min;
+    const SETTINGS_TEMPLATE_PATH = 'hubspot/_components/fieldtypes/Objects/settings';
 
     /**
-     * @var int|null
+     * @inheritdoc
      */
-    public $max;
+    const ACTION_PREFORM_ACTION_PATH = 'hubspot/cp/fields/perform-action';
 
     /**
-     * @var string
+     * @inheritdoc
      */
-    public $viewUrl = '';
+    const ACTION_CREATE_ITEM_PATH = 'hubspot/cp/fields/create-item';
 
     /**
-     * @var string
+     * @inheritdoc
      */
-    public $listUrl = '';
+    const ACTION_ASSOCIATION_ITEM_PATH = 'hubspot/cp/objects/associate';
 
     /**
-     * @var array
+     * @inheritdoc
      */
-    public $selectedActions = [];
+    const ACTION_DISSOCIATION_ITEM_PATH = 'hubspot/cp/objects/dissociate';
 
     /**
-     * @var array
+     * @inheritdoc
      */
-    public $selectedItemActions = [];
-
-    /**
-     * @var string|null
-     */
-    public $selectionLabel;
+    const ACTION_PREFORM_ITEM_ACTION_PATH = 'hubspot/cp/fields/perform-item-action';
 
     /**
      * Indicates whether the full sync operation should be preformed if a matching HubSpot Object was found but not
@@ -100,6 +79,24 @@ class Objects extends Field
      * @var bool
      */
     public $syncToHubSpotOnMatch = false;
+
+    /**
+     * @inheritdoc
+     * @return ObjectsField
+     */
+    protected function fieldService(): IntegrationField
+    {
+        return HubSpot::getInstance()->getObjectsField();
+    }
+
+    /**
+     * @inheritdoc
+     * @return ObjectAssociations
+     */
+    protected function associationService(): IntegrationAssociations
+    {
+        return HubSpot::getInstance()->getObjectAssociations();
+    }
 
     /**
      * @inheritdoc
@@ -115,41 +112,6 @@ class Objects extends Field
     public static function defaultSelectionLabel(): string
     {
         return Craft::t('hubspot', 'Add a HubSpot Objects');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function hasContentColumn(): bool
-    {
-        return false;
-    }
-
-    /*******************************************
-     * VALIDATION
-     *******************************************/
-
-    /**
-     * @inheritdoc
-     */
-    public function getElementValidationRules(): array
-    {
-        return [
-            [
-                MinMaxValidator::class,
-                'min' => $this->min ? (int)$this->min : null,
-                'max' => $this->max ? (int)$this->max : null,
-                'tooFew' => Craft::t(
-                    'hubspot',
-                    '{attribute} should contain at least {min, number} {min, plural, one{domain} other{domains}}.'
-                ),
-                'tooMany' => Craft::t(
-                    'hubspot',
-                    '{attribute} should contain at most {max, number} {max, plural, one{domain} other{domains}}.'
-                ),
-                'skipOnEmpty' => false
-            ]
-        ];
     }
 
     /*******************************************
@@ -201,137 +163,5 @@ class Objects extends Field
         }
 
         return $service;
-    }
-
-    /*******************************************
-     * VALUE
-     *******************************************/
-
-    /**
-     * @inheritdoc
-     */
-    public function normalizeValue($value, ElementInterface $element = null)
-    {
-        return HubSpot::getInstance()->getObjectsField()->normalizeValue(
-            $this,
-            $value,
-            $element
-        );
-    }
-
-
-    /*******************************************
-     * ELEMENT
-     *******************************************/
-
-    /**
-     * @inheritdoc
-     */
-    public function modifyElementsQuery(ElementQueryInterface $query, $value)
-    {
-        return HubSpot::getInstance()->getObjectsField()->modifyElementsQuery(
-            $this,
-            $query,
-            $value
-        );
-    }
-
-
-    /*******************************************
-     * RULES
-     *******************************************/
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return array_merge(
-            parent::rules(),
-            [
-                [
-                    'object',
-                    'required',
-                    'message' => Craft::t('hubspot', 'Hubspot Object cannot be empty.')
-                ],
-                [
-                    [
-                        'object',
-                        'min',
-                        'max',
-                        'viewUrl',
-                        'listUrl',
-                        'selectionLabel'
-                    ],
-                    'safe',
-                    'on' => [
-                        ModelHelper::SCENARIO_DEFAULT
-                    ]
-                ]
-            ]
-        );
-    }
-
-    /*******************************************
-     * SEARCH
-     *******************************************/
-
-    /**
-     * @param ObjectAssociationQuery $value
-     * @inheritdoc
-     */
-    public function getSearchKeywords($value, ElementInterface $element): string
-    {
-        $objects = [];
-
-        foreach ($value->all() as $model) {
-            array_push($objects, $model->objectId);
-        }
-
-        return parent::getSearchKeywords($objects, $element);
-    }
-
-    /*******************************************
-     * VIEWS
-     *******************************************/
-
-    /**
-     * @param ObjectAssociationQuery $value
-     * @inheritdoc
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\Exception
-     */
-    public function getInputHtml($value, ElementInterface $element = null): string
-    {
-        $value->limit(null);
-        return HubSpot::getInstance()->getObjectsField()->getInputHtml($this, $value, $element, false);
-    }
-
-    /**
-     * @inheritdoc
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\Exception
-     */
-    public function getSettingsHtml()
-    {
-        return HubSpot::getInstance()->getObjectsField()->getSettingsHtml($this);
-    }
-
-    /*******************************************
-     * EVENTS
-     *******************************************/
-
-    /**
-     * @inheritdoc
-     * @throws \Exception
-     */
-    public function afterElementSave(ElementInterface $element, bool $isNew)
-    {
-        /** @var ObjectAssociationQuery $value */
-        $value = $element->getFieldValue($this->handle);
-
-        HubSpot::getInstance()->getObjectAssociations()->save($value);
-
-        parent::afterElementSave($element, $isNew);
     }
 }

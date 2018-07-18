@@ -8,101 +8,35 @@
 
 namespace flipbox\hubspot\actions\objects;
 
-use flipbox\ember\helpers\SiteHelper;
+use flipbox\craft\integration\actions\objects\Associate as AssociateIntegration;
+use flipbox\craft\integration\records\IntegrationAssociation;
+use flipbox\craft\integration\services\IntegrationAssociations;
+use flipbox\hubspot\fields\Objects;
 use flipbox\hubspot\HubSpot;
-use flipbox\hubspot\records\ObjectAssociation;
-use flipbox\hubspot\transformers\collections\TransformerCollection;
-use yii\base\DynamicModel;
-use yii\base\Model;
+use flipbox\hubspot\services\ObjectAssociations;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class Associate extends AbstractAssociationAction
+class Associate extends AssociateIntegration
 {
     /**
-     * Validate that the HubSpot Object exists prior to associating
-     *
-     * @var bool
+     * @inheritdoc
+     * @return ObjectAssociations
      */
-    public $validate = true;
-
-    /**
-     * @param string $field
-     * @param string $element
-     * @param string $newObjectId
-     * @param string|null $objectId
-     * @param int|null $siteId
-     * @param int|null $sortOrder
-     * @return Model
-     * @throws \flipbox\ember\exceptions\NotFoundException
-     * @throws \yii\web\HttpException
-     */
-    public function run(
-        string $field,
-        string $element,
-        string $newObjectId,
-        string $objectId = null,
-        int $siteId = null,
-        int $sortOrder = null
-    ) {
-        // Resolve Field
-        $field = $this->resolveField($field);
-
-        // Resolve Element
-        $element = $this->resolveElement($element);
-
-        // Find existing?
-        if (!empty($objectId)) {
-            $association = HubSpot::getInstance()->getObjectAssociations()->getByCondition([
-                'objectId' => $objectId,
-                'elementId' => $element->getId(),
-                'fieldId' => $field->id,
-                'siteId' => SiteHelper::ensureSiteId($siteId ?: $element->siteId),
-            ]);
-        } else {
-            $association = HubSpot::getInstance()->getObjectAssociations()->create([
-                'elementId' => $element->getId(),
-                'fieldId' => $field->id,
-                'siteId' => SiteHelper::ensureSiteId($siteId ?: $element->siteId),
-            ]);
-        }
-
-        $association->objectId = $newObjectId;
-        $association->sortOrder = $sortOrder;
-
-        return $this->runInternal($association);
+    protected function associationService(): IntegrationAssociations
+    {
+        return HubSpot::getInstance()->getObjectAssociations();
     }
 
     /**
      * @inheritdoc
-     * @param ObjectAssociation $model
-     * @throws \flipbox\ember\exceptions\RecordNotFoundException
-     * @throws \Exception
-     */
-    protected function performAction(Model $model): bool
-    {
-        if (true === $this->ensureAssociation($model)) {
-            if ($this->validate === true && !$this->validate($model)) {
-                return false;
-            }
-
-            return HubSpot::getInstance()->getObjectAssociations()->associate(
-                $model
-            );
-        }
-
-        return false;
-    }
-
-    /**
-     * @param ObjectAssociation $record
-     * @return bool
-     * @throws \Exception
+     * @param IntegrationAssociation $record
      */
     protected function validate(
-        ObjectAssociation $record
+        IntegrationAssociation $record
     ): bool {
 
         if (null === ($fieldId = $record->fieldId)) {
@@ -113,14 +47,15 @@ class Associate extends AbstractAssociationAction
             return false;
         }
 
-        $criteria = $field->getResource()->getAccessorCriteria([
-            'id' => $record->objectId,
-            'transformer' => TransformerCollection::class
-        ]);
+        /** @var Objects $field */
 
-        /** @var DynamicModel $response */
-        $response = $field->getResource()->read($criteria);
+        /** @var ResponseInterface $response */
+        $response = $field->getResource()->rawHttpRead(
+            $record->objectId,
+            $field->getConnection(),
+            $field->getCache()
+        );
 
-        return !$response->hasErrors();
+        return $response->getStatusCode() >= 200 && $response->getStatusCode() <= 299;
     }
 }

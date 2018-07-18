@@ -11,8 +11,10 @@ namespace flipbox\hubspot;
 use Craft;
 use craft\base\Plugin;
 use craft\events\RegisterComponentTypesEvent;
+use craft\events\RegisterTemplateRootsEvent;
 use craft\services\Fields;
 use craft\services\Plugins;
+use craft\web\View;
 use flipbox\craft\psr3\Logger;
 use flipbox\ember\modules\LoggerTrait;
 use flipbox\hubspot\fields\Objects;
@@ -88,6 +90,16 @@ class HubSpot extends Plugin
             'cp' => cp\Cp::class
 
         ]);
+
+        // Integration template directory
+        Event::on(
+            View::class,
+            View::EVENT_REGISTER_CP_TEMPLATE_ROOTS,
+            function (RegisterTemplateRootsEvent $e) {
+                $e->roots['flipbox/integration'] = Craft::$app->getPath()->getVendorPath() .
+                    '/flipboxfactory/craft-integration/src/templates';
+            }
+        );
 
         // Register our field types
         Event::on(

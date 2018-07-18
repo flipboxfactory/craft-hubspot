@@ -8,12 +8,8 @@
 
 namespace flipbox\hubspot\db;
 
-use Craft;
-use craft\db\QueryAbortedException;
-use craft\helpers\Db;
-use flipbox\craft\sortable\associations\db\SortableAssociationQuery;
-use flipbox\craft\sortable\associations\db\traits\SiteAttribute;
-use flipbox\ember\db\traits\ElementAttribute;
+use flipbox\craft\integration\db\IntegrationAssociationQuery;
+use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\records\ObjectAssociation;
 
 /**
@@ -22,68 +18,17 @@ use flipbox\hubspot\records\ObjectAssociation;
  *
  * @method ObjectAssociation[] all()
  * @method ObjectAssociation one()
+ * @method ObjectAssociation[] getCachedResult()
  */
-class ObjectAssociationQuery extends SortableAssociationQuery
+class ObjectAssociationQuery extends IntegrationAssociationQuery
 {
-    use traits\FieldAttribute,
-        traits\ObjectIdAttribute,
-        ElementAttribute,
-        SiteAttribute;
-
     /**
      * @inheritdoc
+     * @throws /\Throwable
      */
-    protected function fixedOrderColumn(): string
+    public function __construct($modelClass, $config = [])
     {
-        return ObjectAssociation::TARGET_ATTRIBUTE;
-    }
-
-    /**
-     * @param array $config
-     * @return $this
-     */
-    public function configure(array $config)
-    {
-        Craft::configure(
-            $this,
-            $config
-        );
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @throws QueryAbortedException if it can be determined that there won’t be any results
-     */
-    public function prepare($builder)
-    {
-        // Is the query already doomed?
-        if (($this->field !== null && empty($this->field)) ||
-            ($this->{ObjectAssociation::TARGET_ATTRIBUTE} !== null &&
-                empty($this->{ObjectAssociation::TARGET_ATTRIBUTE})
-            ) ||
-            ($this->element !== null && empty($this->element))
-        ) {
-            throw new QueryAbortedException();
-        }
-
-        $this->applyConditions();
-        $this->applySiteConditions();
-        $this->applyObjectIdConditions();
-        $this->applyFieldConditions();
-
-        return parent::prepare($builder);
-    }
-
-    /**
-     *  Apply query specific conditions
-     */
-    protected function applyConditions()
-    {
-        if ($this->element !== null) {
-            $this->andWhere(Db::parseParam('elementId', $this->parseElementValue($this->element)));
-        }
+        HubSpot::getInstance()->getObjectAssociations()->ensureTableExists();
+        parent::__construct($modelClass, $config);
     }
 }
