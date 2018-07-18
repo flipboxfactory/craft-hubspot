@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-rc.12 - 2018-07-18
+### Changed
+- Moved redundant integration login into separate package
+
 ## 1.0.0-rc.11 - 2018-07-15
 ### Changed
 - Using Transform v3 package
