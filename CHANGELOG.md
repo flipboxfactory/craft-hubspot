@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-rc.13 - 2018-08-01
+### Changed
+- TransformerHelper inherits the Flux TransformerHelper which assist in resolving a transformer from Yii config
+
 ## 1.0.0-rc.12 - 2018-07-18
 ### Changed
 - Moved redundant integration login into separate package
