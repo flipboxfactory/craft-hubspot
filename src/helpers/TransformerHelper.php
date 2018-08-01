@@ -12,7 +12,7 @@ use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\transformers\collections\TransformerCollection;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
 use Flipbox\Skeleton\Helpers\ObjectHelper;
-use Flipbox\Transform\Helpers\TransformerHelper as BaseTransformerHelper;
+use flipbox\flux\helpers\TransformerHelper as BaseTransformerHelper;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
