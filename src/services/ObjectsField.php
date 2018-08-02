@@ -103,6 +103,6 @@ class ObjectsField extends IntegrationField
      */
     public function getObjectLabel(Integrations $field): string
     {
-        return $this->getObjects()[$field->object]['label'] ?? null;
+        return $this->getObjects()[$field->object]['label'] ?? 'UNKNOWN_OBJECT';
     }
 }
