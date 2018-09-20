@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-rc.14 - 2018-09-20
+### Added
+- Timeline event batch handling
+
 ## 1.0.0-rc.13 - 2018-08-01
 ### Changed
 - TransformerHelper inherits the Flux TransformerHelper which assist in resolving a transformer from Yii config
