@@ -9,8 +9,10 @@
 namespace flipbox\hubspot\services\resources;
 
 use Craft;
+use flipbox\hubspot\connections\ConnectionInterface;
 use flipbox\hubspot\connections\IntegrationConnectionInterface;
 use flipbox\hubspot\criteria\TimelineEventAccessorInterface;
+use flipbox\hubspot\criteria\TimelineEventBatchMutatorInterface;
 use flipbox\hubspot\criteria\TimelineEventMutatorInterface;
 use flipbox\hubspot\helpers\CacheHelper;
 use flipbox\hubspot\helpers\ConnectionHelper;
@@ -19,6 +21,7 @@ use flipbox\hubspot\HubSpot;
 use flipbox\hubspot\pipeline\Resource;
 use flipbox\hubspot\queue\jobs\UpsertTimelineEvent;
 use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
+use Flipbox\Relay\HubSpot\Builder\Resources\Timeline\Event\Batch;
 use Flipbox\Relay\HubSpot\Builder\Resources\Timeline\Event\Read;
 use Flipbox\Relay\HubSpot\Builder\Resources\Timeline\Event\Upsert;
 use League\Pipeline\PipelineBuilderInterface;
@@ -461,6 +464,158 @@ class TimelineEvents extends Component
             $payload,
             $connection,
             CacheHelper::resolveCache($cache),
+            HubSpot::getInstance()->getPsrLogger()
+        ))->build();
+    }
+
+
+    /*******************************************
+     * BATCH
+     *******************************************/
+
+    /**
+     * @param TimelineEventBatchMutatorInterface $criteria
+     * @param array $extra
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function batch(
+        TimelineEventBatchMutatorInterface $criteria,
+        array $extra = []
+    ) {
+        return $this->rawBatch(
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getTransformer(),
+            $extra
+        );
+    }
+
+    /**
+     * @param array $payload
+     * @param IntegrationConnectionInterface|null $connection
+     * @param TransformerCollectionInterface|array|null $transformer
+     * @param array $extra
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function rawBatch(
+        array $payload,
+        IntegrationConnectionInterface $connection = null,
+        TransformerCollectionInterface $transformer = null,
+        array $extra = []
+    ) {
+        return $this->rawBatchPipeline(
+            $payload,
+            $connection,
+            $transformer
+        )($extra);
+    }
+
+    /**
+     * @param TimelineEventBatchMutatorInterface $criteria
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function batchPipeline(
+        TimelineEventBatchMutatorInterface $criteria
+    ): PipelineBuilderInterface {
+        return $this->rawBatchPipeline(
+            $criteria->getPayload(),
+            $criteria->getConnection(),
+            $criteria->getTransformer()
+        );
+    }
+
+    /**
+     * @param array $payload
+     * @param IntegrationConnectionInterface|null $connection
+     * @param TransformerCollectionInterface|array|null $transformer
+     * @return PipelineBuilderInterface
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function rawBatchPipeline(
+        array $payload,
+        IntegrationConnectionInterface $connection = null,
+        TransformerCollectionInterface $transformer = null
+    ): PipelineBuilderInterface {
+        $transformer = TransformerHelper::populateTransformerCollection(
+            TransformerHelper::resolveCollection($transformer),
+            [
+                'resource' => [Batch::class]
+            ]
+        );
+
+        return (new Resource(
+            $this->rawHttpBatchRelay(
+                $payload,
+                ConnectionHelper::resolveIntegrationConnection($connection)
+            ),
+            $transformer,
+            HubSpot::getInstance()->getPsrLogger()
+        ));
+    }
+
+    /**
+     * @param TimelineEventBatchMutatorInterface $criteria
+     * @return ResponseInterface
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function httpBatch(
+        TimelineEventBatchMutatorInterface $criteria
+    ): ResponseInterface {
+        return $this->rawHttpBatch(
+            $criteria->getPayload(),
+            $criteria->getConnection()
+        )();
+    }
+
+    /**
+     * @param array $payload
+     * @param IntegrationConnectionInterface|string|null $connection
+     * @return ResponseInterface
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function rawHttpBatch(
+        array $payload,
+        IntegrationConnectionInterface $connection = null
+    ): ResponseInterface {
+        return $this->rawHttpBatchRelay(
+            $payload,
+            $connection
+        )();
+    }
+
+    /**
+     * @param TimelineEventBatchMutatorInterface $criteria
+     * @return callable
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function httpBatchRelay(
+        TimelineEventBatchMutatorInterface $criteria
+    ): callable {
+        return $this->rawHttpBatchRelay(
+            $criteria->getPayload(),
+            $criteria->getConnection()
+        );
+    }
+
+    /**
+     * @param array $payload
+     * @param IntegrationConnectionInterface|null $connection
+     * @return callable
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function rawHttpBatchRelay(
+        array $payload,
+        IntegrationConnectionInterface $connection = null
+    ): callable {
+        $connection = ConnectionHelper::resolveIntegrationConnection($connection);
+
+        return (new Batch(
+            $connection->getAppId(),
+            $payload,
+            $connection,
             HubSpot::getInstance()->getPsrLogger()
         ))->build();
     }
