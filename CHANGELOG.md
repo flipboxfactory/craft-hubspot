@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-rc.15 - 2018-10-09
+### Fixed
+- Timeline event batch http request was not returning correctly.
+
 ## 1.0.0-rc.14 - 2018-09-20
 ### Added
 - Timeline event batch handling
