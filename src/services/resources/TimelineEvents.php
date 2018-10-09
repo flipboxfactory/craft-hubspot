@@ -567,7 +567,7 @@ class TimelineEvents extends Component
         return $this->rawHttpBatch(
             $criteria->getPayload(),
             $criteria->getConnection()
-        )();
+        );
     }
 
     /**
