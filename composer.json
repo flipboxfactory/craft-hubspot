@@ -1,7 +1,7 @@
 {
   "name": "flipboxfactory/craft-hubspot",
   "description": "HubSpot integration for Craft CMS",
-  "version": "1.0.0-rc.15",
+  "version": "1.0.0-rc.16",
   "type": "craft-plugin",
   "license": "proprietary",
   "keywords": [
@@ -53,6 +53,10 @@
     "downloadUrl": "https://github.com/flipboxfactory/craft-hubspot/archive/master.zip",
     "hasCpSettings": true,
     "hasCpSection": false,
-    "schemaVersion": "1.0.0"
+    "schemaVersion": "1.0.0",
+    "branch-alias": {
+      "dev-develop": "1.0.x-dev",
+      "dev-master": "1.0.x-dev"
+    }
   }
 }
