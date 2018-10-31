@@ -12,7 +12,7 @@ use flipbox\hubspot\patron\providers\HubSpotSettings;
 use Flipbox\OAuth2\Client\Provider\HubSpot as HubSpotProvider;
 use Flipbox\OAuth2\Client\Provider\HubSpotResourceOwner;
 use flipbox\patron\cp\Cp;
-use flipbox\patron\events\PersistTokenEvent;
+use flipbox\patron\events\PersistToken;
 use flipbox\patron\events\RegisterProviders;
 use flipbox\patron\events\RegisterProviderSettings;
 use flipbox\patron\services\Tokens;
@@ -50,7 +50,7 @@ class Events
         Event::on(
             HubSpotProvider::class,
             Tokens::EVENT_BEFORE_PERSIST_TOKEN,
-            function (PersistTokenEvent $e) {
+            function (PersistToken $e) {
                 $values = $e->record->values;
 
                 if (!isset($values['appId']) || !isset($values['hubId'])) {

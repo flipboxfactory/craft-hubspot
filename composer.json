@@ -12,7 +12,7 @@
   ],
   "require": {
     "craftcms/cms": "^3.0.14",
-    "flipboxfactory/patron": "^1.0.0-rc.4",
+    "flipboxfactory/patron": "^1.0",
     "flipboxdigital/oauth2-hubspot": "^1.0",
     "flipboxdigital/relay-hubspot": "^1.0.4",
     "flipboxfactory/craft-integration": "^1.0.3",
