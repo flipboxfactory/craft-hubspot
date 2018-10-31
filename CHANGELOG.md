@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-rc.16 - 2018-10-31
+### Changed
+- Updated Patron dependency
+
 ## 1.0.0-rc.15 - 2018-10-09
 ### Fixed
 - Timeline event batch http request was not returning correctly.
