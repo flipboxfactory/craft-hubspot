@@ -2,6 +2,7 @@ module.exports = {
     title: 'HubSpot',
     description: 'Integration Plugin for Craft CMS',
     base: '/',
+    //theme: 'flipbox',
     themeConfig: {
         docsRepo: 'flipboxfactory/craft-hubspot',
         docsDir: 'docs',
@@ -9,10 +10,16 @@ module.exports = {
         editLinks: true,
         search: true,
         searchMaxSuggestions: 10,
+        codeLanguages: {
+            twig: 'Twig',
+            php: 'PHP',
+            json: 'JSON',
+            // any other languages you want to include in code toggles...
+        },
         nav: [
-            {text: 'Details', link: 'https://flipboxdigital.com/software/hubspot'},
-            {text: 'Changelog', link: 'https://github.com/flipboxfactory/craft-hubspot/blob/develop/CHANGELOG'},
-            {text: 'Documentation', link: '/'}
+            {text: 'Details', link: 'https://www.flipboxdigital.com/craft-cms-plugins/hubspot'},
+            {text: 'Changelog', link: 'https://github.com/flipboxfactory/craft-hubspot/blob/master/CHANGELOG.md'},
+            {text: 'Repo', link: 'https://github.com/flipboxfactory/craft-hubspot'}
         ],
         sidebar: {
             '/': [
@@ -29,11 +36,11 @@ module.exports = {
         }
     },
     markdown: {
-        anchor: {
-            level: [2, 3, 4]
-        },
-        toc: {
-            includeLevel: [3]
+        anchor: { level: [2, 3] },
+        toc: { includeLevel: [3] },
+        config(md) {
+            let markup = require('./markup') // TODO Change after using theme
+            md.use(markup)
         }
     }
 }
