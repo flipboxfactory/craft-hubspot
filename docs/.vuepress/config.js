@@ -1,6 +1,6 @@
 module.exports = {
     title: 'HubSpot',
-    description: 'Integration Plugin for Craft CMS',
+    description: 'Hubspot plugin for Craft CMS',
     base: '/',
     theme: 'flipbox',
     themeConfig: {
