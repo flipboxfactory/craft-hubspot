@@ -4,6 +4,7 @@ module.exports = {
     base: '/',
     //theme: 'flipbox',
     themeConfig: {
+        logo: '/icon.svg',
         docsRepo: 'flipboxfactory/craft-hubspot',
         docsDir: 'docs',
         docsBranch: 'master',
