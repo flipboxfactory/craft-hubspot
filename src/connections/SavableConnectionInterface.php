@@ -41,5 +41,4 @@ interface SavableConnectionInterface extends ConnectionInterface
      * @return bool
      */
     public function validate($attributeNames = null, $clearErrors = true);
-
 }

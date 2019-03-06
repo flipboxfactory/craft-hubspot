@@ -62,8 +62,10 @@ class Connection extends IntegrationConnection
             ]);
 
             // Apply overrides
-            if (!empty($this->handle) && null !== ($override = HubSpot::getInstance()->getConnections()->getOverrides($this->handle))) {
-                $config = array_merge($config, $override);
+            if (!empty($this->handle)) {
+                if (null !== ($override = HubSpot::getInstance()->getConnections()->getOverrides($this->handle))) {
+                    $config = array_merge($config, $override);
+                }
             }
 
             /** @noinspection PhpUnhandledExceptionInspection */

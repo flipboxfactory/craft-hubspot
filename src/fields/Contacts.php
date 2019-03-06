@@ -9,6 +9,7 @@
 namespace flipbox\craft\hubspot\fields;
 
 use Craft;
+use craft\helpers\Json;
 use flipbox\craft\hubspot\criteria\ContactCriteria;
 use Psr\Http\Message\ResponseInterface;
 
@@ -71,5 +72,20 @@ class Contacts extends Objects
             'cache' => $this->getCache(),
             'id' => $id
         ]))->read();
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @return string|null
+     */
+    protected function getObjectIdFromResponse(ResponseInterface $response)
+    {
+        $data = Json::decodeIfJson(
+            $response->getBody()->getContents()
+        );
+
+        $id = $data['vid'] ?? null;
+
+        return $id ? (string)$id : null;
     }
 }

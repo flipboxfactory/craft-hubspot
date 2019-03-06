@@ -116,6 +116,12 @@ abstract class Objects extends Integrations implements ObjectsFieldInterface
     ): ResponseInterface;
 
     /**
+     * @param ResponseInterface $response
+     * @return string|null
+     */
+    abstract protected function getObjectIdFromResponse(ResponseInterface $response);
+
+    /**
      * @inheritdoc
      */
     public static function recordClass(): string
@@ -327,22 +333,6 @@ abstract class Objects extends Integrations implements ObjectsFieldInterface
 
         return true;
     }
-
-    /**
-     * @param ResponseInterface $response
-     * @return string|null
-     */
-    protected function getObjectIdFromResponse(ResponseInterface $response)
-    {
-        $data = Json::decodeIfJson(
-            $response->getBody()->getContents()
-        );
-
-        $id = $data['Id'] ?? ($data['id'] ?? null);
-
-        return $id ? (string)$id : null;
-    }
-
 
     /**
      * @param ElementInterface|Element $element
