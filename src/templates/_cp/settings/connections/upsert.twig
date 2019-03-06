@@ -47,6 +47,16 @@
     <div id="connection">
 
         {{ forms.textField({
+            label: "Name"|t('hubspot'),
+            instructions: "The human readable reference to this connection."|t('hubspot'),
+            id: 'name',
+            name: 'name',
+            value: connection.name ?? '',
+            errors: connection.getErrors('name') ?? [],
+            required: true
+        }) }}
+
+        {{ forms.textField({
             label: "Handle"|t('hubspot'),
             instructions: "How you’ll refer to this connection in the templates."|t('hubspot'),
             id: 'handle',
@@ -124,3 +134,9 @@
     {% hook 'hubspot.connection.edit.sidebar' %}
 
 {% endblock %}
+
+{% if not connection.id %}
+    {% js %}
+        new Craft.HandleGenerator('#name', '#handle');
+    {% endjs %}
+{% endif %}

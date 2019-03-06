@@ -8,6 +8,7 @@
 
 namespace flipbox\craft\hubspot\cp\controllers\settings\view;
 
+use flipbox\craft\hubspot\records\Connection;
 use flipbox\craft\hubspot\web\assets\base\Base;
 use yii\web\Response;
 
@@ -38,6 +39,7 @@ class GeneralController extends AbstractController
 
         $this->view->registerAssetBundle(Base::class);
 
+        $variables['connections'] = Connection::find()->all();
         $variables['fullPageForm'] = true;
 
         return $this->renderTemplate(

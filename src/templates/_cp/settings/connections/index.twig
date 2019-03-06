@@ -10,10 +10,11 @@
 {% set content %}
     <table id="connections" class="data fullwidth collapsible">
         <thead>
-        <th scope="col">{{ "Handle"|t('hubspot') }}</th>
-        <th scope="col">{{ "Hub Id"|t('hubspot') }}</th>
-        <th scope="col">{{ "Type"|t('hubspot') }}</th>
-        <th scope="col">{{ "Default"|t('hubspot') }}</th>
+            <th scope="col">{{ "Name"|t('hubspot') }}</th>
+            <th scope="col">{{ "Handle"|t('hubspot') }}</th>
+            <th scope="col">{{ "Hub Id"|t('hubspot') }}</th>
+            <th scope="col">{{ "Type"|t('hubspot') }}</th>
+            <th scope="col">{{ "Default"|t('hubspot') }}</th>
         </thead>
         <tbody>
         {% if connections|length %}
@@ -23,8 +24,11 @@
                     <th scope="row" data-title="{{ 'Type'|t('hubspot') }}">
                         <span class="status{% if record.enabled %} enabled{% endif %}"></span>
                         <a href="{{ url(baseCpPath~'/'~record.id) }}">
-                            <code>{{ record.handle }}</code>
+                            {{ record.name }}
                         </a>
+                    </th>
+                    <th data-title="{{ 'Handle'|t('hubspot') }}">
+                        <code>{{ record.handle }}</code>
                     </th>
                     <td data-title="{{ 'HubId'|t('hubspot') }}">
                         <code>{{ connection.hubId }}</code>

@@ -12,9 +12,9 @@
     {{ redirectInput(baseCpPath) }}
 
     {% set connecitonOptions = {(null): '-- Select Connection --'|t('hubspot')} %}
-    {% for handle, connection in craft.hubspot.connections.all %}
+    {% for connection in connections %}
         {% set connecitonOptions = connecitonOptions|merge({
-            (handle): handle
+            (connection.handle): connection.name
         }) %}
     {% endfor %}
 
