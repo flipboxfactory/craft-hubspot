@@ -6,7 +6,7 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\cp;
+namespace flipbox\craft\hubspot\cp;
 
 use Craft;
 use flipbox\hubspot\HubSpot;

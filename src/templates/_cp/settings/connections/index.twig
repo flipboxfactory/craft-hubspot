@@ -1,0 +1,49 @@
+{% extends "hubspot/_cp/settings/_layout" %}
+
+{% block actionButton %}
+    <div class="buttons right">
+        <a href="{{ url(continueEditingUrl ~ '/new') }}"
+           class="btn submit add icon">{{ "New connection"|t('hubspot') }}</a>
+    </div>
+{% endblock %}
+
+{% set content %}
+    <table id="connections" class="data fullwidth collapsible">
+        <thead>
+        <th scope="col">{{ "Handle"|t('hubspot') }}</th>
+        <th scope="col">{{ "Hub Id"|t('hubspot') }}</th>
+        <th scope="col">{{ "Type"|t('hubspot') }}</th>
+        <th scope="col">{{ "Default"|t('hubspot') }}</th>
+        </thead>
+        <tbody>
+        {% if connections|length %}
+            {% for handle, record in connections %}
+                {% set connection = record.connection %}
+                <tr data-id="{{ record.id }}" data-name="{{ record.handle }}">
+                    <th scope="row" data-title="{{ 'Type'|t('hubspot') }}">
+                        <span class="status{% if record.enabled %} enabled{% endif %}"></span>
+                        <a href="{{ url(baseCpPath~'/'~record.id) }}">
+                            <code>{{ record.handle }}</code>
+                        </a>
+                    </th>
+                    <td data-title="{{ 'HubId'|t('hubspot') }}">
+                        <code>{{ connection.hubId }}</code>
+                    </td>
+                    <td data-title="{{ 'Handle'|t('hubspot') }}">
+                        {{ connection.displayName() }}
+                    </td>
+                    <td data-title="{{ 'Default'|t('hubspot') }}">
+                        <span class="status{% if settings.defaultConnection == record.handle %} enabled{% endif %}"></span>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="3">
+                    {{ "No connections exist yet."|t('hubspot') }}
+                </td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+{% endset %}

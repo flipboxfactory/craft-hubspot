@@ -1,8 +1,8 @@
 # Changelog
 
-## 1.0.0-rc.16 - 2018-10-31
+## Unreleased
 ### Changed
-- Updated Patron dependency
+- Refactoring
 
 ## 1.0.0-rc.15 - 2018-10-09
 ### Fixed

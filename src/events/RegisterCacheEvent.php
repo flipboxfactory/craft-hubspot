@@ -6,7 +6,7 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\events;
+namespace flipbox\craft\hubspot\events;
 
 use Psr\SimpleCache\CacheInterface;
 use yii\base\Event;

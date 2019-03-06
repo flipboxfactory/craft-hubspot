@@ -6,138 +6,65 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\helpers;
+namespace flipbox\craft\hubspot\helpers;
 
-use flipbox\hubspot\HubSpot;
-use flipbox\hubspot\transformers\collections\TransformerCollection;
-use flipbox\hubspot\transformers\collections\TransformerCollectionInterface;
-use Flipbox\Skeleton\Helpers\ObjectHelper;
-use flipbox\flux\helpers\TransformerHelper as BaseTransformerHelper;
+use Craft;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class TransformerHelper extends BaseTransformerHelper
+class TransformerHelper
 {
     /**
-     * @param array|callable|null $transformer
+     * @param $transformer
+     * @return bool
+     */
+    public static function isTransformerClass($transformer): bool
+    {
+        return is_string($transformer) &&
+            class_exists($transformer) &&
+            (
+                method_exists($transformer, '__invoke') ||
+                is_callable([$transformer, '__invoke'])
+            );
+    }
+
+    /**
+     * @param $transformer
+     * @return bool
+     */
+    public static function isTransformerClassArray($transformer): bool
+    {
+        if (!is_array($transformer)) {
+            false;
+        }
+
+        return static::isTransformerClass($transformer['class'] ?? null);
+    }
+
+    /**
+     * @noinspection PhpDocMissingThrowsInspection
+     *
+     * @param $transformer
      * @return callable|null
      */
-    public static function resolve($transformer = null)
+    public static function resolveTransformer($transformer)
     {
-        if (empty($transformer)) {
-            return null;
-        }
-
-        return parent::resolve($transformer);
-    }
-
-    /**
-     * @param $transformer
-     * @return bool
-     */
-    public static function isTransformerCollection($transformer): bool
-    {
-        return $transformer instanceof TransformerCollectionInterface;
-    }
-
-    /**
-     * @param $transformer
-     * @return bool
-     */
-    public static function isTransformerCollectionClass($transformer): bool
-    {
-        return is_string($transformer) && is_subclass_of($transformer, TransformerCollectionInterface::class);
-    }
-
-    /**
-     * @param TransformerCollectionInterface|array|string|null $transformer
-     * @param TransformerCollectionInterface|array|null $default
-     * @return TransformerCollectionInterface|null
-     */
-    public static function resolveCollection($transformer = null, $default = ['class' => TransformerCollection::class])
-    {
-        if ($transformer === false) {
-            return null;
-        }
-
-        if ($transformer === null && $default !== null) {
-            $transformer = $default;
-        }
-
-        if (null !== ($collection = static::returnCollectionFromTransformer($transformer))) {
-            return $collection;
-        }
-
-        if (is_array($transformer)) {
-            try {
-                $class = ObjectHelper::checkConfig($transformer, TransformerCollectionInterface::class);
-
-                /** @var TransformerCollectionInterface $collection */
-                $collection = new $class();
-
-                static::populateTransformerCollection(
-                    $collection,
-                    $transformer
-                );
-
-                return $collection;
-            } catch (\Throwable $e) {
-                HubSpot::warning(sprintf(
-                    "An exception was thrown while trying to resolve transformer collection: '%s'",
-                    (string)$e->getMessage()
-                ));
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @param TransformerCollectionInterface|string $transformer
-     * @return null|TransformerCollectionInterface
-     */
-    protected static function returnCollectionFromTransformer($transformer)
-    {
-        if (static::isTransformerCollection($transformer)) {
+        if (is_callable($transformer)) {
             return $transformer;
         }
 
-        if (static::isTransformerCollectionClass($transformer)) {
+        if (static::isTransformerClass($transformer)) {
             return new $transformer();
         }
 
+        if (static::isTransformerClassArray($transformer)) {
+            /** @noinspection PhpIncompatibleReturnTypeInspection */
+            /** @noinspection PhpUnhandledExceptionInspection */
+            return Craft::createObject($transformer);
+        }
+
         return null;
-    }
-
-
-    /**
-     * @param TransformerCollectionInterface|null $collection
-     * @param array $config
-     * @return TransformerCollectionInterface|null
-     */
-    public static function populateTransformerCollection(
-        TransformerCollectionInterface $collection = null,
-        array $config = []
-    ) {
-        if ($collection === null) {
-            return $collection;
-        }
-
-        foreach ($config as $name => $value) {
-            $setter = 'set' . $name;
-            if (method_exists($collection, $setter)) {
-                $collection->$setter($value);
-                continue;
-            }
-
-            if (property_exists($collection, $name)) {
-                $collection->{$name} = $value;
-                continue;
-            }
-        }
-
-        return $collection;
     }
 }

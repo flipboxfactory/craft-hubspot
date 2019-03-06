@@ -6,39 +6,27 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\services;
+namespace flipbox\craft\hubspot\services;
 
-use flipbox\hubspot\connections\ConnectionInterface;
-use flipbox\hubspot\events\RegisterConnectionsEvent;
-use flipbox\hubspot\HubSpot;
-use yii\base\InvalidConfigException;
-use yii\di\ServiceLocator;
+use flipbox\craft\hubspot\connections\ApplicationKeyConnection;
+use flipbox\craft\hubspot\events\RegisterConnectionTypesEvent;
+use flipbox\craft\hubspot\HubSpot;
+use flipbox\craft\hubspot\records\Connection;
+use flipbox\craft\integration\exceptions\ConnectionNotFound;
+use flipbox\craft\integration\services\IntegrationConnections;
+use Flipbox\HubSpot\Connections\ConnectionInterface;
+use Flipbox\HubSpot\Connections\IntegrationConnectionInterface;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class Connections extends ServiceLocator
+class Connections extends IntegrationConnections
 {
     /**
-     * @event RegisterConnectionsEvent The event that is triggered when registering connections.
-     */
-    const EVENT_REGISTER_CONNECTIONS = 'registerConnections';
-
-    /**
-     * The default connection handle
-     */
-    const APP_CONNECTION = 'app';
-
-    /**
-     * The default connection handle
+     * The integration connection handle
      */
     const INTEGRATION_CONNECTION = 'token';
-
-    /**
-     * The default connection identifier
-     */
-    const DEFAULT_CONNECTION = 'DEFAULT_APP';
 
     /**
      * The default connection identifier
@@ -46,65 +34,98 @@ class Connections extends ServiceLocator
     const DEFAULT_INTEGRATION_CONNECTION = 'DEFAULT_INTEGRATION';
 
     /**
+     * The override file
+     */
+    public $overrideFile = 'hubspot-connections';
+
+    /**
      * @inheritdoc
      */
-    public function init()
+    protected static function tableName(): string
     {
-        parent::init();
-
-        $event = new RegisterConnectionsEvent([
-            'connections' => []
-        ]);
-
-        $this->trigger(self::EVENT_REGISTER_CONNECTIONS, $event);
-
-        $this->setComponents(
-            $event->connections
-        );
+        return Connection::tableName();
     }
 
     /**
      * @inheritdoc
-     * @return ConnectionInterface
      */
-    public function get($id, $throwException = true)
+    protected static function connectionInstance(): string
     {
-        switch ($id) {
-            case self::DEFAULT_CONNECTION:
-                $id = HubSpot::getInstance()->getSettings()->getDefaultConnection();
-                break;
+        return ConnectionInterface::class;
+    }
 
-            case self::DEFAULT_INTEGRATION_CONNECTION:
-                $id = HubSpot::getInstance()->getSettings()->getDefaultIntegrationConnection();
-                break;
+    /**
+     * @inheritdoc
+     */
+    protected function getDefaultConnection(): string
+    {
+        return HubSpot::getInstance()->getSettings()->getDefaultConnection();
+    }
+
+    /**
+     * @param string $handle
+     * @param bool $enabledOnly
+     * @return IntegrationConnectionInterface|null
+     */
+    public function findIntegration(
+        string $handle = self::DEFAULT_INTEGRATION_CONNECTION,
+        bool $enabledOnly = true
+    ) {
+        if ($handle === self::DEFAULT_INTEGRATION_CONNECTION) {
+            $handle = HubSpot::getInstance()->getSettings()->getDefaultIntegrationConnection();
         }
 
-        $connection = parent::get($id, $throwException);
+        $connection = $this->find($handle, $enabledOnly);
 
-        if (!$connection instanceof ConnectionInterface) {
-            throw new InvalidConfigException(sprintf(
-                "Connection '%s' must be an instance of '%s', '%s' given.",
-                (string)$id,
-                ConnectionInterface::class,
-                get_class($connection)
-            ));
+        if (!$connection instanceof IntegrationConnectionInterface) {
+            return null;
         }
+
         return $connection;
     }
 
     /**
-     * @param bool $throwException
-     * @return ConnectionInterface[]
-     * @throws InvalidConfigException
+     * @param string $handle
+     * @param bool $enabledOnly
+     * @return IntegrationConnectionInterface
+     * @throws ConnectionNotFound
      */
-    public function getAll($throwException = true)
-    {
-        $components = [];
-
-        foreach ($this->getComponents(true) as $id => $component) {
-            $components[$id] = $this->get($id, $throwException);
+    public function getIntegration(
+        string $handle = self::DEFAULT_INTEGRATION_CONNECTION,
+        bool $enabledOnly = true
+    ): IntegrationConnectionInterface {
+        if (null === ($connection = $this->findIntegration($handle, $enabledOnly))) {
+            throw new ConnectionNotFound('Unable to find connection');
         }
 
-        return $components;
+        return $connection;
+    }
+
+    /**
+     * @var ConnectionInterface[]
+     */
+    private $types;
+
+    /**
+     * @return ConnectionInterface[]
+     */
+    public function getTypes(): array
+    {
+        if ($this->types === null) {
+            $event = new RegisterConnectionTypesEvent([
+                'types' => [
+                    ApplicationKeyConnection::class
+                ]
+            ]);
+
+            $this->trigger(
+                $event::REGISTER_CONNECTIONS,
+                $event
+            );
+
+            $this->types = $event->types;
+        }
+
+        return $this->types;
     }
 }

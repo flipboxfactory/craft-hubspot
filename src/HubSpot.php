@@ -6,20 +6,24 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot;
+namespace flipbox\craft\hubspot;
 
 use Craft;
 use craft\base\Plugin;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterTemplateRootsEvent;
+use craft\events\RegisterUrlRulesEvent;
 use craft\services\Fields;
-use craft\services\Plugins;
+use craft\web\twig\variables\CraftVariable;
+use craft\web\UrlManager;
 use craft\web\View;
+use flipbox\craft\ember\modules\LoggerTrait;
+use flipbox\craft\hubspot\fields\Companies;
+use flipbox\craft\hubspot\fields\ContactLists;
+use flipbox\craft\hubspot\fields\Contacts;
+use flipbox\craft\hubspot\models\Settings as SettingsModel;
+use flipbox\craft\hubspot\web\twig\variables\HubSpot as HubSpotVariable;
 use flipbox\craft\psr3\Logger;
-use flipbox\ember\modules\LoggerTrait;
-use flipbox\hubspot\fields\Objects;
-use flipbox\hubspot\models\Settings as SettingsModel;
-use flipbox\hubspot\patron\Events;
 use yii\base\Event;
 
 /**
@@ -31,19 +35,10 @@ use yii\base\Event;
  * @property services\Cache $cache
  * @property services\Connections $connections
  * @property Logger $psr3Logger
- * @property services\Resources $resources
- * @property services\ObjectAssociations $objectAssociations
- * @property services\ObjectsField $objectsField
- * @property services\Transformers $transformers
  */
 class HubSpot extends Plugin
 {
     use LoggerTrait;
-
-    /**
-     * The default transformer
-     */
-    const DEFAULT_TRANSFORMER = 'hubspot';
 
     /**
      * @inheritdoc
@@ -51,14 +46,6 @@ class HubSpot extends Plugin
     protected static function getLogFileName(): string
     {
         return 'hubspot';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected static function isDebugModeEnabled()
-    {
-        return (bool)static::getInstance()->getSettings()->debugMode;
     }
 
     /**
@@ -78,11 +65,7 @@ class HubSpot extends Plugin
                     'logger' => static::getLogger(),
                     'category' => self::getLogFileName()
                 ]);
-            },
-            'resources' => services\Resources::class,
-            'objectAssociations' => services\ObjectAssociations::class,
-            'objectsField' => services\ObjectsField::class,
-            'transformers' => services\Transformers::class,
+            }
         ]);
 
         // Modules
@@ -90,6 +73,21 @@ class HubSpot extends Plugin
             'cp' => cp\Cp::class
 
         ]);
+
+        \Flipbox\HubSpot\HubSpot::setLogger(
+            $this->getPsrLogger()
+        );
+
+        // Template variables
+        Event::on(
+            CraftVariable::class,
+            CraftVariable::EVENT_INIT,
+            function (Event $event) {
+                /** @var CraftVariable $variable */
+                $variable = $event->sender;
+                $variable->set('hubspot', HubSpotVariable::class);
+            }
+        );
 
         // Integration template directory
         Event::on(
@@ -106,19 +104,35 @@ class HubSpot extends Plugin
             Fields::class,
             Fields::EVENT_REGISTER_FIELD_TYPES,
             function (RegisterComponentTypesEvent $event) {
-                $event->types[] = Objects::class;
+                $event->types[] = Companies::class;
+                $event->types[] = ContactLists::class;
+                $event->types[] = Contacts::class;
             }
         );
 
-        // Patron Access Token (if installed)
+        // CP routes
         Event::on(
-            Plugins::class,
-            Plugins::EVENT_AFTER_LOAD_PLUGINS,
-            function () {
-                if (Craft::$app->getPlugins()->getPlugin('patron')) {
-                    Events::register();
-                }
-            }
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_CP_URL_RULES,
+            [self::class, 'onRegisterCpUrlRules']
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCpNavItem()
+    {
+        return array_merge(
+            parent::getCpNavItem(),
+            [
+                'subnav' => [
+                    'hubspot.settings' => [
+                        'label' => Craft::t('hubspot', 'Settings'),
+                        'url' => 'hubspot/settings',
+                    ]
+                ]
+            ]
         );
     }
 
@@ -171,28 +185,6 @@ class HubSpot extends Plugin
 
     /**
      * @noinspection PhpDocMissingThrowsInspection
-     * @return services\ObjectAssociations
-     */
-    public function getObjectAssociations(): services\ObjectAssociations
-    {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->get('objectAssociations');
-    }
-
-    /**
-     * @noinspection PhpDocMissingThrowsInspection
-     * @return services\ObjectsField
-     */
-    public function getObjectsField(): services\ObjectsField
-    {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->get('objectsField');
-    }
-
-    /**
-     * @noinspection PhpDocMissingThrowsInspection
      * @return Logger
      */
     public function getPsrLogger(): Logger
@@ -202,30 +194,81 @@ class HubSpot extends Plugin
         return $this->get('psr3Logger');
     }
 
+    /*******************************************
+     * TRANSLATE
+     *******************************************/
+
     /**
-     * @noinspection PhpDocMissingThrowsInspection
-     * @return services\Transformers
+     * Translates a message to the specified language.
+     *
+     * This is a shortcut method of [[\yii\i18n\I18N::translate()]].
+     *
+     * The translation will be conducted according to the message category and the target language will be used.
+     *
+     * You can add parameters to a translation message that will be substituted with the corresponding value after
+     * translation. The format for this is to use curly brackets around the parameter name as you can see in the following example:
+     *
+     * ```php
+     * $username = 'Alexander';
+     * echo \Yii::t('app', 'Hello, {username}!', ['username' => $username]);
+     * ```
+     *
+     * Further formatting of message parameters is supported using the [PHP intl extensions](http://www.php.net/manual/en/intro.intl.php)
+     * message formatter. See [[\yii\i18n\I18N::translate()]] for more details.
+     *
+     * @param string $message the message to be translated.
+     * @param array $params the parameters that will be used to replace the corresponding placeholders in the message.
+     * @param string $language the language code (e.g. `en-US`, `en`). If this is null, the current
+     * [[\yii\base\Application::language|application language]] will be used.
+     * @return string the translated message.
      */
-    public function getTransformers(): services\Transformers
+    public static function t($message, $params = [], $language = null)
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->get('transformers');
+        return Craft::t('hubspot', $message, $params, $language);
     }
 
 
     /*******************************************
-     * RESOURCES
+     * MODULES
      *******************************************/
 
     /**
      * @noinspection PhpDocMissingThrowsInspection
-     * @return services\Resources
+     * @return cp\Cp
      */
-    public function getResources(): services\Resources
+    public function getCp(): cp\Cp
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->get('resources');
+        return $this->getModule('cp');
+    }
+
+
+    /*******************************************
+     * EVENTS
+     *******************************************/
+
+    /**
+     * @param RegisterUrlRulesEvent $event
+     */
+    public static function onRegisterCpUrlRules(RegisterUrlRulesEvent $event)
+    {
+        $event->rules = array_merge(
+            $event->rules,
+            [
+                // ??
+                'hubspot' => 'hubspot/cp/settings/view/general/index',
+
+                // SETTINGS
+                'hubspot/settings' => 'hubspot/cp/settings/view/general/index',
+                'hubspot/settings/limits' => 'hubspot/cp/settings/view/limits/index',
+
+                // SETTINGS: CONNECTIONS
+                'hubspot/settings/connections' => 'hubspot/cp/settings/view/connections/index',
+                'hubspot/settings/connections/new' => 'hubspot/cp/settings/view/connections/upsert',
+                'hubspot/settings/connections/<identifier:\d+>' => 'hubspot/cp/settings/view/connections/upsert',
+
+            ]
+        );
     }
 }

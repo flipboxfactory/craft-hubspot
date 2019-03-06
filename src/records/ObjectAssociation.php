@@ -6,15 +6,14 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\records;
+namespace flipbox\craft\hubspot\records;
 
 use Craft;
+use flipbox\craft\hubspot\fields\ObjectsFieldInterface;
+use flipbox\craft\hubspot\HubSpot;
+use flipbox\craft\hubspot\migrations\ObjectAssociations;
 use flipbox\craft\integration\records\IntegrationAssociation;
-use flipbox\craft\sortable\associations\services\SortableAssociations;
-use flipbox\hubspot\db\ObjectAssociationQuery;
-use flipbox\hubspot\fields\Objects;
-use flipbox\hubspot\HubSpot;
-use flipbox\hubspot\services\ObjectAssociations;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -34,10 +33,38 @@ class ObjectAssociation extends IntegrationAssociation
      * @inheritdoc
      * @throws \Throwable
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
-        HubSpot::getInstance()->getObjectAssociations()->ensureTableExists();
+        $this->ensureTableExists();
         parent::__construct($config);
+    }
+
+
+    /**
+     * @throws \Throwable
+     */
+    public function ensureTableExists()
+    {
+        if (!in_array(
+            Craft::$app->getDb()->tablePrefix . static::tableAlias(),
+            Craft::$app->getDb()->getSchema()->tableNames,
+            true
+        )) {
+            $this->createTable();
+        }
+    }
+
+    /**
+     * @return bool
+     * @throws \Throwable
+     */
+    private function createTable(): bool
+    {
+        ob_start();
+        (new ObjectAssociations())->up();
+        ob_end_clean();
+
+        return true;
     }
 
     /**
@@ -49,58 +76,20 @@ class ObjectAssociation extends IntegrationAssociation
     }
 
     /**
-     * @inheritdoc
-     * @return ObjectAssociations
+     * @return ResponseInterface
      */
-    protected function associationService(): SortableAssociations
-    {
-        return HubSpot::getInstance()->getObjectAssociations();
-    }
-
-    /**
-     * @noinspection PhpDocMissingThrowsInspection
-     * @return ObjectAssociationQuery
-     */
-    public static function find(): ObjectAssociationQuery
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        /** @noinspection PhpUnhandledExceptionInspection */
-        return Craft::createObject(ObjectAssociationQuery::class, [get_called_class()]);
-    }
-
-    /**
-     * @param array $criteria
-     * @return mixed|null
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function getObject(array $criteria = [])
+    public function getObject(): ResponseInterface
     {
         if (null === ($field = $this->getField())) {
             return null;
         }
 
-        if (!$field instanceof Objects) {
+        if (!$field instanceof ObjectsFieldInterface) {
             return null;
         }
 
-        $base = [
-            'connection' => $field->getConnection(),
-            'cache' => $field->getCache()
-        ];
+        $id = $this->objectId ?: self::DEFAULT_ID;
 
-        $resource = $field->getResource();
-
-        // Can't override these...
-        $criteria['id'] = $this->{self::TARGET_ATTRIBUTE} ?: self::DEFAULT_ID;
-        $criteria['object'] = $field->object;
-
-        return $resource->read(
-            $resource->getAccessorCriteria(
-                array_merge(
-                    $base,
-                    $criteria
-                )
-            )
-        );
+        return $field->readFromHubSpot($id);
     }
 }

@@ -1,0 +1,23 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField({
+    label: "Key"|t('hubspot'),
+    instructions: "The key."|t('hubspot'),
+    id: 'key',
+    class: 'code',
+    name: 'key',
+    value: connection.key ?? '',
+    errors: connection.getErrors('key') ?? [],
+    required: true
+}) }}
+
+{{ forms.textField({
+    label: "Hub Id"|t('hubspot'),
+    instructions: "The Hub Id."|t('hubspot'),
+    id: 'hubId',
+    class: 'code',
+    name: 'hubId',
+    value: connection.hubId ?? '',
+    errors: connection.getErrors('hubId') ?? [],
+    required: true
+}) }}

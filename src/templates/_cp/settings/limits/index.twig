@@ -1,0 +1,23 @@
+{% extends "hubspot/_cp/settings/_layout" %}
+
+{% set content %}
+    {% from _self import MaxRemainingLimits %}
+    <table class="data fullwidth fixed-layout">
+        <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th>{{ "Used"|t('hubspot') }}</th>
+            <th>{{ "Max"|t('hubspot') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for node in limits.attributes %}
+            <tr>
+                <th class="light">{{ node.name }}</th>
+                <td>{{ node.currentUsage }}</td>
+                <td>{{ node.usageLimit }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endset %}

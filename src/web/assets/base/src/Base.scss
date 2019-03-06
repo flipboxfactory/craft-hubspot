@@ -1,0 +1,14 @@
+@charset "UTF-8";
+@import "../../../../../../../vendor/craftcms/cms/lib/craftcms-sass/mixins";
+
+/* ----------------------------------------
+/* BASE
+/* ----------------------------------------*/
+
+.config-override {
+  text-transform: uppercase;
+  font-size: 70%;
+  color: $orange;
+  font-weight: bold;
+
+}
