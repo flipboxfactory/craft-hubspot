@@ -9,36 +9,8 @@
 namespace flipbox\craft\hubspot\connections;
 
 use Flipbox\HubSpot\Connections\ConnectionInterface;
+use flipbox\craft\integration\connections\SavableConnectionInterface as BaseSavableConnectionInterface;
 
-/**
- * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
- */
-interface SavableConnectionInterface extends ConnectionInterface
+interface SavableConnectionInterface extends ConnectionInterface, BaseSavableConnectionInterface
 {
-    /**
-     * Returns the display name of the connection.
-     *
-     * @return string
-     */
-    public static function displayName(): string;
-
-    /**
-     * Returns the settings html for the connection
-     *
-     * @return string|null
-     */
-    public function getSettingsHtml();
-
-    /**
-     * Validates the connection.
-     *
-     * @param string[]|null $attributeNames List of attribute names that should
-     * be validated. If this parameter is empty, it means any attribute listed
-     * in the applicable validation rules should be validated.
-     * @param bool $clearErrors Whether existing errors should be cleared before
-     * performing validation
-     * @return bool
-     */
-    public function validate($attributeNames = null, $clearErrors = true);
 }

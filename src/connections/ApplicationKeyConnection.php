@@ -9,6 +9,7 @@
 namespace flipbox\craft\hubspot\connections;
 
 use Craft;
+use flipbox\craft\integration\connections\AbstractSaveableConnection;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use yii\base\Model;
@@ -17,7 +18,7 @@ use yii\base\Model;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class ApplicationKeyConnection extends Model implements SavableConnectionInterface
+class ApplicationKeyConnection extends AbstractSaveableConnection implements SavableConnectionInterface
 {
     /**
      * @var string
@@ -68,6 +69,16 @@ class ApplicationKeyConnection extends Model implements SavableConnectionInterfa
                         'hubId'
                     ],
                     'required'
+                ],
+                [
+                    [
+                        'key',
+                        'hubId'
+                    ],
+                    'safe',
+                    'on' => [
+                        static::SCENARIO_DEFAULT
+                    ]
                 ]
             ]
         );

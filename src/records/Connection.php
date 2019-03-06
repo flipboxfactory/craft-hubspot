@@ -8,7 +8,9 @@
 
 namespace flipbox\craft\hubspot\records;
 
+use craft\helpers\ArrayHelper;
 use craft\helpers\Component as ComponentHelper;
+use flipbox\craft\hubspot\connections\SavableConnectionInterface;
 use flipbox\craft\hubspot\HubSpot;
 use flipbox\craft\hubspot\validators\ConnectionValidator;
 use flipbox\craft\integration\records\IntegrationConnection;
@@ -76,5 +78,69 @@ class Connection extends IntegrationConnection
         }
 
         return $this->connection;
+    }
+
+    /*******************************************
+     * EVENTS
+     *******************************************/
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        $connection = $this->getConnection();
+
+        if ($connection instanceof SavableConnectionInterface) {
+            if (!$connection->beforeSave($insert)) {
+                return false;
+            }
+        }
+
+        return parent::beforeSave($insert);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        $connection = $this->getConnection();
+
+        if ($connection instanceof SavableConnectionInterface) {
+            $connection->afterSave($insert, ArrayHelper::getValue($changedAttributes, 'settings'));
+        }
+
+        parent::afterSave($insert, $changedAttributes);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeDelete()
+    {
+        $connection = $this->getConnection();
+
+        if ($connection instanceof SavableConnectionInterface) {
+            if (!$connection->beforeDelete()) {
+                return false;
+            }
+        }
+
+        return parent::beforeDelete();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function afterDelete()
+    {
+        $connection = $this->getConnection();
+
+        if ($connection instanceof SavableConnectionInterface) {
+            $connection->afterDelete();
+        }
+
+        parent::afterDelete();
     }
 }

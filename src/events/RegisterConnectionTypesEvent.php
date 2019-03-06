@@ -8,7 +8,7 @@
 
 namespace flipbox\craft\hubspot\events;
 
-use flipbox\craft\hubspot\records\Connection;
+use flipbox\craft\hubspot\connections\SavableConnectionInterface;
 use yii\base\Event;
 
 /**
@@ -23,7 +23,7 @@ class RegisterConnectionTypesEvent extends Event
     const REGISTER_CONNECTIONS = 'registerConnectionTypes';
 
     /**
-     * @var array|Connection[]
+     * @var SavableConnectionInterface[]
      */
     public $types = [];
 }
