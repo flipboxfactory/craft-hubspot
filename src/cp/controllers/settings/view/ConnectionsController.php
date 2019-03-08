@@ -104,7 +104,7 @@ class ConnectionsController extends AbstractController
      */
     private function getAvailableConnections()
     {
-        $classes = HubSpot::getInstance()->getConnections()->getTypes();
+        $classes = HubSpot::getInstance()->getCp()->getAvailableConnections();
 
         $connections = [];
         foreach ($classes as $connection) {

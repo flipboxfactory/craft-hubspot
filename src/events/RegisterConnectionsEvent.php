@@ -15,15 +15,15 @@ use yii\base\Event;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class RegisterConnectionTypesEvent extends Event
+class RegisterConnectionsEvent extends Event
 {
     /**
      * Event to register connections
      */
-    const REGISTER_CONNECTIONS = 'registerConnectionTypes';
+    const REGISTER_CONNECTIONS = 'registerConnections';
 
     /**
      * @var SavableConnectionInterface[]
      */
-    public $types = [];
+    public $connections = [];
 }

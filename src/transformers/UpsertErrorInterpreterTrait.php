@@ -8,6 +8,8 @@
 
 namespace flipbox\craft\hubspot\transformers;
 
+use flipbox\craft\ember\helpers\ArrayHelper;
+
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
@@ -15,21 +17,19 @@ namespace flipbox\craft\hubspot\transformers;
 trait UpsertErrorInterpreterTrait
 {
     /**
-     * @param string $errorMessage
-     * @param string $errorCode
-     * @param array $fields
+     * @param array $errors
      * @return array
      */
-    protected function interpretError(string $errorMessage, string $errorCode, array $fields = []): array
+    protected function prepareValidationErrors(array $errors): array
     {
-        $errorKeys = ($fields ?: $errorCode);
+        $validationErrors = [];
 
-        var_dump($errorMessage);
-        var_dump($errorCode);
-        var_dump($fields);
+        foreach ($errors as $error) {
+            if ($property = ArrayHelper::getValue($error, 'name')) {
+                $validationErrors[$property] = ArrayHelper::getValue($error, 'message');
+            }
+        }
 
-        exit;
-
-        return [$errorKeys, $errorMessage, $errorCode];
+        return $validationErrors;
     }
 }

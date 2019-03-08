@@ -15,4 +15,22 @@ namespace flipbox\craft\hubspot\transformers;
 class InterpretUpsertResponseErrors extends InterpretResponseErrors
 {
     use UpsertErrorInterpreterTrait;
+
+    /**
+     * @param array $errors
+     * @return array
+     */
+    public function normalizeErrors(array $errors): array
+    {
+        $preparedErrors = parent::normalizeErrors($errors);
+
+        if (!empty($errors['validationResults'])) {
+            $preparedErrors = array_merge(
+                $preparedErrors,
+                $this->prepareValidationErrors($errors['validationResults'])
+            );
+        }
+
+        return $preparedErrors;
+    }
 }

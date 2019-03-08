@@ -32,7 +32,7 @@ class CreateUpsertPayloadFromElement extends BaseObject
     public $action;
 
     /**
-     * @param ElementInterface|Element $element
+     * @param ElementInterface $element
      * @param ObjectsFieldInterface $field
      * @return array
      */
@@ -41,6 +41,7 @@ class CreateUpsertPayloadFromElement extends BaseObject
         ObjectsFieldInterface $field
     ): array {
         /** @var Objects $field */
+        /** @var Element $element */
 
         $event = new CreatePayloadFromElementEvent([
             'payload' => $this->createPayload($element, $field)

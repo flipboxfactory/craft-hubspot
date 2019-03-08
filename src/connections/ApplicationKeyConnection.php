@@ -12,7 +12,6 @@ use Craft;
 use flipbox\craft\integration\connections\AbstractSaveableConnection;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use yii\base\Model;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>

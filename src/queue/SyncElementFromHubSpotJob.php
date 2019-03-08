@@ -9,6 +9,7 @@
 namespace flipbox\craft\hubspot\queue;
 
 use Craft;
+use craft\base\ElementInterface;
 use craft\queue\BaseJob;
 use flipbox\craft\ember\objects\ElementAttributeTrait;
 use flipbox\craft\ember\objects\FieldAttributeTrait;
@@ -39,13 +40,14 @@ class SyncElementFromHubSpotJob extends BaseJob implements \Serializable
     public function execute($queue)
     {
         $field = $this->getField();
+        $element = $this->getElement();
 
-        if (!$field instanceof ObjectsFieldInterface) {
+        if (!$field instanceof ObjectsFieldInterface || !$element instanceof ElementInterface) {
             return false;
         }
 
         return $field->syncFromHubSpot(
-            $this->getElement(),
+            $element,
             $this->objectId,
             $this->transformer
         );

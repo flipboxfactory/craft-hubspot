@@ -25,4 +25,14 @@ class ContactCriteria extends \Flipbox\HubSpot\Criteria\ContactCriteria
         ElementAttributeTrait,
         FieldAttributeTrait,
         SiteAttributeTrait;
+
+    public function getPayload(): array
+    {
+        return [
+            'properties' => [
+                ['property' => 'email', 'value' => 'asdfsadfsafd@asdfadsffads.com'],
+                ['property' => 'foo', 'value' => 'bar'],
+            ]
+        ];
+    }
 }

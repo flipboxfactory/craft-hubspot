@@ -12,7 +12,6 @@ use Craft;
 use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\helpers\ArrayHelper;
-use craft\helpers\Json;
 use flipbox\craft\ember\helpers\SiteHelper;
 use flipbox\craft\hubspot\fields\actions\SyncItemFrom;
 use flipbox\craft\hubspot\fields\actions\SyncItemTo;

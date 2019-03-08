@@ -8,8 +8,6 @@
 
 namespace flipbox\craft\hubspot\services;
 
-use flipbox\craft\hubspot\connections\ApplicationKeyConnection;
-use flipbox\craft\hubspot\events\RegisterConnectionTypesEvent;
 use flipbox\craft\hubspot\HubSpot;
 use flipbox\craft\hubspot\records\Connection;
 use flipbox\craft\integration\exceptions\ConnectionNotFound;
@@ -99,33 +97,5 @@ class Connections extends IntegrationConnections
         }
 
         return $connection;
-    }
-
-    /**
-     * @var ConnectionInterface[]
-     */
-    private $types;
-
-    /**
-     * @return ConnectionInterface[]
-     */
-    public function getTypes(): array
-    {
-        if ($this->types === null) {
-            $event = new RegisterConnectionTypesEvent([
-                'types' => [
-                    ApplicationKeyConnection::class
-                ]
-            ]);
-
-            $this->trigger(
-                $event::REGISTER_CONNECTIONS,
-                $event
-            );
-
-            $this->types = $event->types;
-        }
-
-        return $this->types;
     }
 }

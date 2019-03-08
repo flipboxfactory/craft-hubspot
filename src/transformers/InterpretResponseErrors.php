@@ -39,7 +39,6 @@ class InterpretResponseErrors
         $preparedErrors = [];
 
         $status = $errors['status'] ?? null;
-
         if (in_array($status, ['error', 'exception'], true)) {
             list($errorKey, $errorMessage) = $this->prepareError($errors);
             $preparedErrors[$errorKey] = $errorMessage;
