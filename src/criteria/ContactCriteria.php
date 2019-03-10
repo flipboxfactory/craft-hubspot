@@ -31,7 +31,6 @@ class ContactCriteria extends \Flipbox\HubSpot\Criteria\ContactCriteria
         return [
             'properties' => [
                 ['property' => 'email', 'value' => 'asdfsadfsafd@asdfadsffads.com'],
-                ['property' => 'foo', 'value' => 'bar'],
             ]
         ];
     }

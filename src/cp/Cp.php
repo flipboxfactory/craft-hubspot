@@ -9,6 +9,7 @@
 namespace flipbox\craft\hubspot\cp;
 
 use Craft;
+use flipbox\craft\hubspot\connections\ApplicationKeyConnection;
 use flipbox\craft\hubspot\connections\SavableConnectionInterface;
 use flipbox\craft\hubspot\events\RegisterConnectionsEvent;
 use flipbox\hubspot\HubSpot;
@@ -51,7 +52,11 @@ class Cp extends BaseModule
     public function getAvailableConnections(): array
     {
         if ($this->registeredConnections === null) {
-            $event = new RegisterConnectionsEvent();
+            $event = new RegisterConnectionsEvent([
+                'connections' => [
+                    ApplicationKeyConnection::class
+                ]
+            ]);
 
             $this->trigger(
                 $event::REGISTER_CONNECTIONS,
