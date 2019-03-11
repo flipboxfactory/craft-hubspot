@@ -8,8 +8,8 @@
 
 namespace flipbox\craft\hubspot\validators;
 
-use Craft;
 use flipbox\craft\hubspot\connections\SavableConnectionInterface;
+use flipbox\craft\hubspot\HubSpot;
 use flipbox\craft\hubspot\records\Connection;
 use Flipbox\HubSpot\Connections\ConnectionInterface;
 use Flipbox\HubSpot\Connections\IntegrationConnectionInterface;
@@ -32,8 +32,7 @@ class ConnectionValidator extends Validator
         // Handles are always required, so if it's blank, the required validator will catch this.
         if ($class) {
             if (!$this->isValid($class)) {
-                $message = Craft::t(
-                    'hubspot',
+                $message = HubSpot::t(
                     '“{class}” is a not a valid connection.',
                     ['class' => $class]
                 );
@@ -75,8 +74,7 @@ class ConnectionValidator extends Validator
         }
 
         if (!$connection->validate()) {
-            $message = Craft::t(
-                'hubspot',
+            $message = HubSpot::t(
                 'Invalid settings.',
                 ['class' => $class]
             );

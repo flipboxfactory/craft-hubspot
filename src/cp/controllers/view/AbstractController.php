@@ -67,7 +67,7 @@ abstract class AbstractController extends Controller
     {
         $module = HubSpot::getInstance();
 
-        $title = Craft::t('hubspot', "HubSpot");
+        $title = HubSpot::t("HubSpot");
 
         // Settings
         $variables['settings'] = $module->getSettings();
@@ -111,6 +111,6 @@ abstract class AbstractController extends Controller
         $variables['continueEditingUrl'] = $this->getBaseContinueEditingUrl('/{id}');
 
         // Append title
-        $variables['title'] .= ' - ' . Craft::t('hubspot', 'New');
+        $variables['title'] .= ' - ' . HubSpot::t('New');
     }
 }

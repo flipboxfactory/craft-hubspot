@@ -8,9 +8,9 @@
 
 namespace flipbox\craft\hubspot\fields;
 
-use Craft;
 use craft\helpers\Json;
 use flipbox\craft\hubspot\criteria\ContactListCriteria;
+use flipbox\craft\hubspot\HubSpot;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -32,7 +32,7 @@ class ContactLists extends Objects
      */
     public static function displayName(): string
     {
-        return Craft::t('hubspot', 'HubSpot: Contact Lists');
+        return HubSpot::t('HubSpot: Contact Lists');
     }
 
     /**
@@ -40,7 +40,7 @@ class ContactLists extends Objects
      */
     public static function defaultSelectionLabel(): string
     {
-        return Craft::t('hubspot', 'Add a HubSpot Contact List');
+        return HubSpot::t('Add a HubSpot Contact List');
     }
 
     /**

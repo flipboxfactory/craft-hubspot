@@ -149,7 +149,7 @@ class ConnectionsController extends AbstractController
     protected function updateVariables(array &$variables, Connection $connection)
     {
         $this->baseVariables($variables);
-        $variables['title'] .= ' - ' . Craft::t('hubspot', 'Edit') . ' ' . $connection->handle;
+        $variables['title'] .= ' - ' . HubSpot::t('Edit') . ' ' . $connection->handle;
         $variables['continueEditingUrl'] = $this->getBaseContinueEditingUrl('/' . $connection->getId());
         $variables['crumbs'][] = [
             'label' => $connection->handle,

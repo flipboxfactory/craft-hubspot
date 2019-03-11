@@ -10,6 +10,7 @@ namespace flipbox\craft\hubspot\cp\controllers;
 
 use Craft;
 use craft\helpers\ArrayHelper;
+use flipbox\craft\hubspot\HubSpot;
 use flipbox\craft\integration\actions\fields\CreateFieldItem;
 use flipbox\craft\integration\actions\fields\PerformFieldAction;
 use flipbox\craft\integration\actions\fields\PerformFieldItemAction;
@@ -41,8 +42,8 @@ class FieldsController extends AbstractController
                 'flash' => [
                     'actions' => [
                         'perform-action' => [
-                            200 => Craft::t('hubspot', "Action executed successfully."),
-                            400 => Craft::t('hubspot', "Failed to execute action.")
+                            200 => HubSpot::t("Action executed successfully."),
+                            400 => HubSpot::t("Failed to execute action.")
                         ]
                     ]
                 ]

@@ -8,7 +8,6 @@
 
 namespace flipbox\craft\hubspot\cp\controllers\settings\view;
 
-use Craft;
 use flipbox\craft\ember\helpers\UrlHelper;
 use flipbox\craft\hubspot\cp\Cp as CpModule;
 use flipbox\craft\hubspot\HubSpot;
@@ -66,7 +65,7 @@ abstract class AbstractController extends \flipbox\craft\hubspot\cp\controllers\
     {
         parent::baseVariables($variables);
 
-        $title = Craft::t('hubspot', "Settings");
+        $title = HubSpot::t("Settings");
         $variables['title'] .= ': ' . $title;
 
         // Breadcrumbs
@@ -87,6 +86,6 @@ abstract class AbstractController extends \flipbox\craft\hubspot\cp\controllers\
     {
         $this->baseVariables($variables);
         $variables['continueEditingUrl'] = $this->getBaseContinueEditingUrl('/{id}');
-        $variables['title'] .= ' - ' . Craft::t('hubspot', 'New');
+        $variables['title'] .= ' - ' . HubSpot::t('New');
     }
 }

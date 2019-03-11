@@ -128,7 +128,7 @@ class HubSpot extends Plugin
             [
                 'subnav' => [
                     'hubspot.settings' => [
-                        'label' => Craft::t('hubspot', 'Settings'),
+                        'label' => static::t('Settings'),
                         'url' => 'hubspot/settings',
                     ]
                 ]

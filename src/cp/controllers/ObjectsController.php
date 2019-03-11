@@ -12,6 +12,7 @@ use Craft;
 use craft\helpers\ArrayHelper;
 use flipbox\craft\hubspot\actions\objects\AssociateObject;
 use flipbox\craft\hubspot\actions\objects\DissociateObject;
+use flipbox\craft\hubspot\HubSpot;
 use flipbox\craft\hubspot\records\ObjectAssociation;
 
 /**
@@ -41,12 +42,12 @@ class ObjectsController extends AbstractController
                 'flash' => [
                     'actions' => [
                         'associate' => [
-                            200 => Craft::t('hubspot', "HubSpot Object associated successfully"),
-                            400 => Craft::t('hubspot', "Failed to associate HubSpot Object")
+                            200 => HubSpot::t("HubSpot Object associated successfully"),
+                            400 => HubSpot::t("Failed to associate HubSpot Object")
                         ],
                         'dissociate' => [
-                            200 => Craft::t('hubspot', "HubSpot Object dissociated successfully"),
-                            400 => Craft::t('hubspot', "Failed to dissociate HubSpot Object")
+                            200 => HubSpot::t("HubSpot Object dissociated successfully"),
+                            400 => HubSpot::t("Failed to dissociate HubSpot Object")
                         ]
                     ]
                 ]

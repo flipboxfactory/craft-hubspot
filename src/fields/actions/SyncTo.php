@@ -8,9 +8,9 @@
 
 namespace flipbox\craft\hubspot\fields\actions;
 
-use Craft;
 use craft\base\ElementInterface;
 use flipbox\craft\hubspot\fields\ObjectsFieldInterface;
+use flipbox\craft\hubspot\HubSpot;
 use flipbox\craft\integration\fields\actions\AbstractIntegrationAction;
 use flipbox\craft\integration\fields\Integrations;
 use flipbox\craft\integration\queries\IntegrationAssociationQuery;
@@ -23,7 +23,7 @@ class SyncTo extends AbstractIntegrationAction
      */
     public function getTriggerLabel(): string
     {
-        return Craft::t('hubspot', 'Create HubSpot Object from Element');
+        return HubSpot::t('Create HubSpot Object from Element');
     }
 
     /**
@@ -31,8 +31,7 @@ class SyncTo extends AbstractIntegrationAction
      */
     public function getConfirmationMessage()
     {
-        return Craft::t(
-            'hubspot',
+        return HubSpot::t(
             "This element will be used to create a new HubSpot Object.  Please confirm to continue."
         );
     }

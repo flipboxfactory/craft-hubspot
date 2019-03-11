@@ -8,9 +8,9 @@
 
 namespace flipbox\craft\hubspot\fields\actions;
 
-use Craft;
 use craft\base\ElementInterface;
 use flipbox\craft\hubspot\fields\ObjectsFieldInterface;
+use flipbox\craft\hubspot\HubSpot;
 use flipbox\craft\integration\fields\actions\AbstractIntegrationItemAction;
 use flipbox\craft\integration\fields\Integrations;
 use flipbox\craft\integration\records\IntegrationAssociation;
@@ -22,7 +22,7 @@ class SyncItemTo extends AbstractIntegrationItemAction
      */
     public function getTriggerLabel(): string
     {
-        return Craft::t('hubspot', 'Sync To HubSpot');
+        return HubSpot::t('Sync To HubSpot');
     }
 
     /**
@@ -30,7 +30,7 @@ class SyncItemTo extends AbstractIntegrationItemAction
      */
     public function getConfirmationMessage()
     {
-        return Craft::t('hubspot', "Performing a sync will transmit any unsaved data.  Please confirm to continue.");
+        return HubSpot::t("Performing a sync will transmit any unsaved data.  Please confirm to continue.");
     }
 
     /**

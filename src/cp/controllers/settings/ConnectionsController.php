@@ -15,6 +15,7 @@ use flipbox\craft\hubspot\actions\connections\DeleteConnection;
 use flipbox\craft\hubspot\actions\connections\UpdateConnection;
 use flipbox\craft\hubspot\cp\controllers\AbstractController;
 use flipbox\craft\hubspot\cp\Cp;
+use flipbox\craft\hubspot\HubSpot;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -46,16 +47,16 @@ class ConnectionsController extends AbstractController
                 'flash' => [
                     'actions' => [
                         'create' => [
-                            201 => Craft::t('hubspot', "Connection successfully created."),
-                            400 => Craft::t('hubspot', "Failed to create connection.")
+                            201 => HubSpot::t("Connection successfully created."),
+                            400 => HubSpot::t("Failed to create connection.")
                         ],
                         'update' => [
-                            200 => Craft::t('hubspot', "Connection successfully updated."),
-                            400 => Craft::t('hubspot', "Failed to update connection.")
+                            200 => HubSpot::t("Connection successfully updated."),
+                            400 => HubSpot::t("Failed to update connection.")
                         ],
                         'delete' => [
-                            204 => Craft::t('hubspot', "Connection successfully deleted."),
-                            400 => Craft::t('hubspot', "Failed to delete connection.")
+                            204 => HubSpot::t("Connection successfully deleted."),
+                            400 => HubSpot::t("Failed to delete connection.")
                         ]
                     ]
                 ]

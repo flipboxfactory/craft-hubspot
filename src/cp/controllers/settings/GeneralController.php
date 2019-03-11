@@ -12,6 +12,7 @@ use Craft;
 use craft\helpers\ArrayHelper;
 use flipbox\craft\hubspot\cp\actions\SaveSettings;
 use flipbox\craft\hubspot\cp\controllers\AbstractController;
+use flipbox\craft\hubspot\HubSpot;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -39,8 +40,8 @@ class GeneralController extends AbstractController
                 'flash' => [
                     'actions' => [
                         'save' => [
-                            200 => Craft::t('hubspot', "Settings successfully saved."),
-                            400 => Craft::t('hubspot', "Failed to save settings.")
+                            200 => HubSpot::t("Settings successfully saved."),
+                            400 => HubSpot::t("Failed to save settings.")
                         ]
                     ]
                 ]

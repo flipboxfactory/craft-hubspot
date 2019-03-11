@@ -12,6 +12,7 @@ use Craft;
 use craft\base\ElementInterface;
 use craft\helpers\ArrayHelper;
 use flipbox\craft\hubspot\cp\actions\widgets\SyncFrom;
+use flipbox\craft\hubspot\HubSpot;
 use yii\web\HttpException;
 
 /**
@@ -40,8 +41,8 @@ class WidgetsController extends AbstractController
                 'flash' => [
                     'actions' => [
                         'sync-from' => [
-                            200 => Craft::t('hubspot', "HubSpot Object synced successfully"),
-                            400 => Craft::t('hubspot', "Failed to sync HubSpot Object")
+                            200 => HubSpot::t("HubSpot Object synced successfully"),
+                            400 => HubSpot::t("Failed to sync HubSpot Object")
                         ]
                     ]
                 ]
