@@ -6,12 +6,14 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\models;
+namespace flipbox\craft\hubspot\models;
 
 use craft\base\Model;
-use flipbox\ember\helpers\ModelHelper;
-use flipbox\hubspot\services\Connections;
-use yii\caching\Dependency;
+use flipbox\craft\hubspot\helpers\TransformerHelper;
+use flipbox\craft\hubspot\services\Cache;
+use flipbox\craft\hubspot\services\Connections;
+use flipbox\craft\hubspot\transformers\CreateUpsertPayloadFromElement;
+use flipbox\craft\hubspot\transformers\PopulateElementFromResponse;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -20,39 +22,24 @@ use yii\caching\Dependency;
 class Settings extends Model
 {
     /**
-     * @var bool
-     */
-    public $debugMode = false;
-
-    /**
      * @var string
      */
     public $environmentTablePostfix = '';
 
     /**
-     * @var int|null|false
+     * @var string
      */
-    public $associationsCacheDuration = false;
-
-    /**
-     * @var null|Dependency
-     */
-    public $associationsCacheDependency = null;
+    private $defaultCache = Cache::APP_CACHE;
 
     /**
      * @var string
      */
-    private $defaultConnection = Connections::APP_CONNECTION;
+    private $defaultConnection = Connections::DEFAULT_CONNECTION;
 
     /**
      * @var string
      */
-    private $defaultIntegrationConnection = Connections::INTEGRATION_CONNECTION;
-
-    /**
-     * @var string
-     */
-    private $defaultCache = Connections::APP_CONNECTION;
+    private $defaultIntegrationConnection = Connections::DEFAULT_INTEGRATION_CONNECTION;
 
     /**
      * @param string $key
@@ -70,6 +57,16 @@ class Settings extends Model
     public function getDefaultConnection(): string
     {
         return $this->defaultConnection;
+    }
+
+    /**
+     * @param string $key
+     * @return $this
+     */
+    public function setDefaultIntegrationConnection(string $key)
+    {
+        $this->defaultIntegrationConnection = $key;
+        return $this;
     }
 
     /**
@@ -99,6 +96,28 @@ class Settings extends Model
     }
 
     /**
+     * @return callable
+     */
+    public function getSyncUpsertPayloadTransformer(): callable
+    {
+        return TransformerHelper::resolveTransformer([
+            'class' => CreateUpsertPayloadFromElement::class,
+            'action' => 'sync'
+        ]);
+    }
+
+    /**
+     * @return callable
+     */
+    public function getSyncPopulateElementTransformer(): callable
+    {
+        return TransformerHelper::resolveTransformer([
+            'class' => PopulateElementFromResponse::class,
+            'action' => 'sync'
+        ]);
+    }
+
+    /**
      * @return array
      */
     public function attributes()
@@ -107,6 +126,7 @@ class Settings extends Model
             parent::attributes(),
             [
                 'defaultConnection',
+                'defaultIntegrationConnection',
                 'defaultCache'
             ]
         );
@@ -123,11 +143,12 @@ class Settings extends Model
                 [
                     [
                         'defaultConnection',
+                        'defaultIntegrationConnection',
                         'defaultCache'
                     ],
                     'safe',
                     'on' => [
-                        ModelHelper::SCENARIO_DEFAULT
+                        self::SCENARIO_DEFAULT
                     ]
                 ]
             ]

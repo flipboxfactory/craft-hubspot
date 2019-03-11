@@ -6,8 +6,10 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\connections;
+namespace flipbox\craft\hubspot\connections;
 
+use Craft;
+use flipbox\craft\integration\connections\AbstractSaveableConnection;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -15,17 +17,71 @@ use Psr\Http\Message\ResponseInterface;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class ApplicationKeyConnection implements ConnectionInterface
+class ApplicationKeyConnection extends AbstractSaveableConnection implements SavableConnectionInterface
 {
     /**
-     * @var
+     * @var string
      */
     public $key;
 
     /**
-     * @var
+     * @var string
      */
     public $hubId;
+
+    /**
+     * Returns the display name of this class.
+     *
+     * @return string The display name of this class.
+     */
+    public static function displayName(): string
+    {
+        return 'Application Key';
+    }
+
+    /**
+     * @inheritdoc
+     * @throws \Twig_Error_Loader
+     * @throws \yii\base\Exception
+     */
+    public function getSettingsHtml()
+    {
+        return Craft::$app->getView()->renderTemplate(
+            'hubspot/_components/connections/applicationKey',
+            [
+                'connection' => $this
+            ]
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return array_merge(
+            parent::rules(),
+            [
+                [
+                    [
+                        'key',
+                        'hubId'
+                    ],
+                    'required'
+                ],
+                [
+                    [
+                        'key',
+                        'hubId'
+                    ],
+                    'safe',
+                    'on' => [
+                        static::SCENARIO_DEFAULT
+                    ]
+                ]
+            ]
+        );
+    }
 
     /**
      * @return string

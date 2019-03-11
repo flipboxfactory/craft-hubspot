@@ -6,25 +6,32 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\fields;
+namespace flipbox\craft\hubspot\fields;
 
 use Craft;
+use craft\base\Element;
+use craft\base\ElementInterface;
+use craft\helpers\ArrayHelper;
+use flipbox\craft\ember\helpers\SiteHelper;
+use flipbox\craft\hubspot\fields\actions\SyncItemFrom;
+use flipbox\craft\hubspot\fields\actions\SyncItemTo;
+use flipbox\craft\hubspot\fields\actions\SyncTo;
+use flipbox\craft\hubspot\helpers\TransformerHelper;
+use flipbox\craft\hubspot\HubSpot;
+use flipbox\craft\hubspot\records\ObjectAssociation;
+use flipbox\craft\hubspot\transformers\PopulateElementErrorsFromResponse;
+use flipbox\craft\hubspot\transformers\PopulateElementErrorsFromUpsertResponse;
 use flipbox\craft\integration\fields\Integrations;
-use flipbox\craft\integration\services\IntegrationAssociations;
-use flipbox\craft\integration\services\IntegrationField;
+use flipbox\craft\integration\queries\IntegrationAssociationQuery;
 use flipbox\hubspot\connections\ConnectionInterface;
-use flipbox\hubspot\HubSpot;
-use flipbox\hubspot\services\ObjectAssociations;
-use flipbox\hubspot\services\ObjectsField;
-use flipbox\hubspot\services\resources\CRUDInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\SimpleCache\CacheInterface;
-use yii\base\InvalidConfigException;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class Objects extends Integrations
+abstract class Objects extends Integrations implements ObjectsFieldInterface
 {
     /**
      * @inheritdoc
@@ -77,41 +84,48 @@ class Objects extends Integrations
      * the HubSpot Contact already exists; true would override data in HubSpot while false would just perform
      * an association (note, a subsequent sync operation could be preformed)
      * @var bool
+     *
+     * @deprecated
      */
     public $syncToHubSpotOnMatch = false;
 
     /**
      * @inheritdoc
-     * @return ObjectsField
      */
-    protected function fieldService(): IntegrationField
-    {
-        return HubSpot::getInstance()->getObjectsField();
-    }
-
-    /**
-     * @inheritdoc
-     * @return ObjectAssociations
-     */
-    protected function associationService(): IntegrationAssociations
-    {
-        return HubSpot::getInstance()->getObjectAssociations();
-    }
+    protected $defaultAvailableActions = [
+        SyncTo::class
+    ];
 
     /**
      * @inheritdoc
      */
-    public static function displayName(): string
-    {
-        return Craft::t('hubspot', 'HubSpot Objects');
-    }
+    protected $defaultAvailableItemActions = [
+        SyncItemFrom::class,
+        SyncItemTo::class,
+    ];
+
+    /**
+     * @param array $payload
+     * @param string|null $id
+     * @return ResponseInterface
+     */
+    abstract protected function upsertToHubSpot(
+        array $payload,
+        string $id = null
+    ): ResponseInterface;
+
+    /**
+     * @param ResponseInterface $response
+     * @return string|null
+     */
+    abstract protected function getObjectIdFromResponse(ResponseInterface $response);
 
     /**
      * @inheritdoc
      */
-    public static function defaultSelectionLabel(): string
+    public static function recordClass(): string
     {
-        return Craft::t('hubspot', 'Add a HubSpot Objects');
+        return ObjectAssociation::class;
     }
 
     /*******************************************
@@ -120,12 +134,11 @@ class Objects extends Integrations
 
     /**
      * @return ConnectionInterface
-     * @throws \yii\base\InvalidConfigException
+     * @throws \flipbox\craft\integration\exceptions\ConnectionNotFound
      */
     public function getConnection(): ConnectionInterface
     {
-        $service = HubSpot::getInstance()->getConnections();
-        return $service->get($service::DEFAULT_CONNECTION);
+        return HubSpot::getInstance()->getConnections()->get();
     }
 
     /*******************************************
@@ -134,34 +147,221 @@ class Objects extends Integrations
 
     /**
      * @return CacheInterface
-     * @throws \yii\base\InvalidConfigException
      */
     public function getCache(): CacheInterface
     {
-        $service = HubSpot::getInstance()->getCache();
-        return $service->get($service::DEFAULT_CACHE);
+        return HubSpot::getInstance()->getCache()->get();
     }
 
+
     /*******************************************
-     * CRUD
+     * SYNC TO
      *******************************************/
 
     /**
-     * @return CRUDInterface
-     * @throws InvalidConfigException
+     * @inheritdoc
+     * @throws \Throwable
      */
-    public function getResource(): CRUDInterface
-    {
-        $service = HubSpot::getInstance()->getResources()->get($this->object);
+    public function syncToHubSpot(
+        ElementInterface $element,
+        string $objectId = null,
+        $transformer = null
+    ): bool {
+        /** @var Element $element */
 
-        if (!$service instanceof CRUDInterface) {
-            throw new InvalidConfigException(sprintf(
-                "Resource must be an instance of '%s', '%s' given",
-                CRUDInterface::class,
-                get_class($service)
-            ));
+        $id = $objectId ?: $this->resolveObjectIdFromElement($element);
+
+        // Get callable used to create payload
+        if (null === ($transformer = TransformerHelper::resolveTransformer($transformer))) {
+            $transformer = HubSpot::getInstance()->getSettings()->getSyncUpsertPayloadTransformer();
         }
 
-        return $service;
+        // Create payload
+        $payload = call_user_func_array(
+            $transformer,
+            [
+                $element,
+                $this,
+                $id
+            ]
+        );
+
+        $response = $this->upsertToHubSpot($payload, $id);
+
+        return $this->handleSyncToHubSpotResponse(
+            $response,
+            $element,
+            $id
+        );
+    }
+
+    /*******************************************
+     * SYNC FROM
+     *******************************************/
+
+    /**
+     * @@inheritdoc
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function syncFromHubSpot(
+        ElementInterface $element,
+        string $objectId = null,
+        $transformer = null
+    ): bool {
+
+        $id = $objectId ?: $this->resolveObjectIdFromElement($element);
+
+        if (null === $id) {
+            return false;
+        }
+
+        $response = $this->readFromHubSpot($id);
+
+        if (($response->getStatusCode() < 200 || $response->getStatusCode() >= 300)) {
+            call_user_func_array(
+                new PopulateElementErrorsFromResponse(),
+                [
+                    $response,
+                    $element,
+                    $this,
+                    $id
+                ]
+            );
+            return false;
+        }
+
+        // Get callable used to populate element
+        if (null === ($transformer = TransformerHelper::resolveTransformer($transformer))) {
+            $transformer = HubSpot::getInstance()->getSettings()->getSyncPopulateElementTransformer();
+        }
+
+        // Populate element
+        call_user_func_array(
+            $transformer,
+            [
+                $response,
+                $element,
+                $this,
+                $id
+            ]
+        );
+
+        if ($objectId !== null) {
+            $this->addAssociation(
+                $element,
+                $id
+            );
+        }
+
+        return Craft::$app->getElements()->saveElement($element);
+    }
+
+
+    /**
+     * @param ElementInterface|Element $element
+     * @param string $id
+     * @return bool
+     * @throws \Throwable
+     */
+    protected function addAssociation(
+        ElementInterface $element,
+        string $id
+    ) {
+        /** @var IntegrationAssociationQuery $query */
+        if (null === ($query = $element->getFieldValue($this->handle))) {
+            HubSpot::warning("Field is not available on element.");
+            return false;
+        };
+
+        $associations = ArrayHelper::index($query->all(), 'objectId');
+
+        if (!array_key_exists($id, $associations)) {
+            $associations[$id] = $association = new ObjectAssociation([
+                'element' => $element,
+                'field' => $this,
+                'siteId' => SiteHelper::ensureSiteId($element->siteId),
+                'objectId' => $id
+            ]);
+
+            $query->setCachedResult(array_values($associations));
+
+            return $association->save();
+        }
+
+        return true;
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @param ElementInterface $element
+     * @param string|null $objectId
+     * @return bool
+     * @throws \Throwable
+     */
+    protected function handleSyncToHubSpotResponse(
+        ResponseInterface $response,
+        ElementInterface $element,
+        string $objectId = null
+    ): bool {
+
+        /** @var Element $element */
+
+        if (!($response->getStatusCode() >= 200 && $response->getStatusCode() <= 299)) {
+            call_user_func_array(
+                new PopulateElementErrorsFromUpsertResponse(),
+                [
+                    $response,
+                    $element,
+                    $this,
+                    $objectId
+                ]
+            );
+            return false;
+        }
+
+        if (empty($objectId)) {
+            if (null === ($objectId = $this->getObjectIdFromResponse($response))) {
+                HubSpot::error("Unable to determine object id from response");
+                return false;
+            };
+
+            return $this->addAssociation($element, $objectId);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param ElementInterface|Element $element
+     * @return null|string
+     */
+    protected function resolveObjectIdFromElement(
+        ElementInterface $element
+    ) {
+
+        if (!$objectId = ObjectAssociation::find()
+            ->select(['objectId'])
+            ->elementId($element->getId())
+            ->fieldId($this->id)
+            ->siteId(SiteHelper::ensureSiteId($element->siteId))
+            ->scalar()
+        ) {
+            HubSpot::warning(sprintf(
+                "HubSpot Object Id association was not found for element '%s'",
+                $element->getId()
+            ));
+
+            return null;
+        }
+
+        HubSpot::info(sprintf(
+            "HubSpot Object Id '%s' was found for element '%s'",
+            $objectId,
+            $element->getId()
+        ));
+
+        return $objectId;
     }
 }

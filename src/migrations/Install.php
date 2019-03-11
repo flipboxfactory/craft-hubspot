@@ -6,7 +6,7 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\migrations;
+namespace flipbox\craft\hubspot\migrations;
 
 use craft\db\Migration;
 
@@ -21,8 +21,13 @@ class Install extends Migration
      */
     public function safeUp()
     {
-        (new ObjectAssociation())
-            ->safeUp();
+        if (false === (new ObjectAssociations())->safeUp()) {
+            return false;
+        };
+
+        if (false === (new m190222_101208_connections())->safeUp()) {
+            return false;
+        };
 
         return true;
     }
@@ -32,8 +37,13 @@ class Install extends Migration
      */
     public function safeDown()
     {
-        (new ObjectAssociation())
-            ->safeDown();
+        if (false === (new ObjectAssociations())->safeDown()) {
+            return false;
+        };
+
+        if (false === (new m190222_101208_connections())->safeDown()) {
+            return false;
+        };
 
         return true;
     }

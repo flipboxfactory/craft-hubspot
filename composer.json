@@ -1,7 +1,7 @@
 {
   "name": "flipboxfactory/craft-hubspot",
   "description": "HubSpot integration for Craft CMS",
-  "version": "1.0.0-rc.16",
+  "version": "1.0.0",
   "type": "craft-plugin",
   "license": "proprietary",
   "keywords": [
@@ -12,14 +12,10 @@
   ],
   "require": {
     "craftcms/cms": "^3.0.14",
-    "flipboxfactory/patron": "^1.0",
-    "flipboxdigital/oauth2-hubspot": "^1.0",
-    "flipboxdigital/relay-hubspot": "^1.0.4",
-    "flipboxfactory/craft-integration": "^1.0.3",
-    "flipboxfactory/craft-psr16": "^1.0",
-    "flipboxfactory/craft-psr3": "^1.0",
-    "flipboxfactory/flux": "~1.0.0-rc.5",
-    "flipboxdigital/pipeline": "^1.1"
+    "flipboxdigital/hubspot": "^2.1",
+    "flipboxfactory/craft-ember": "^2.1",
+    "flipboxfactory/craft-integration": "^2.2",
+    "flipboxfactory/craft-psr3": "^1.1"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.2",
@@ -28,12 +24,12 @@
   },
   "autoload": {
     "psr-4": {
-      "flipbox\\hubspot\\": "src/"
+      "flipbox\\craft\\hubspot\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "flipbox\\hubspot\\tests\\": "tests/src/"
+      "flipbox\\craft\\hubspot\\tests\\": "tests/src/"
     }
   },
   "support": {
@@ -46,17 +42,17 @@
   "extra": {
     "name": "HubSpot",
     "handle": "hubspot",
+    "class": "flipbox\\craft\\hubspot\\HubSpot",
     "developer": "Flipbox Digital",
     "developerUrl": "https://www.flipboxdigital.com",
-    "class": "flipbox\\hubspot\\HubSpot",
     "changelogUrl": "https://raw.githubusercontent.com/flipboxfactory/craft-hubspot/master/CHANGELOG.md",
-    "downloadUrl": "https://github.com/flipboxfactory/craft-hubspot/archive/master.zip",
+    "documentationUrl": "https://hubspot.flipboxfactory.com",
     "hasCpSettings": true,
-    "hasCpSection": false,
-    "schemaVersion": "1.0.0",
+    "hasCpSection": true,
+    "schemaVersion": "1.2.0",
     "branch-alias": {
-      "dev-develop": "1.0.x-dev",
-      "dev-master": "1.0.x-dev"
+      "dev-master": "1.0.x-dev",
+      "dev-develop": "1.0.x-dev"
     }
   }
 }

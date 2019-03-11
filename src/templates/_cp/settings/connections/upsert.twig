@@ -1,0 +1,142 @@
+{% extends "hubspot/_cp/settings/_layout" %}
+{% import "_includes/forms" as forms %}
+
+{% block actionButton %}
+    <div class="btngroup submit right">
+        <input type="submit" class="btn submit" value="{{ 'Save'|t('app') }}">
+        <div class="btn submit menubtn"></div>
+        <div class="menu">
+            <ul role="listbox">
+                <li>
+                    <a class="formsubmit"
+                       data-redirect="{{ continueEditingUrl|hash }}">
+                        {{ "Save and continue editing"|t('app') }}
+                        {{ forms.optionShortcutLabel('S') }}
+                    </a>
+                </li>
+                <li>
+                    <a class="formsubmit"
+                       data-redirect="{{ baseCpPath~'/new'|hash }}">
+                        {{ "Save and add another"|t('app') }}
+                    </a>
+                </li>
+            </ul>
+            {% if connection and connection.id %}
+                <hr/>
+                <ul role="listbox">
+                    <li>
+                        <a class="formsubmit error"
+                           data-action="{{ baseActionPath }}/delete"
+                           data-confirm="{{ 'Are you sure you want to delete this connection?'|t('hubspot') }}"
+                           data-redirect="{{ baseCpPath|hash }}"
+                           role="option"
+                           tabindex="-1">{{ "Delete"|t('app') }}</a>
+                    </li>
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <input type="hidden" name="action"
+           value="{{ baseActionPath }}/{% if connection and connection.id %}update{% else %}create{% endif %}">
+    {% if connection and connection.id %}<input type="hidden" name="connection" value="{{ connection.id }}">{% endif %}
+    {{ redirectInput(baseCpPath) }}
+
+    <div id="connection">
+
+        {{ forms.textField({
+            label: "Name"|t('hubspot'),
+            instructions: "The human readable reference to this connection."|t('hubspot'),
+            id: 'name',
+            name: 'name',
+            value: connection.name ?? '',
+            errors: connection.getErrors('name') ?? [],
+            required: true
+        }) }}
+
+        {{ forms.textField({
+            label: "Handle"|t('hubspot'),
+            instructions: "How you’ll refer to this connection in the templates."|t('hubspot'),
+            id: 'handle',
+            class: 'code',
+            name: 'handle',
+            value: connection.handle ?? '',
+            errors: connection.getErrors('handle') ?? [],
+            required: true
+        }) }}
+
+        {% set typeOptions = [] %}
+        {% for class, type in types %}
+            {% set typeOptions = typeOptions|merge([{
+                label: type.displayName,
+                value: class
+            }]) %}
+        {% endfor %}
+
+        {{ forms.selectField({
+            label: "Type"|t('app'),
+            instructions: "The type of connection"|t('hubspot'),
+            id: 'class',
+            name: 'class',
+            options: typeOptions,
+            value: connection.class ?? '',
+            errors: adapter.getErrors('class') ?? null,
+            toggle: true
+        }) }}
+
+        <hr />
+
+        {% for class, type in types %}
+            {% set isCurrent = class == (connection.class ?? '') %}
+            <div{% if not isCurrent and types|length > 1 %} class="hidden"{% endif %}>
+                {% namespace 'settings['~class~']' %}
+                    {% if isCurrent %}
+                        {% set type = connection.connection %}
+                    {% endif %}
+
+                    {% if type is instance of("flipbox\\craft\\hubspot\\connections\\SavableConnectionInterface") %}
+                        {{ type.getSettingsHtml()|raw }}
+                    {% endif %}
+                {% endnamespace %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+
+{% block details %}
+    <div id="settings" class="meta">
+        {{ forms.lightswitchField({
+            label: "Enabled"|t('app'),
+            id: 'enabled',
+            name: 'enabled',
+            on: connection.id ? connection.enabled : true,
+            errors: connection.getErrors('enabled')
+        }) }}
+    </div>
+
+    {% if connection.id %}
+        <hr>
+        <div class="meta read-only">
+            <div class="data">
+                <h5 class="heading">{{ "Created at"|t('app') }}</h5>
+                <div class="value">{{ connection.dateCreated|datetime('short') }}</div>
+            </div>
+            <div class="data">
+                <h5 class="heading">{{ "Updated at"|t('app') }}</h5>
+                <div class="value">{{ connection.dateUpdated|datetime('short') }}</div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% hook 'hubspot.connection.edit.sidebar' %}
+
+{% endblock %}
+
+{% if not connection.id %}
+    {% js %}
+        new Craft.HandleGenerator('#name', '#handle');
+    {% endjs %}
+{% endif %}

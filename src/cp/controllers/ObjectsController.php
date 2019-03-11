@@ -6,13 +6,14 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\cp\controllers;
+namespace flipbox\craft\hubspot\cp\controllers;
 
 use Craft;
 use craft\helpers\ArrayHelper;
-use flipbox\hubspot\actions\objects\Associate;
-use flipbox\hubspot\actions\objects\Dissociate;
-use flipbox\hubspot\records\ObjectAssociation;
+use flipbox\craft\hubspot\actions\objects\AssociateObject;
+use flipbox\craft\hubspot\actions\objects\DissociateObject;
+use flipbox\craft\hubspot\HubSpot;
+use flipbox\craft\hubspot\records\ObjectAssociation;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -41,12 +42,12 @@ class ObjectsController extends AbstractController
                 'flash' => [
                     'actions' => [
                         'associate' => [
-                            200 => Craft::t('hubspot', "HubSpot Object associated successfully"),
-                            400 => Craft::t('hubspot', "Failed to associate HubSpot Object")
+                            200 => HubSpot::t("HubSpot Object associated successfully"),
+                            400 => HubSpot::t("Failed to associate HubSpot Object")
                         ],
                         'dissociate' => [
-                            200 => Craft::t('hubspot', "HubSpot Object dissociated successfully"),
-                            400 => Craft::t('hubspot', "Failed to dissociate HubSpot Object")
+                            200 => HubSpot::t("HubSpot Object dissociated successfully"),
+                            400 => HubSpot::t("Failed to dissociate HubSpot Object")
                         ]
                     ]
                 ]
@@ -86,9 +87,9 @@ class ObjectsController extends AbstractController
             $element = Craft::$app->getRequest()->getRequiredParam('element');
         }
 
-        /** @var Associate $action */
+        /** @var AssociateObject $action */
         return (Craft::createObject([
-            'class' => Associate::class
+            'class' => AssociateObject::class
         ], [
             'associate',
             $this
@@ -126,9 +127,9 @@ class ObjectsController extends AbstractController
             $element = Craft::$app->getRequest()->getRequiredParam('element');
         }
 
-        /** @var Dissociate $action */
+        /** @var DissociateObject $action */
         return (Craft::createObject([
-            'class' => Dissociate::class
+            'class' => DissociateObject::class
         ], [
             'dissociate',
             $this

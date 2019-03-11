@@ -6,9 +6,12 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\cp;
+namespace flipbox\craft\hubspot\cp;
 
 use Craft;
+use flipbox\craft\hubspot\connections\ApplicationKeyConnection;
+use flipbox\craft\hubspot\connections\SavableConnectionInterface;
+use flipbox\craft\hubspot\events\RegisterConnectionsEvent;
 use flipbox\hubspot\HubSpot;
 use yii\base\Module as BaseModule;
 use yii\web\NotFoundHttpException;
@@ -22,6 +25,11 @@ use yii\web\NotFoundHttpException;
 class Cp extends BaseModule
 {
     /**
+     * @var SavableConnectionInterface[]
+     */
+    private $registeredConnections;
+
+    /**
      * @inheritdoc
      * @throws NotFoundHttpException
      */
@@ -32,5 +40,32 @@ class Cp extends BaseModule
         }
 
         return parent::beforeAction($action);
+    }
+
+    /*******************************************
+     * CONNECTIONS
+     *******************************************/
+
+    /**
+     * @return SavableConnectionInterface[]
+     */
+    public function getAvailableConnections(): array
+    {
+        if ($this->registeredConnections === null) {
+            $event = new RegisterConnectionsEvent([
+                'connections' => [
+                    ApplicationKeyConnection::class
+                ]
+            ]);
+
+            $this->trigger(
+                $event::REGISTER_CONNECTIONS,
+                $event
+            );
+
+            $this->registeredConnections = $event->connections;
+        }
+
+        return $this->registeredConnections;
     }
 }

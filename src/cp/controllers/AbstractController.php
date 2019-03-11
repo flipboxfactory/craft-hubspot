@@ -6,13 +6,13 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\cp\controllers;
+namespace flipbox\craft\hubspot\cp\controllers;
 
 use craft\helpers\ArrayHelper;
-use flipbox\ember\filters\FlashMessageFilter;
-use flipbox\ember\filters\ModelErrorFilter;
-use flipbox\ember\filters\RedirectFilter;
-use flipbox\hubspot\cp\Cp;
+use flipbox\craft\ember\filters\FlashMessageFilter;
+use flipbox\craft\ember\filters\ModelErrorFilter;
+use flipbox\craft\ember\filters\RedirectFilter;
+use flipbox\craft\hubspot\cp\Cp;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -20,7 +20,7 @@ use flipbox\hubspot\cp\Cp;
  *
  * @property Cp $module
  */
-abstract class AbstractController extends \flipbox\ember\controllers\AbstractController
+abstract class AbstractController extends \flipbox\craft\ember\controllers\AbstractController
 {
     /**
      * @return array

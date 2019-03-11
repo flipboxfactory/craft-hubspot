@@ -1,12 +1,3 @@
 {% embed "flipbox/integration/fieldtypes/Objects/settings" %}
-    {% import "_includes/forms" as forms %}
-    {% block objectField %}
-        {{ forms.selectField({
-            label: "HubSpot Object"|t('hubspot'),
-            id: 'object',
-            name: 'object',
-            value: field.object,
-            options: objects
-        }) }}
-    {% endblock %}
+    {% block objectField %}{% endblock %}
 {% endembed %}

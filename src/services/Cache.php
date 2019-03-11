@@ -6,127 +6,40 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\services;
+namespace flipbox\craft\hubspot\services;
 
-use Craft;
-use flipbox\craft\psr16\SimpleCacheAdapter;
-use flipbox\hubspot\events\RegisterCacheEvent;
-use flipbox\hubspot\HubSpot;
-use yii\base\InvalidConfigException;
-use yii\caching\CacheInterface;
-use yii\caching\DummyCache;
-use yii\di\ServiceLocator;
+use flipbox\craft\hubspot\HubSpot;
+use flipbox\craft\integration\services\IntegrationCache;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class Cache extends ServiceLocator
+class Cache extends IntegrationCache
 {
     /**
-     * @event RegisterConnectionsEvent The event that is triggered when registering caches.
+     * The override file
      */
-    const EVENT_REGISTER_CACHE = 'registerCache';
-
-    /**
-     * The dummy cache handle
-     */
-    const DUMMY_CACHE = 'dummy';
-
-    /**
-     * The app cache handle
-     */
-    const APP_CACHE = 'app';
-
-    /**
-     * The default cache identifier
-     */
-    const DEFAULT_CACHE = 'DEFAULT';
+    public $overrideFile = 'hubspot-cache';
 
     /**
      * @inheritdoc
      */
-    public function init()
+    protected function getDefaultCache(): string
     {
-        parent::init();
-
-        $event = new RegisterCacheEvent([
-            'cache' => [
-                self::APP_CACHE => Craft::$app->getCache(),
-                self::DUMMY_CACHE => [
-                    'class' => DummyCache::class
-                ]
-            ]
-        ]);
-
-        $this->trigger(self::EVENT_REGISTER_CACHE, $event);
-
-        $this->setComponents(
-            $event->cache
-        );
+        return HubSpot::getInstance()->getSettings()->getDefaultCache();
     }
 
     /**
      * @inheritdoc
-     * @return SimpleCacheAdapter
      */
-    public function get($id, $throwException = true)
+    protected function handleCacheNotFound(string $handle)
     {
-        if ($id === self::DEFAULT_CACHE) {
-            $id = HubSpot::getInstance()->getSettings()->getDefaultCache();
-        }
+        HubSpot::warning(sprintf(
+            "Unable to find cache '%s'.",
+            $handle
+        ));
 
-        return $this->resolveSimpleCache(
-            parent::get($id, $throwException),
-            $id
-        );
-    }
-
-    /**
-     * @param $cache
-     * @param string $id
-     * @return SimpleCacheAdapter
-     * @throws InvalidConfigException
-     */
-    private function resolveSimpleCache($cache, string $id): SimpleCacheAdapter
-    {
-        if ($cache instanceof SimpleCacheAdapter) {
-            return $cache;
-        }
-
-        if (!$cache instanceof CacheInterface) {
-            throw new InvalidConfigException(sprintf(
-                "Cache '%s' must be an instance of '%s', '%s' given.",
-                (string)$id,
-                CacheInterface::class,
-                get_class($cache)
-            ));
-        }
-
-        /** @var SimpleCacheAdapter $cacheAdapter */
-        $cacheAdapter = Craft::createObject([
-            'class' => SimpleCacheAdapter::class,
-            'cache' => $cache
-        ]);
-
-        $this->set($id, $cacheAdapter);
-
-        return $cacheAdapter;
-    }
-
-    /**
-     * @param bool $throwException
-     * @return CacheInterface[]
-     * @throws InvalidConfigException
-     */
-    public function getAll($throwException = true)
-    {
-        $components = [];
-
-        foreach ($this->getComponents(true) as $id => $component) {
-            $components[$id] = $this->get($id, $throwException);
-        }
-
-        return $components;
+        return parent::handleCacheNotFound($handle);
     }
 }

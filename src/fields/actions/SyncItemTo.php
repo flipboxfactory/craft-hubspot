@@ -6,10 +6,11 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\fields\actions;
+namespace flipbox\craft\hubspot\fields\actions;
 
-use Craft;
 use craft\base\ElementInterface;
+use flipbox\craft\hubspot\fields\ObjectsFieldInterface;
+use flipbox\craft\hubspot\HubSpot;
 use flipbox\craft\integration\fields\actions\AbstractIntegrationItemAction;
 use flipbox\craft\integration\fields\Integrations;
 use flipbox\craft\integration\records\IntegrationAssociation;
@@ -21,7 +22,7 @@ class SyncItemTo extends AbstractIntegrationItemAction
      */
     public function getTriggerLabel(): string
     {
-        return Craft::t('hubspot', 'Sync To HubSpot');
+        return HubSpot::t('Sync To HubSpot');
     }
 
     /**
@@ -29,17 +30,22 @@ class SyncItemTo extends AbstractIntegrationItemAction
      */
     public function getConfirmationMessage()
     {
-        return Craft::t('hubspot', "Performing a sync will transmit any unsaved data.  Please confirm to continue.");
+        return HubSpot::t("Performing a sync will transmit any unsaved data.  Please confirm to continue.");
     }
 
     /**
      * @inheritdoc
-     * @throws \yii\base\InvalidConfigException
+     * @throws \Throwable
      */
     public function performAction(Integrations $field, ElementInterface $element, IntegrationAssociation $record): bool
     {
-        if (!$field->getResource()->syncUp($element, $field)) {
-            $this->setMessage("Failed to sync to HubSpot Object");
+        if (!$field instanceof ObjectsFieldInterface) {
+            $this->setMessage("Invalid field type.");
+            return false;
+        }
+
+        if (!$field->syncToHubSpot($element)) {
+            $this->setMessage("Failed to sync to HubSpot");
             return false;
         }
 

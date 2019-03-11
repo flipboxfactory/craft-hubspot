@@ -1,8 +1,8 @@
 # Changelog
 
-## 1.0.0-rc.16 - 2018-10-31
+## 1.0.0
 ### Changed
-- Updated Patron dependency
+- GA release
 
 ## 1.0.0-rc.15 - 2018-10-09
 ### Fixed

@@ -1,0 +1,50 @@
+{% extends "hubspot/_cp/settings/_layout" %}
+{% import "_includes/forms" as forms %}
+
+{% set configOverrideMessage %}
+    <span class="config-override">[Config Override]</span>
+{% endset %}
+
+{% set config = craft.app.config.getConfigFromFile('hubspot') %}
+
+{% set content %}
+    <input type="hidden" name="action" value="{{ baseActionPath }}/save">
+    {{ redirectInput(baseCpPath) }}
+
+    {% set connecitonOptions = {(null): '-- Select Connection --'|t('hubspot')} %}
+    {% for connection in connections %}
+        {% set connecitonOptions = connecitonOptions|merge({
+            (connection.handle): connection.name
+        }) %}
+    {% endfor %}
+
+    {% set connectionOverride = attribute(config, 'defaultConnection') is defined %}
+    {{ forms.selectField({
+        label: "Default Connection"|t('hubspot'),
+        instructions: "The default connection is used when an API request is made without a specified connection." ~ (connectionOverride ? configOverrideMessage : '') |t('hubspot'),
+        id: 'defaultConnection',
+        name: 'defaultConnection',
+        value: settings.defaultConnection,
+        options: connecitonOptions,
+        required: true
+    }) }}
+
+    {% set cacheOptions = {(null): '-- Select Cache --'|t('hubspot')} %}
+    {% for key, config in craft.hubspot.cache.all %}
+        {% set cacheOptions = cacheOptions|merge({
+            (key): key
+            }) %}
+    {% endfor %}
+
+    {% set cacheOverride = attribute(config, 'defaultCache') is defined %}
+    {{ forms.selectField({
+        label: "Default Cache"|t('hubspot'),
+        instructions: "The default cache is used when an API request is made without a specified cache." ~ (cacheOverride ? configOverrideMessage : '') |t('hubspot'),
+        id: 'defaultCache',
+        name: 'defaultCache',
+        value: settings.defaultCache,
+        options: cacheOptions,
+        required: true
+    }) }}
+
+{% endset %}

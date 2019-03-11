@@ -6,9 +6,12 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\web\twig\variables;
+namespace flipbox\craft\hubspot\web\twig\variables;
 
-use flipbox\hubspot\HubSpot as HubSpotPlugin;
+use flipbox\craft\hubspot\HubSpot as HubSpotPlugin;
+use flipbox\craft\hubspot\models\Settings;
+use flipbox\craft\hubspot\services\Cache;
+use flipbox\craft\hubspot\services\Connections;
 use yii\di\ServiceLocator;
 
 /**
@@ -27,8 +30,40 @@ class HubSpot extends ServiceLocator
         $this->setComponents([
             'cache' => HubSpotPlugin::getInstance()->getCache(),
             'connections' => HubSpotPlugin::getInstance()->getConnections(),
-            'resources' => HubSpotPlugin::getInstance()->getResources(),
-            'settings' => HubSpotPlugin::getInstance()->getSettings()
+            'criteria' => Criteria::class
         ]);
+    }
+
+
+    /**
+     * Sub-Variables that are accessed 'craft.hubspot.settings'
+     *
+     * @return Settings
+     */
+    public function getSettings()
+    {
+        return HubSpotPlugin::getInstance()->getSettings();
+    }
+
+    /**
+     * @noinspection PhpDocMissingThrowsInspection
+     * @return Cache
+     */
+    public function getCache(): Cache
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->get('cache');
+    }
+
+    /**
+     * @noinspection PhpDocMissingThrowsInspection
+     * @return Connections
+     */
+    public function getConnections(): Connections
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->get('connections');
     }
 }

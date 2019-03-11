@@ -6,9 +6,9 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\hubspot\events;
+namespace flipbox\craft\hubspot\events;
 
-use flipbox\hubspot\connections\ConnectionInterface;
+use flipbox\craft\hubspot\connections\SavableConnectionInterface;
 use yii\base\Event;
 
 /**
@@ -18,7 +18,12 @@ use yii\base\Event;
 class RegisterConnectionsEvent extends Event
 {
     /**
-     * @var array|ConnectionInterface[]
+     * Event to register connections
+     */
+    const REGISTER_CONNECTIONS = 'registerConnections';
+
+    /**
+     * @var SavableConnectionInterface[]
      */
     public $connections = [];
 }
