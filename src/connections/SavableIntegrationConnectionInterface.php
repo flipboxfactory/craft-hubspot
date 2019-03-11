@@ -8,9 +8,8 @@
 
 namespace flipbox\craft\hubspot\connections;
 
-use flipbox\craft\integration\connections\SavableConnectionInterface as BaseSavableConnectionInterface;
 use Flipbox\HubSpot\Connections\IntegrationConnectionInterface;
 
-interface SavableIntegrationConnectionInterface extends IntegrationConnectionInterface, BaseSavableConnectionInterface
+interface SavableIntegrationConnectionInterface extends SavableConnectionInterface, IntegrationConnectionInterface
 {
 }

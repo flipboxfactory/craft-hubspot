@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 1.0.0
 ### Changed
-- Refactoring
+- GA release
 
 ## 1.0.0-rc.15 - 2018-10-09
 ### Fixed
