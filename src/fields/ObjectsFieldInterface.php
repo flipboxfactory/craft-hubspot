@@ -19,6 +19,11 @@ use Psr\Http\Message\ResponseInterface;
 interface ObjectsFieldInterface extends FieldInterface
 {
     /**
+     * @return string
+     */
+    public function getObjectLabel(): string;
+
+    /**
      * @param string $id
      * @return ResponseInterface
      */

@@ -108,7 +108,7 @@ class Connection extends IntegrationConnection
         $connection = $this->getConnection();
 
         if ($connection instanceof SavableConnectionInterface) {
-            $connection->afterSave($insert, ArrayHelper::getValue($changedAttributes, 'settings'));
+            $connection->afterSave($insert, (array)ArrayHelper::getValue($changedAttributes, 'settings', []) ?: []);
         }
 
         parent::afterSave($insert, $changedAttributes);

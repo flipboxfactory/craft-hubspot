@@ -47,7 +47,7 @@ class SyncItemFrom extends AbstractIntegrationItemAction
         }
 
         if (!$field->syncFromHubSpot($element)) {
-            $this->setMessage("Failed to sync from HubSpot Object");
+            $this->setMessage("Failed to sync from HubSpot " . $field->getObjectLabel());
             return false;
         }
 
