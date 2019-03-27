@@ -13,6 +13,8 @@ use craft\web\Controller;
 use flipbox\craft\ember\helpers\UrlHelper;
 use flipbox\craft\hubspot\cp\Cp as CpModule;
 use flipbox\craft\hubspot\HubSpot;
+use flipbox\craft\hubspot\records\Connection;
+use yii\base\DynamicModel;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -57,6 +59,72 @@ abstract class AbstractController extends Controller
     }
 
     /*******************************************
+     * CONNECTIONS
+     *******************************************/
+
+    /**
+     * @return array
+     */
+    protected function getConnections(): array
+    {
+        return Connection::findAll(['enabled' => true]);
+    }
+
+    /**
+     * @return Connection|null
+     */
+    protected function findDefaultConnection()
+    {
+        return Connection::findOne([
+            'enabled' => true,
+            'handle' => HubSpot::getInstance()->getSettings()->getDefaultConnection()
+        ]);
+    }
+
+    /**
+     * @return Connection|null
+     */
+    protected function findActiveConnection()
+    {
+        $selectedConnection = Craft::$app->getRequest()->getParam(
+            'connection',
+            HubSpot::getInstance()->getSettings()->getDefaultConnection()
+        );
+
+        $connection = Connection::findOne([
+            'enabled' => true,
+            'handle' => $selectedConnection
+        ]) ?: $this->findDefaultConnection();
+
+        if ($connection === null) {
+            $connections = $this->getConnections();
+
+            if(count($connections) === 1) {
+                return reset($connections);
+            }
+        }
+
+        return $connection;
+    }
+
+    /**
+     * @return DynamicModel
+     */
+    protected function invalidConnectionModel(): DynamicModel
+    {
+        $model = new DynamicModel();
+        $model->addError(
+            'connection',
+            'Invalid connection. ' .
+            '<a href="' . UrlHelper::cpUrl('hubspot/settings/connections') . '">' .
+            'Manage connections to HubSpot' .
+            '</a>.'
+        );
+
+        return $model;
+    }
+
+    /*******************************************
      * VARIABLES
      *******************************************/
 
@@ -72,6 +140,11 @@ abstract class AbstractController extends Controller
         // Settings
         $variables['settings'] = $module->getSettings();
         $variables['title'] = $title;
+
+        // Connections
+        $variables['availableConnections'] = $this->getConnections();
+        $variables['defaultConnection'] = $this->findDefaultConnection();
+        $variables['activeConnection'] = $this->findActiveConnection();
 
         // Path to controller actions
         $variables['baseActionPath'] = $this->getBaseActionPath();

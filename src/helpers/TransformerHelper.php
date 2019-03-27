@@ -17,6 +17,16 @@ use Craft;
 class TransformerHelper
 {
     /**
+     * The sync payload action name
+     */
+    const PAYLOAD_ACTION_SYNC = 'sync';
+
+    /**
+     * The sync payload action name
+     */
+    const PAYLOAD_ACTION_SAVE = 'save';
+
+    /**
      * @param $transformer
      * @return bool
      */

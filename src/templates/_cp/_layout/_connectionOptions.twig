@@ -1,0 +1,30 @@
+{% import "_includes/forms" as forms %}
+
+{% if not activeConnection %}
+    <a href="{{ cpUrl('hubspot/settings/connections') }}">Create a connection</a>&nbsp;{{ "to get started."|t('force') }}
+{% endif %}
+
+{% set queryParams = craft.app.request.queryParams|without(craft.app.request.fullPath) %}
+{% set baseUrl = '/'~craft.app.request.fullPath %}
+
+{% if availableConnections|length > 1 %}
+    <div id="connections-btn" class="btn menubtn">
+        <span class="light">Connection:</span>&nbsp;&nbsp;
+        {{ activeConnection ? activeConnection.name : 'Select Connection'|t('force') }}
+    </div>
+
+    <div class="menu">
+        <ul class="padded">
+            {% for connection in availableConnections %}
+            <li>
+                <a{% if activeConnection and activeConnection.handle == connection.handle %} class="sel"{% endif %} href="{{ url(baseUrl, queryParams|merge({connection: connection.handle})) }}">
+                    {{ connection.name }}
+                    {% if defaultConnection and defaultConnection.handle == connection.handle %}
+                        <span class="light">(default)</span>
+                    {% endif %}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

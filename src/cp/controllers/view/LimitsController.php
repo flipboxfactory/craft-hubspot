@@ -6,7 +6,7 @@
  * @link       https://www.flipboxfactory.com/software/hubspot/
  */
 
-namespace flipbox\craft\hubspot\cp\controllers\settings\view;
+namespace flipbox\craft\hubspot\cp\controllers\view;
 
 use flipbox\craft\hubspot\criteria\HubCriteria;
 use flipbox\craft\hubspot\transformers\DynamicModelResponse;
@@ -36,14 +36,20 @@ class LimitsController extends AbstractController
         $variables = [];
         $this->baseVariables($variables);
 
-        $criteria = new HubCriteria();
+        if (null !== ($connection = $this->findActiveConnection())) {
+            $criteria = new HubCriteria([
+                'connection' => $connection->getConnection()
+            ]);
 
-        $variables['limits'] = call_user_func_array(
-            new DynamicModelResponse(),
-            [
-                $criteria->dailyLimit()
-            ]
-        );
+            $model = call_user_func_array(
+                new DynamicModelResponse(),
+                [
+                    $criteria->dailyLimit()
+                ]
+            );
+        }
+
+        $variables['limits'] = $model ?? $this->invalidConnectionModel();
 
         return $this->renderTemplate(
             static::TEMPLATE_INDEX,

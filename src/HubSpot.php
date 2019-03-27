@@ -127,6 +127,10 @@ class HubSpot extends Plugin
             parent::getCpNavItem(),
             [
                 'subnav' => [
+                    'hubspot.limits' => [
+                        'label' => static::t('Limits'),
+                        'url' => 'hubspot/limits',
+                    ],
                     'hubspot.settings' => [
                         'label' => static::t('Settings'),
                         'url' => 'hubspot/settings',
@@ -247,9 +251,14 @@ class HubSpot extends Plugin
                 // ??
                 'hubspot' => 'hubspot/cp/settings/view/general/index',
 
+                // LIMITS
+                'hubspot/limits' => 'hubspot/cp/view/limits/index',
+
+                // OBJECTS: PAYLOAD
+                'hubspot/objects/payloads/<field:\d+>/element/<element:\d+>' => 'hubspot/cp/view/object-payloads/index',
+
                 // SETTINGS
                 'hubspot/settings' => 'hubspot/cp/settings/view/general/index',
-                'hubspot/settings/limits' => 'hubspot/cp/settings/view/limits/index',
 
                 // SETTINGS: CONNECTIONS
                 'hubspot/settings/connections' => 'hubspot/cp/settings/view/connections/index',

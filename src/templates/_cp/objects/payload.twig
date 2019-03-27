@@ -1,0 +1,56 @@
+{% extends "hubspot/_cp/_layout" %}
+{% import "_includes/forms" as forms %}
+
+{% do view.registerJsFile("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js") %}
+{% do view.registerCssFile("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css") %}
+{% js %}
+    hljs.initHighlightingOnLoad();
+{% endjs %}
+{% css %}
+    .hljs {
+    background: none;
+    padding: 0;
+    }
+    .breakall {
+    word-break: break-all;
+    }
+{% endcss %}
+
+{% block content %}
+    {% for type, payload in payloads %}
+        <div id="{{ type }}"{% if not loop.first %} class="hidden"{% endif %}>
+            <pre>
+                <code id="results" class="json">{{ payload|json_encode(constant('JSON_PRETTY_PRINT')) }}</code>
+            </pre>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block details %}
+    <div class="meta read-only">
+        <h4 class="heading">Field</h4>
+        <div>
+            <strong>
+                <a href="{{ cpUrl('/settings/fields/edit/' ~ field.id) }}">
+                    {{ field.name }}
+                </a>
+            </strong>
+            <div class="light">Object: {{ field.objectLabel }}</div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="meta read-only">
+        <h4 class="heading">Element</h4>
+        <div>
+            <strong>
+                <a href="{{ element.getCpEditUrl() }}">
+                    {{ element|trim }}
+                </a>
+            </strong>
+            <div class="light">Type: {{ element.displayName }}</div>
+        </div>
+    </div>
+    <hr />
+{% endblock %}

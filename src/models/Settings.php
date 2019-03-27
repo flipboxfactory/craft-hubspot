@@ -102,7 +102,7 @@ class Settings extends Model
     {
         return TransformerHelper::resolveTransformer([
             'class' => CreateUpsertPayloadFromElement::class,
-            'action' => 'sync'
+            'action' => TransformerHelper::PAYLOAD_ACTION_SYNC
         ]);
     }
 
@@ -113,7 +113,7 @@ class Settings extends Model
     {
         return TransformerHelper::resolveTransformer([
             'class' => PopulateElementFromResponse::class,
-            'action' => 'sync'
+            'action' => TransformerHelper::PAYLOAD_ACTION_SYNC
         ]);
     }
 

@@ -30,7 +30,7 @@ trait PayloadAttributeFromElementTrait
      */
     public $transformer = [
         'class' => CreateUpsertPayloadFromElement::class,
-        'action' => 'save'
+        'action' => TransformerHelper::PAYLOAD_ACTION_SAVE
     ];
 
     /**
