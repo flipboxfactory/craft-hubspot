@@ -258,14 +258,13 @@ abstract class Objects extends Integrations implements ObjectsFieldInterface
         return Craft::$app->getElements()->saveElement($element);
     }
 
-
     /**
      * @param ElementInterface|Element $element
      * @param string $id
      * @return bool
      * @throws \Throwable
      */
-    protected function addAssociation(
+    public function addAssociation(
         ElementInterface $element,
         string $id
     ) {
@@ -337,20 +336,34 @@ abstract class Objects extends Integrations implements ObjectsFieldInterface
      * @param ElementInterface|Element $element
      * @return null|string
      */
-    protected function resolveObjectIdFromElement(
+    public function resolveObjectIdFromElement(
         ElementInterface $element
     ) {
+        return $this->resolveObjectIdFromElementId(
+            $element->getId(),
+            $element->siteId
+        );
+    }
 
+    /**
+     * @param int $elementId
+     * @param int|null $siteId
+     * @return bool|false|string|null
+     */
+    public function resolveObjectIdFromElementId(
+        int $elementId,
+        int $siteId = null
+    ) {
         if (!$objectId = ObjectAssociation::find()
             ->select(['objectId'])
-            ->elementId($element->getId())
+            ->elementId($elementId)
             ->fieldId($this->id)
-            ->siteId(SiteHelper::ensureSiteId($element->siteId))
+            ->siteId(SiteHelper::ensureSiteId($siteId))
             ->scalar()
         ) {
             HubSpot::warning(sprintf(
                 "HubSpot Object Id association was not found for element '%s'",
-                $element->getId()
+                $elementId
             ));
 
             return null;
@@ -359,9 +372,42 @@ abstract class Objects extends Integrations implements ObjectsFieldInterface
         HubSpot::info(sprintf(
             "HubSpot Object Id '%s' was found for element '%s'",
             $objectId,
-            $element->getId()
+            $elementId
         ));
 
         return $objectId;
+    }
+
+    /**
+     * @param string $objectId
+     * @param int|null $siteId
+     * @return bool|false|string|null
+     */
+    public function resolveElementIdFromObjectId(
+        string $objectId,
+        int $siteId = null
+    ) {
+        if (!$elementId = ObjectAssociation::find()
+            ->select(['elementId'])
+            ->objectId($objectId)
+            ->fieldId($this->id)
+            ->siteId(SiteHelper::ensureSiteId($siteId))
+            ->scalar()
+        ) {
+            HubSpot::warning(sprintf(
+                "HubSpot Element Id association was not found for object '%s'",
+                $objectId
+            ));
+
+            return null;
+        }
+
+        HubSpot::info(sprintf(
+            "HubSpot Element Id '%s' was found for object '%s'",
+            $elementId,
+            $objectId
+        ));
+
+        return $elementId;
     }
 }

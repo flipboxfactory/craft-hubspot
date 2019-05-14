@@ -17,7 +17,7 @@ use Flipbox\HubSpot\Connections\ConnectionInterface;
  */
 trait IntegrationConnectionTrait
 {
-    use \Flipbox\HubSpot\Criteria\ConnectionTrait;
+    use \Flipbox\HubSpot\Criteria\IntegrationConnectionTrait;
 
     /**
      * @param $connection

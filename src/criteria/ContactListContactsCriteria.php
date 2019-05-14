@@ -21,7 +21,6 @@ class ContactListContactsCriteria extends \Flipbox\HubSpot\Criteria\ContactListC
     use ConnectionTrait,
         CacheTrait,
         IdAttributeFromElementTrait,
-        PayloadAttributeFromElementTrait,
         ElementAttributeTrait,
         FieldAttributeTrait,
         SiteAttributeTrait;

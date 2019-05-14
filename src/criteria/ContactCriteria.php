@@ -11,10 +11,13 @@ namespace flipbox\craft\hubspot\criteria;
 use flipbox\craft\ember\objects\ElementAttributeTrait;
 use flipbox\craft\ember\objects\FieldAttributeTrait;
 use flipbox\craft\ember\objects\SiteAttributeTrait;
+use flipbox\craft\hubspot\fields\ObjectsFieldInterface;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 2.0.0
+ *
+ * @method ObjectsFieldInterface getField()
  */
 class ContactCriteria extends \Flipbox\HubSpot\Criteria\ContactCriteria
 {
@@ -25,13 +28,4 @@ class ContactCriteria extends \Flipbox\HubSpot\Criteria\ContactCriteria
         ElementAttributeTrait,
         FieldAttributeTrait,
         SiteAttributeTrait;
-
-    public function getPayload(): array
-    {
-        return [
-            'properties' => [
-                ['property' => 'email', 'value' => 'asdfsadfsafd@asdfadsffads.com'],
-            ]
-        ];
-    }
 }
