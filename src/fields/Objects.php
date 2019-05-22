@@ -160,7 +160,6 @@ abstract class Objects extends Integrations implements ObjectsFieldInterface
 
     /**
      * @inheritdoc
-     * @throws \Throwable
      */
     public function syncToHubSpot(
         ElementInterface $element,
@@ -191,7 +190,8 @@ abstract class Objects extends Integrations implements ObjectsFieldInterface
         return $this->handleSyncToHubSpotResponse(
             $response,
             $element,
-            $id
+            $id,
+            $transformer
         );
     }
 
@@ -262,7 +262,6 @@ abstract class Objects extends Integrations implements ObjectsFieldInterface
      * @param ElementInterface|Element $element
      * @param string $id
      * @return bool
-     * @throws \Throwable
      */
     public function addAssociation(
         ElementInterface $element,
@@ -296,13 +295,14 @@ abstract class Objects extends Integrations implements ObjectsFieldInterface
      * @param ResponseInterface $response
      * @param ElementInterface $element
      * @param string|null $objectId
+     * @param string|null|callable $transformer
      * @return bool
-     * @throws \Throwable
      */
     protected function handleSyncToHubSpotResponse(
         ResponseInterface $response,
         ElementInterface $element,
-        string $objectId = null
+        string $objectId = null,
+        $transformer = null
     ): bool {
 
         /** @var Element $element */

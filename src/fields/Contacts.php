@@ -8,6 +8,7 @@
 
 namespace flipbox\craft\hubspot\fields;
 
+use craft\base\ElementInterface;
 use craft\helpers\Json;
 use flipbox\craft\hubspot\criteria\ContactCriteria;
 use flipbox\craft\hubspot\HubSpot;
@@ -72,6 +73,36 @@ class Contacts extends Objects
             'cache' => $this->getCache(),
             'id' => $id
         ]))->read();
+    }
+
+    /**
+     * @inheritDoc
+     * @return bool
+     * @throws \Throwable
+     */
+    protected function handleSyncToHubSpotResponse(
+        ResponseInterface $response,
+        ElementInterface $element,
+        string $objectId = null,
+        $transformer = null
+    ): bool {
+
+        // 409 = failure because contact already exists
+        if ($response->getStatusCode() === 409) {
+            $data = Json::decodeIfJson(
+                $response->getBody()->getContents()
+            );
+
+            $objectId = $data['identityProfile']['vid'] ?? null;
+
+            if($objectId !==null && $this->addAssociation($element, $objectId)) {
+                return $this->syncToHubSpot($element, $objectId, $transformer);
+            }
+
+            $response->getBody()->rewind();
+        }
+
+        return parent::handleSyncToHubSpotResponse($response, $element, $objectId);
     }
 
     /**

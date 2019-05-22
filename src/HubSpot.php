@@ -42,12 +42,9 @@ class HubSpot extends Plugin
     use LoggerTrait;
 
     /**
-     * @inheritdoc
+     * @var string
      */
-    protected static function getLogFileName(): string
-    {
-        return 'hubspot';
-    }
+    public static $category = 'hubspot';
 
     /**
      * @inheritdoc
@@ -64,7 +61,7 @@ class HubSpot extends Plugin
                 return Craft::createObject([
                     'class' => Logger::class,
                     'logger' => static::getLogger(),
-                    'category' => self::getLogFileName()
+                    'category' => static::$category
                 ]);
             }
         ]);
