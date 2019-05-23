@@ -1594,6 +1594,29 @@ CREATE TABLE `volumes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+# Dump of table hubspot_objects
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hubspot_objects`;
+
+CREATE TABLE `hubspot_objects` (
+  `objectId` int(11) NOT NULL,
+  `elementId` int(11) NOT NULL,
+  `fieldId` int(11) NOT NULL,
+  `siteId` int(11) NOT NULL,
+  `sortOrder` smallint(6) unsigned DEFAULT NULL,
+  `dateCreated` datetime NOT NULL,
+  `dateUpdated` datetime NOT NULL,
+  `uid` char(36) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`elementId`,`objectId`,`fieldId`,`siteId`),
+  KEY `hubspot_objects_objectId_idx` (`objectId`),
+  KEY `hubspot_objects_siteId_fk` (`siteId`),
+  KEY `hubspot_objects_fieldId_fk` (`fieldId`),
+  CONSTRAINT `hubspot_objects_elementId_fk` FOREIGN KEY (`elementId`) REFERENCES `elements` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `hubspot_objects_fieldId_fk` FOREIGN KEY (`fieldId`) REFERENCES `fields` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `hubspot_objects_siteId_fk` FOREIGN KEY (`siteId`) REFERENCES `sites` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 # Dump of table widgets
 # ------------------------------------------------------------
