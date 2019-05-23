@@ -1,15 +1,17 @@
 # Changelog
 
 ## 1.0.2 - 2018-05-23
-### Fixed
-- Testing db to 
-
 ### Changed
 - Environmental object tables are checked when plugin is loaded
 - `Settings::$environmentTablePostfix` was changed to `Settings::$environmentTableSuffix`
 
 ### Added
+- new testing db dump
 - TimelineEventBatchCriteria class to assist with timeline event batches
+
+## 1.0.1 - 2019-03-29
+### Added
+- Admin interactions with the HubSpot API can specific which connection to use
 
 ## 1.0.0 - 2019-03-11
 ### Changed
