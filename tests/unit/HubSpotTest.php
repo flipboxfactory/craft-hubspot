@@ -1,6 +1,6 @@
 <?php
 
-namespace flipbox\hubspot\tests;
+namespace flipbox\craft\hubspot\tests;
 
 use Codeception\Test\Unit;
 use flipbox\craft\hubspot\HubSpot as HubSpotPlugin;
