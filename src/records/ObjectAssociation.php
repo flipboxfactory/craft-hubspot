@@ -12,6 +12,7 @@ use Craft;
 use flipbox\craft\hubspot\fields\ObjectsFieldInterface;
 use flipbox\craft\hubspot\HubSpot;
 use flipbox\craft\hubspot\migrations\ObjectAssociations;
+use flipbox\craft\integration\records\EnvironmentalTableTrait;
 use flipbox\craft\integration\records\IntegrationAssociation;
 use Psr\Http\Message\ResponseInterface;
 
@@ -24,6 +25,8 @@ use Psr\Http\Message\ResponseInterface;
  */
 class ObjectAssociation extends IntegrationAssociation
 {
+    use EnvironmentalTableTrait;
+
     /**
      * The table alias
      */
@@ -33,46 +36,25 @@ class ObjectAssociation extends IntegrationAssociation
      * @inheritdoc
      * @throws \Throwable
      */
-    public function __construct(array $config = [])
-    {
-        $this->ensureTableExists();
-        parent::__construct($config);
-    }
-
-
-    /**
-     * @throws \Throwable
-     */
-    public function ensureTableExists()
-    {
-        if (!in_array(
-            Craft::$app->getDb()->tablePrefix . static::tableAlias(),
-            Craft::$app->getDb()->getSchema()->tableNames,
-            true
-        )) {
-            $this->createTable();
-        }
-    }
-
-    /**
-     * @return bool
-     * @throws \Throwable
-     */
-    private function createTable(): bool
-    {
-        ob_start();
-        (new ObjectAssociations())->up();
-        ob_end_clean();
-
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public static function tableAlias()
     {
-        return parent::tableAlias() . HubSpot::getInstance()->getSettings()->environmentTablePostfix;
+        return static::environmentTableAlias();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected static function environmentTableAlias()
+    {
+        return static::TABLE_ALIAS . HubSpot::getInstance()->getSettings()->environmentTableSuffix;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected static function createEnvironmentTableMigration()
+    {
+        return new ObjectAssociations();
     }
 
     /**

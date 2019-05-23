@@ -22,6 +22,7 @@ use flipbox\craft\hubspot\fields\Companies;
 use flipbox\craft\hubspot\fields\ContactLists;
 use flipbox\craft\hubspot\fields\Contacts;
 use flipbox\craft\hubspot\models\Settings as SettingsModel;
+use flipbox\craft\hubspot\records\ObjectAssociation;
 use flipbox\craft\hubspot\web\twig\variables\HubSpot as HubSpotVariable;
 use flipbox\craft\psr3\Logger;
 use yii\base\Event;
@@ -41,12 +42,9 @@ class HubSpot extends Plugin
     use LoggerTrait;
 
     /**
-     * @inheritdoc
+     * @var string
      */
-    protected static function getLogFileName(): string
-    {
-        return 'hubspot';
-    }
+    public static $category = 'hubspot';
 
     /**
      * @inheritdoc
@@ -63,7 +61,7 @@ class HubSpot extends Plugin
                 return Craft::createObject([
                     'class' => Logger::class,
                     'logger' => static::getLogger(),
-                    'category' => self::getLogFileName()
+                    'category' => static::$category
                 ]);
             }
         ]);
@@ -116,6 +114,11 @@ class HubSpot extends Plugin
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             [self::class, 'onRegisterCpUrlRules']
         );
+
+        // Make sure we have an objects table
+        if ($this->isInstalled) {
+            ObjectAssociation::ensureEnvironmentTableExists();
+        }
     }
 
     /**

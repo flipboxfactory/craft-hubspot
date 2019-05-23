@@ -24,7 +24,7 @@ class Settings extends Model
     /**
      * @var string
      */
-    public $environmentTablePostfix = '';
+    public $environmentTableSuffix = '';
 
     /**
      * @var string

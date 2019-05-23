@@ -11,16 +11,18 @@ namespace flipbox\craft\hubspot\criteria;
 use flipbox\craft\ember\objects\ElementAttributeTrait;
 use flipbox\craft\ember\objects\FieldAttributeTrait;
 use flipbox\craft\ember\objects\SiteAttributeTrait;
+use flipbox\craft\hubspot\fields\ObjectsFieldInterface;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
+ * @since 1.0.0
+ *
+ * @method ObjectsFieldInterface getField()
  */
-class ContactListContactsCriteria extends \Flipbox\HubSpot\Criteria\ContactListContactsCriteria
+trait ElementTrait
 {
-    use CacheTrait,
-        ConnectionTrait,
-        IdAttributeFromElementTrait,
+    use IdAttributeFromElementTrait,
+        PayloadAttributeFromElementTrait,
         ElementAttributeTrait,
         FieldAttributeTrait,
         SiteAttributeTrait;
