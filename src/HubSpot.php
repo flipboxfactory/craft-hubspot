@@ -13,6 +13,7 @@ use craft\base\Plugin;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterTemplateRootsEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\helpers\UrlHelper;
 use craft\services\Fields;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
@@ -154,14 +155,14 @@ class HubSpot extends Plugin
 
     /**
      * @inheritdoc
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\Exception
      */
     public function settingsHtml()
     {
-        return Craft::$app->getView()->renderTemplate('hubspot/settings', [
-            'hubspot' => $this
-        ]);
+        Craft::$app->getResponse()->redirect(
+            UrlHelper::cpUrl('hubspot/settings')
+        );
+
+        Craft::$app->end();
     }
 
     /*******************************************
