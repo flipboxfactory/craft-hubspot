@@ -95,7 +95,7 @@ class Contacts extends Objects
 
             $objectId = $data['identityProfile']['vid'] ?? null;
 
-            if($objectId !==null && $this->addAssociation($element, $objectId)) {
+            if ($objectId !==null && $this->addAssociation($element, $objectId)) {
                 return $this->syncToHubSpot($element, $objectId, $transformer);
             }
 
