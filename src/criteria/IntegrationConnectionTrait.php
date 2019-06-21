@@ -31,7 +31,7 @@ trait IntegrationConnectionTrait
         }
 
         if ($connection === null) {
-            $connection = HubSpot::getInstance()->getSettings()->getDefaultConnection();
+            $connection = HubSpot::getInstance()->getSettings()->getDefaultIntegrationConnection();
         }
 
         return HubSpot::getInstance()->getConnections()->getIntegration($connection);
