@@ -1,6 +1,10 @@
 # Changelog
 
-## 1.0.2 - 2018-05-23
+## 1.0.3 - 2019-06-09
+### Fixed
+- Incorrect default connection references
+
+## 1.0.2 - 2019-05-23
 ### Changed
 - Environmental object tables are checked when plugin is loaded
 - `Settings::$environmentTablePostfix` was changed to `Settings::$environmentTableSuffix`
