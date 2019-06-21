@@ -34,12 +34,12 @@ class Settings extends Model
     /**
      * @var string
      */
-    private $defaultConnection = Connections::DEFAULT_CONNECTION;
+    private $defaultConnection = Connections::CONNECTION;
 
     /**
      * @var string
      */
-    private $defaultIntegrationConnection = Connections::DEFAULT_INTEGRATION_CONNECTION;
+    private $defaultIntegrationConnection = Connections::INTEGRATION_CONNECTION;
 
     /**
      * @param string $key
