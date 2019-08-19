@@ -34,7 +34,6 @@ class HubSpot extends ServiceLocator
         ]);
     }
 
-
     /**
      * Sub-Variables that are accessed 'craft.hubspot.settings'
      *
@@ -65,5 +64,16 @@ class HubSpot extends ServiceLocator
         /** @noinspection PhpUnhandledExceptionInspection */
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->get('connections');
+    }
+
+    /**
+     * @noinspection PhpDocMissingThrowsInspection
+     * @return array|null
+     */
+    public function getVisitor()
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return HubSpotPlugin::getInstance()->getVisitor()->findContact();
     }
 }

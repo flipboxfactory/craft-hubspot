@@ -24,6 +24,7 @@ use flipbox\craft\hubspot\fields\ContactLists;
 use flipbox\craft\hubspot\fields\Contacts;
 use flipbox\craft\hubspot\models\Settings as SettingsModel;
 use flipbox\craft\hubspot\records\ObjectAssociation;
+use flipbox\craft\hubspot\services\Visitor;
 use flipbox\craft\hubspot\web\twig\variables\HubSpot as HubSpotVariable;
 use flipbox\craft\psr3\Logger;
 use yii\base\Event;
@@ -64,7 +65,8 @@ class HubSpot extends Plugin
                     'logger' => static::getLogger(),
                     'category' => static::$category
                 ]);
-            }
+            },
+            'visitor' => services\Visitor::class
         ]);
 
         // Modules
@@ -202,6 +204,16 @@ class HubSpot extends Plugin
         return $this->get('psr3Logger');
     }
 
+    /**
+     * @noinspection PhpDocMissingThrowsInspection
+     * @return Visitor
+     */
+    public function getVisitor(): Visitor
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->get('visitor');
+    }
 
     /*******************************************
      * TRANSLATE
