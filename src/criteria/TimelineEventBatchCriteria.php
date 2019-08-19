@@ -16,7 +16,7 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
+ * @since 1.0.0
  */
 class TimelineEventBatchCriteria extends AbstractCriteria
 {

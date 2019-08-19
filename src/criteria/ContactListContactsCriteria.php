@@ -14,7 +14,7 @@ use flipbox\craft\ember\objects\SiteAttributeTrait;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 2.0.0
+ * @since 1.0.0
  */
 class ContactListContactsCriteria extends \Flipbox\HubSpot\Criteria\ContactListContactsCriteria
 {
