@@ -1,0 +1,55 @@
+{% extends "hubspot/_cp/_layout" %}
+
+{% block contextMenu %}
+    {% include "hubspot/_cp/_layout/_connectionOptions" with {
+        availableConnections: availableConnections,
+        activeConnection: activeConnection,
+        defaultConnection: defaultConnection
+    } only %}
+{% endblock %}
+
+{% block content %}
+    {% from _self import statusIndicator %}
+    <div class="visitors">
+        <p id="no-visitors"{% if visitors|length %} class="hidden"{% endif %}>
+            {{ "No visitors exist yet."|t('hubspot') }}
+        </p>
+
+        {% if visitors|length %}
+            <table id="visitors" class="data fullwidth collapsible">
+                <thead>
+                <th scope="col">{{ "Token"|t('hubspot') }}</th>
+                <th scope="col">{{ "Name"|t('hubspot') }}</th>
+                <th scope="col">{{ "Email"|t('hubspot') }}</th>
+                <th scope="col">{{ "Updated"|t('hubspot') }}</th>
+                </thead>
+                <tbody>
+                {% for visitor in visitors %}
+                    <tr data-id="{{ visitor.id }}" data-name="{{ visitor.token }}">
+                        <th scope="row" data-title="{{ 'token'|t('hubspot') }}">
+                            {{ statusIndicator(visitor.status) }}
+                            <a href="{{ url(baseCpPath ~ '/' ~ visitor.id) }}">{{ visitor.token }}</a>
+                        </th>
+                        <td data-title="{{ 'Name'|t('hubspot') }}">{{ visitor.contact.properties.firstname ?? '' }} {{ visitor.contact.properties.lastname ?? '' }}</td>
+                        <td data-title="{{ 'Email'|t('hubspot') }}">{{ visitor.contact.properties.email ?? '' }}</td>
+                        <td data-title="{{ 'Updated'|t('hubspot') }}">{{ visitor.dateUpdated|datetime('short') }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% macro statusIndicator(status) %}
+    {% set class = '' %}
+    {% switch status %}
+        {% case "successful" %}
+            {% set class = "active" %}
+        {% case "pending" %}
+            {% set class = "pending" %}
+        {% case "error" %}
+            {% set class = "suspended" %}
+    {% endswitch %}
+    <span data-status="{{ status }}" class="status {{ class }}"></span>
+{% endmacro %}

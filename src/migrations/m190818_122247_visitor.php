@@ -29,13 +29,13 @@ class m190818_122247_visitor extends Migration
                 [
                     Visitor::STATUS_SUCCESSFUL,
                     Visitor::STATUS_PENDING,
-                    Visitor::STATUS_PENDING,
                     Visitor::STATUS_ERROR,
                     Visitor::STATUS_NOT_FOUND
                 ]
             )
                 ->defaultValue(Visitor::STATUS_PENDING)
                 ->notNull(),
+            'connection' => $this->string(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid()

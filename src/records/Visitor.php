@@ -8,14 +8,18 @@
 
 namespace flipbox\craft\hubspot\records;
 
+use craft\db\Table;
 use flipbox\craft\ember\records\ActiveRecord;
+use flipbox\craft\hubspot\queue\SaveVisitor;
+use yii\db\Query;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.1.0
  *
  * @property string $token
- * @property string $contact
+ * @property array $contact
+ * @property string $connection
  * @property string $status
  */
 class Visitor extends ActiveRecord
@@ -59,13 +63,14 @@ class Visitor extends ActiveRecord
     }
 
     /**
-     * @param string $identifier
+     * @param string $token
+     * @param string|null $connection
      * @return Visitor
      */
-    public static function findOrCreate(string $identifier): Visitor
+    public static function findOrCreate(string $token, string $connection = null): Visitor
     {
         $condition = [
-            'token' => $identifier
+            'token' => $token
         ];
 
         if (null === ($record = static::findOne($condition))) {
@@ -73,5 +78,34 @@ class Visitor extends ActiveRecord
         }
 
         return $record;
+    }
+
+    /**
+     * Identify if there is a job that has yet to be processed.
+     * @return bool
+     */
+    public function inQueue(): bool
+    {
+        return $this->getQueueJobs()
+            ->andWhere([
+                'fail' => false,
+                'attempt' => null
+            ])
+            ->exists();
+    }
+
+    /**
+     * @return Query
+     */
+    public function getQueueJobs(): Query
+    {
+        return (new Query())
+            ->from(Table::QUEUE)
+            ->andWhere([
+                'description' => SaveVisitor::DESCRIPTION . $this->token
+            ])
+            ->orderBy([
+                'timePushed' => SORT_DESC
+            ]);
     }
 }

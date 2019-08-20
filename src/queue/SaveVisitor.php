@@ -20,6 +20,11 @@ use yii\base\Exception;
 class SaveVisitor extends BaseJob implements \Serializable
 {
     /**
+     * The default description
+     */
+    const DESCRIPTION = "Saving HubSpot Visitor by Token: ";
+
+    /**
      * @var string|null
      */
     public $token;
@@ -38,7 +43,7 @@ class SaveVisitor extends BaseJob implements \Serializable
      */
     protected function defaultDescription()
     {
-        return "Saving HubSpot Visitor by Token: " . $this->token;
+        return static::DESCRIPTION . $this->token;
     }
 
     /**
@@ -51,7 +56,7 @@ class SaveVisitor extends BaseJob implements \Serializable
             return;
         }
 
-        $record = Visitor::findOrCreate($this->token);
+        $record = Visitor::findOrCreate($this->token, $this->connection);
 
         // Only process 'pending'
         if ($record->status !== Visitor::STATUS_PENDING) {

@@ -32,18 +32,31 @@ class Visitor extends Component
     }
 
     /**
-     * @return array|null
+     * @param string|null $connection
+     * @return mixed|null
      */
-    public function findContact()
+    public function findContact(string $connection = null)
     {
         if (null === ($token = $this->findTokenValue())) {
             HubSpot::info("Visitor token was not found.");
             return null;
         }
 
-        $record = VisitorRecord::findOrCreate($token);
+        $record = VisitorRecord::findOrCreate($token, $connection);
         if ($record->status !== VisitorRecord::STATUS_SUCCESSFUL) {
-            $this->syncVisitorIfNecessary($record);
+            // If new, always queue up sync operation
+            if ($record->getIsNewRecord()) {
+                $record->save();
+            }
+
+            if ($record->status === VisitorRecord::STATUS_PENDING) {
+                $this->syncVisitor($record);
+            }
+
+            HubSpot::info(sprintf(
+                "Visitor record status is '%s' and is not 'completed'; nothing to return.",
+                $record->status
+            ));
             return null;
         }
 
@@ -56,24 +69,20 @@ class Visitor extends Component
      * @param VisitorRecord $record
      * @return void
      */
-    protected function syncVisitorIfNecessary(VisitorRecord $record)
+    public function syncVisitor(VisitorRecord $record)
     {
-        if ($record->getIsNewRecord()) {
-            $record->save();
-
-            Craft::$app->getQueue()->push(
-                new SaveVisitor([
-                    'token' => $record->token
-                ])
-            );
-
-            HubSpot::info("Visitor record is new, adding to queue.");
+        if ($record->inQueue()) {
+            HubSpot::warning("Queue Job already exists; ignoring.");
             return;
         }
 
-        HubSpot::info(sprintf(
-            "Visitor record status is '%s' and is not 'completed'.",
-            $record->status
-        ));
+        Craft::$app->getQueue()->push(
+            new SaveVisitor([
+                'token' => $record->token,
+                'connection' => $record->connection
+            ])
+        );
+
+        HubSpot::info("Added Queue Job to sync Visitor from HubSpot");
     }
 }

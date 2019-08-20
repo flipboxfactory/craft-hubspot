@@ -8,11 +8,13 @@
 
 namespace flipbox\craft\hubspot\web\twig\variables;
 
+use Craft;
 use flipbox\craft\hubspot\HubSpot as HubSpotPlugin;
 use flipbox\craft\hubspot\models\Settings;
 use flipbox\craft\hubspot\services\Cache;
 use flipbox\craft\hubspot\services\Connections;
 use yii\di\ServiceLocator;
+use yii\helpers\Json;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -68,12 +70,29 @@ class HubSpot extends ServiceLocator
 
     /**
      * @noinspection PhpDocMissingThrowsInspection
+     * @param string $connection
      * @return array|null
      */
-    public function getVisitor()
+    public function getVisitor(string $connection = null)
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return HubSpotPlugin::getInstance()->getVisitor()->findContact();
+        try {
+            return HubSpotPlugin::getInstance()->getVisitor()->findContact($connection);
+        } catch (\Exception $e) {
+
+            HubSpotPlugin::warning(
+                sprintf(
+                    "Exception caught while trying to get HubSpot Visitor. Exception: [%s].",
+                    (string)Json::encode([
+                        'Trace' => $e->getTraceAsString(),
+                        'File' => $e->getFile(),
+                        'Line' => $e->getLine(),
+                        'Code' => $e->getCode(),
+                        'Message' => $e->getMessage()
+                    ])
+                ),
+                __METHOD__
+            );
+            return null;
+        }
     }
 }
