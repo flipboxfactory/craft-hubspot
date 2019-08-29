@@ -70,13 +70,14 @@ class HubSpot extends ServiceLocator
 
     /**
      * @noinspection PhpDocMissingThrowsInspection
+     * @param bool $toQueue
      * @param string $connection
      * @return array|null
      */
-    public function getVisitor(string $connection = null)
+    public function getVisitor(bool $toQueue = true, string $connection = null)
     {
         try {
-            return HubSpotPlugin::getInstance()->getVisitor()->findContact($connection);
+            return HubSpotPlugin::getInstance()->getVisitor()->findContact($toQueue, $connection);
         } catch (\Exception $e) {
 
             HubSpotPlugin::warning(

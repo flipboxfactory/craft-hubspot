@@ -10,9 +10,8 @@ namespace flipbox\craft\hubspot\queue;
 
 use Craft;
 use craft\queue\BaseJob;
-use flipbox\craft\hubspot\criteria\ContactCriteria;
-use flipbox\craft\hubspot\records\Visitor;
-use yii\base\Exception;
+use flipbox\craft\hubspot\HubSpot;
+use flipbox\craft\hubspot\records\Visitor as VisitorRecord;
 
 /**
  * Sync a HubSpot Object to a Craft Element
@@ -56,41 +55,13 @@ class SaveVisitor extends BaseJob implements \Serializable
             return;
         }
 
-        $record = Visitor::findOrCreate($this->token, $this->connection);
-
-        // Only process 'pending'
-        if ($record->status !== Visitor::STATUS_PENDING) {
-            return;
-        }
-
-        $result = (new ContactCriteria())
-            ->setId($this->token)
-            ->setConnection($this->connection)
-            ->read();
-
-        // Contact doesn't exist.  A known response
-        if ($result->getStatusCode() === 404) {
-            $record->status = Visitor::STATUS_NOT_FOUND;
-            $record->save();
-            return;
-        }
-
-        // Not sure what happened.
-        if ($result->getStatusCode() !== 200) {
-            $record->status = Visitor::STATUS_ERROR;
-            $record->save();
-
-            throw new Exception(sprintf(
-                "Failed to save visitor '%s' due to the following errors: %s:",
+        // Sync
+        HubSpot::getInstance()->getVisitor()->syncFromHubSpot(
+            VisitorRecord::findOrCreate(
                 $this->token,
-                $result->getBody()->getContents()
-            ));
-        }
-
-        $record = Visitor::findOrCreate($this->token);
-        $record->contact = $result->getBody()->getContents();
-        $record->status = Visitor::STATUS_SUCCESSFUL;
-        $record->save();
+                $this->connection
+            )
+        );
     }
 
     /**
