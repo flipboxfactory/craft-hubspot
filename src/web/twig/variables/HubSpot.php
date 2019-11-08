@@ -79,7 +79,6 @@ class HubSpot extends ServiceLocator
         try {
             return HubSpotPlugin::getInstance()->getVisitor()->findContact($toQueue, $connection);
         } catch (\Exception $e) {
-
             HubSpotPlugin::warning(
                 sprintf(
                     "Exception caught while trying to get HubSpot Visitor. Exception: [%s].",

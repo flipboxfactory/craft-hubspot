@@ -1,0 +1,28 @@
+# This setup provides craft already configured with a database and the plugin already installed
+# Username is admin
+# Password is password
+
+version: '3'
+services:
+    web:
+        image: 'flipbox/php:72-apache'
+        depends_on:
+            - db
+        volumes:
+            - '.:/var/www/html/'
+        environment:
+            XDEBUG_ON: "yes"
+            XDEBUG_HOST: "host.docker.internal"
+            XDEBUG_IDEKEY: "PHPSTORM"
+            DB_SERVER: db
+            DB_USER: root
+            DB_PASSWORD: password
+            DB_DATABASE: test
+            DB_DRIVER: mysql
+    db:
+        image: 'mysql:5.7'
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: test
+            MYSQL_USER: craft
+            MYSQL_PASSWORD: craft

@@ -105,5 +105,4 @@ class VisitorsController extends AbstractController
             'identifier' => $identifier
         ]);
     }
-
 }

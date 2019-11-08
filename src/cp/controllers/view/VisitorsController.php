@@ -60,7 +60,7 @@ class VisitorsController extends AbstractController
 
         $variables = [];
 
-        $this->baseUpsertVariables($variables, $visitor);
+        $this->baseUpsertVariables($visitor, $variables);
 
         // Full page form in the CP
         $variables['fullPageForm'] = true;
@@ -120,7 +120,7 @@ class VisitorsController extends AbstractController
      * @param array $variables
      * @param Visitor $visitor
      */
-    protected function baseUpsertVariables(array &$variables = [], Visitor $visitor)
+    protected function baseUpsertVariables(Visitor $visitor, array &$variables = [])
     {
         $this->baseVariables($variables);
 
