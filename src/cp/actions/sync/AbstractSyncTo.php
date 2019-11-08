@@ -12,7 +12,6 @@ use Craft;
 use craft\base\ElementInterface;
 use flipbox\craft\ember\actions\CheckAccessTrait;
 use flipbox\craft\hubspot\fields\Objects;
-use flipbox\craft\hubspot\queue\SyncElementToHubSpotJob;
 use yii\base\Action;
 
 /**
@@ -54,12 +53,7 @@ abstract class AbstractSyncTo extends Action
         ElementInterface $element,
         Objects $field
     ) {
-        $job = new SyncElementToHubSpotJob([
-            'element' => $element,
-            'field' => $field
-        ]);
-
-        return $job->execute(Craft::$app->getQueue());
+        return $field->syncToHubSpot($element);
     }
 
     /**

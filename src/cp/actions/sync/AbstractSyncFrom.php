@@ -12,7 +12,6 @@ use Craft;
 use craft\base\ElementInterface;
 use flipbox\craft\ember\actions\CheckAccessTrait;
 use flipbox\craft\hubspot\fields\Objects;
-use flipbox\craft\hubspot\queue\SyncElementFromHubSpotJob;
 use yii\base\Action;
 
 /**
@@ -28,6 +27,9 @@ abstract class AbstractSyncFrom extends Action
      * @param Objects $field
      * @param string|null $objectId
      * @return ElementInterface|mixed
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      * @throws \yii\web\UnauthorizedHttpException
      */
     protected function runInternal(
@@ -52,19 +54,16 @@ abstract class AbstractSyncFrom extends Action
      * @param Objects $field
      * @param string|null $objectId
      * @return bool
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     protected function performAction(
         ElementInterface $element,
         Objects $field,
         string $objectId = null
     ) {
-        $job = new SyncElementFromHubSpotJob([
-            'element' => $element,
-            'field' => $field,
-            'objectId' => $objectId
-        ]);
-
-        return $job->execute(Craft::$app->getQueue());
+        return $field->syncFromHubSpot($element, $objectId);
     }
 
     /**

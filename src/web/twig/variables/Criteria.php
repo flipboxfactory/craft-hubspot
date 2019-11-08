@@ -9,6 +9,7 @@
 namespace flipbox\craft\hubspot\web\twig\variables;
 
 use flipbox\craft\hubspot\criteria\CompanyCriteria;
+use flipbox\craft\hubspot\criteria\ContactCriteria;
 use yii\base\Component;
 
 /**
@@ -24,6 +25,18 @@ class Criteria extends Component
     public function getCompany(array $properties = []): CompanyCriteria
     {
         $criteria = (new CompanyCriteria())
+            ->populate($properties);
+
+        return $criteria;
+    }
+
+    /**
+     * @param array $properties
+     * @return ContactCriteria
+     */
+    public function getContact(array $properties = []): ContactCriteria
+    {
+        $criteria = (new ContactCriteria())
             ->populate($properties);
 
         return $criteria;

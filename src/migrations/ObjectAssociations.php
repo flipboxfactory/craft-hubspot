@@ -49,7 +49,7 @@ class ObjectAssociations extends Migration
     protected function createTables()
     {
         $this->createTable(ObjectAssociationRecord::tableName(), [
-            'objectId' => $this->integer()->notNull(),
+            'objectId' => $this->bigInteger()->notNull(),
             'elementId' => $this->integer()->notNull(),
             'fieldId' => $this->integer()->notNull(),
             'siteId' => $this->integer()->notNull(),
