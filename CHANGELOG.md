@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0 - 2019-11-08
+### Added
+- Introducing: Email Subscription interactions
+
+### Fixed
+- MySQL integer column exceeding 2147483647 in size.
+
+## 1.1.0 - 2019-11-08
+### Added
+- Introducing: Visitor tracking
+
 ## 1.0.3 - 2019-06-09
 ### Fixed
 - Incorrect default connection references
