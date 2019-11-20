@@ -29,9 +29,23 @@ class Visitor extends Component
     /**
      * @return string|null
      */
-    protected function findTokenValue()
+    public function findTokenValue()
     {
         return $_COOKIE[self::COOKIE_NAME] ?? null;
+    }
+
+    /**
+     * @param string|null $connection
+     * @return VisitorRecord|null
+     */
+    public function findRecord(string $connection = null)
+    {
+        if (null === ($token = $this->findTokenValue())) {
+            HubSpot::info("Visitor token was not found.");
+            return null;
+        }
+
+        return VisitorRecord::findOrCreate($token, $connection);
     }
 
     /**
@@ -41,12 +55,10 @@ class Visitor extends Component
      */
     public function findContact(bool $toQueue = true, string $connection = null)
     {
-        if (null === ($token = $this->findTokenValue())) {
-            HubSpot::info("Visitor token was not found.");
+        if (null === ($record = $this->findRecord($connection))) {
             return null;
         }
 
-        $record = VisitorRecord::findOrCreate($token, $connection);
         if ($record->status !== VisitorRecord::STATUS_SUCCESSFUL) {
             // If new, save now so we can reference later
             if ($record->getIsNewRecord()) {
@@ -71,7 +83,7 @@ class Visitor extends Component
             $record->contact
         );
     }
-
+    
     /**
      * @param VisitorRecord $record
      * @param bool $toQueue
