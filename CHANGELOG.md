@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.1 - - 2019-11-20
+### Changed
+- Syncing visitors respects the 'queue' flag for existing records (still in the queue).
+
+### Added
+- Sync visitors twig trait
+
 ## 1.2.0 - 2019-11-08
 ### Added
 - Introducing: Email Subscription interactions
