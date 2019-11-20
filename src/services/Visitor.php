@@ -78,7 +78,7 @@ class Visitor extends Component
      */
     public function syncVisitor(VisitorRecord $record, bool $toQueue = true)
     {
-        if ($record->inQueue()) {
+        if ($toQueue === true && $record->inQueue()) {
             HubSpot::warning("Queue Job already exists; ignoring.");
             return;
         }
@@ -99,7 +99,6 @@ class Visitor extends Component
         );
 
         HubSpot::info("Added Queue Job to sync Visitor from HubSpot");
-        return;
     }
 
     /**

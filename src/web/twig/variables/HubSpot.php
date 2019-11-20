@@ -22,6 +22,8 @@ use yii\helpers\Json;
  */
 class HubSpot extends ServiceLocator
 {
+    use VisitorTrait;
+
     /**
      * @inheritdoc
      */
@@ -66,33 +68,5 @@ class HubSpot extends ServiceLocator
         /** @noinspection PhpUnhandledExceptionInspection */
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->get('connections');
-    }
-
-    /**
-     * @noinspection PhpDocMissingThrowsInspection
-     * @param bool $toQueue
-     * @param string $connection
-     * @return array|null
-     */
-    public function getVisitor(bool $toQueue = true, string $connection = null)
-    {
-        try {
-            return HubSpotPlugin::getInstance()->getVisitor()->findContact($toQueue, $connection);
-        } catch (\Exception $e) {
-            HubSpotPlugin::warning(
-                sprintf(
-                    "Exception caught while trying to get HubSpot Visitor. Exception: [%s].",
-                    (string)Json::encode([
-                        'Trace' => $e->getTraceAsString(),
-                        'File' => $e->getFile(),
-                        'Line' => $e->getLine(),
-                        'Code' => $e->getCode(),
-                        'Message' => $e->getMessage()
-                    ])
-                ),
-                __METHOD__
-            );
-            return null;
-        }
     }
 }
