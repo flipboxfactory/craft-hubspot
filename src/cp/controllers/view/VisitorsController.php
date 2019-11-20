@@ -8,6 +8,7 @@
 
 namespace flipbox\craft\hubspot\cp\controllers\view;
 
+use craft\helpers\UrlHelper;
 use flipbox\craft\hubspot\HubSpot;
 use flipbox\craft\hubspot\records\Visitor;
 use yii\web\Response;
@@ -124,6 +125,12 @@ class VisitorsController extends AbstractController
     {
         $this->baseVariables($variables);
 
+        // Breadcrumbs
+        $variables['crumbs'][] = [
+            'label' => $visitor->token,
+            'url' => ''
+        ];
+
         $variables['title'] .= ': ' . $visitor->token;
     }
 
@@ -140,7 +147,7 @@ class VisitorsController extends AbstractController
         // Breadcrumbs
         $variables['crumbs'][] = [
             'label' => $title,
-            'url' => ''
+            'url' => UrlHelper::url($this->getBaseCpPath())
         ];
     }
 }
