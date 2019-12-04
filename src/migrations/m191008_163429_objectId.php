@@ -21,7 +21,7 @@ class m191008_163429_objectId extends Migration
      */
     public function safeUp()
     {
-        https://stackoverflow.com/questions/10255724/incorrect-integer-2147483647-is-inserted-into-mysql
+        // https://stackoverflow.com/questions/10255724/incorrect-integer-2147483647-is-inserted-into-mysql
         $this->alterColumn(
             ObjectAssociation::tableName(),
             'objectId',

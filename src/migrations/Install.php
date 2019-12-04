@@ -29,6 +29,10 @@ class Install extends Migration
             return false;
         };
 
+        if (false === (new m190818_122247_visitor())->safeUp()) {
+            return false;
+        };
+
         return true;
     }
 
@@ -42,6 +46,10 @@ class Install extends Migration
         };
 
         if (false === (new m190222_101208_connections())->safeDown()) {
+            return false;
+        };
+
+        if (false === (new m190818_122247_visitor())->safeDown()) {
             return false;
         };
 

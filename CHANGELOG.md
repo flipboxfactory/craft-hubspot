@@ -1,5 +1,9 @@
 # Changelog
 
+### Unreleased
+### Fixed
+- Adding visitor table migration to installation [#2](https://github.com/flipboxfactory/craft-hubspot/issues/2)
+
 ## 1.2.1 - - 2019-11-20
 ### Changed
 - Syncing visitors respects the 'queue' flag for existing records (still in the queue).

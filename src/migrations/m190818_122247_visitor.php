@@ -48,4 +48,13 @@ class m190818_122247_visitor extends Migration
             true
         );
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function safeDown()
+    {
+        $this->dropTableIfExists(Visitor::tableName());
+        return true;
+    }
 }
