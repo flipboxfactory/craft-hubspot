@@ -1,7 +1,7 @@
 {
   "name": "flipboxfactory/craft-hubspot",
   "description": "HubSpot integration for Craft CMS",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "type": "craft-plugin",
   "license": "proprietary",
   "keywords": [
@@ -12,7 +12,7 @@
   ],
   "require": {
     "craftcms/cms": "^3.2",
-    "flipboxdigital/hubspot": "^2.4.0",
+    "flipboxdigital/hubspot": "^2.5",
     "flipboxfactory/craft-ember": "^2.1",
     "flipboxfactory/craft-integration": "^2.2.2",
     "flipboxfactory/craft-psr3": "^1.1"
