@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Added
+- Blog Post retrieval capabilities
+
 ## 1.2.2 - - 2019-12-04
 ### Fixed
 - Adding visitor table migration to installation [#2](https://github.com/flipboxfactory/craft-hubspot/issues/2)
