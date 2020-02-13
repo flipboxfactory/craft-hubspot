@@ -9,11 +9,11 @@ php:
   - 7.3
 
 env:
-  - DB_DRIVER=mysql DB_DATABASE=test DB_SERVER=127.0.0.1 DB_USER=root DB_PASSWORD=
+  - DB_DSN=mysql:host=127.0.0.1;port=3306;dbname=test DB_USER=root DB_PASSWORD=
 
 services:
   - mysql
-  -
+
 before_install:
   - nvm install 8
   - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
