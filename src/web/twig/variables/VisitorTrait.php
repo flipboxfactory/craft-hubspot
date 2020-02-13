@@ -20,13 +20,14 @@ trait VisitorTrait
     /**
      * @noinspection PhpDocMissingThrowsInspection
      * @param bool $toQueue
-     * @param string $connection
+     * @param string|null $connection
+     * @param string|null $cache
      * @return array|null
      */
-    public function getVisitor(bool $toQueue = true, string $connection = null)
+    public function getVisitor(bool $toQueue = true, string $connection = null, string $cache = null)
     {
         try {
-            return HubSpotPlugin::getInstance()->getVisitor()->findContact($toQueue, $connection);
+            return HubSpotPlugin::getInstance()->getVisitor()->findContact($toQueue, $connection, $cache);
         } catch (\Exception $e) {
             HubSpotPlugin::warning(
                 sprintf(

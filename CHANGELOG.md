@@ -3,6 +3,7 @@
 ## Unreleased
 ### Added
 - Blog Post retrieval capabilities
+- Optional cache param to visitor service
 
 ## 1.2.2 - - 2019-12-04
 ### Fixed

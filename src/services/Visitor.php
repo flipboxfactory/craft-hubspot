@@ -51,9 +51,10 @@ class Visitor extends Component
     /**
      * @param bool $toQueue
      * @param string|null $connection
+     * @param string|null $cache
      * @return mixed|null
      */
-    public function findContact(bool $toQueue = true, string $connection = null)
+    public function findContact(bool $toQueue = true, string $connection = null, string $cache = null)
     {
         if (null === ($record = $this->findRecord($connection))) {
             return null;
@@ -66,7 +67,7 @@ class Visitor extends Component
             }
 
             if ($record->status === VisitorRecord::STATUS_PENDING) {
-                $this->syncVisitor($record, $toQueue);
+                $this->syncVisitor($record, $toQueue, $cache);
             }
 
             // It's possible the sync operation was run immediately
@@ -87,26 +88,29 @@ class Visitor extends Component
     /**
      * @param VisitorRecord $record
      * @param bool $toQueue
+     * @param string|null $cache
      */
-    public function syncVisitor(VisitorRecord $record, bool $toQueue = true)
+    public function syncVisitor(VisitorRecord $record, bool $toQueue = true, string $cache = null)
     {
         if ($toQueue === true && $record->inQueue()) {
             HubSpot::warning("Queue Job already exists; ignoring.");
             return;
         }
 
-        $toQueue === true ? $this->syncViaQueue($record) : $this->syncImmediately($record);
+        $toQueue === true ? $this->syncViaQueue($record, $cache) : $this->syncImmediately($record, $cache);
     }
 
     /**
      * @param VisitorRecord $record
+     * @param string|null $cache
      */
-    protected function syncViaQueue(VisitorRecord $record)
+    protected function syncViaQueue(VisitorRecord $record, string $cache = null)
     {
         Craft::$app->getQueue()->push(
             new SaveVisitor([
                 'token' => $record->token,
-                'connection' => $record->connection
+                'connection' => $record->connection,
+                'cache' => $cache
             ])
         );
 
@@ -115,11 +119,12 @@ class Visitor extends Component
 
     /**
      * @param VisitorRecord $record
+     * @param string|null $cache
      */
-    protected function syncImmediately(VisitorRecord $record)
+    protected function syncImmediately(VisitorRecord $record, string $cache = null)
     {
         try {
-            $this->syncFromHubSpot($record);
+            $this->syncFromHubSpot($record, $cache);
         } catch (\Exception $e) {
             HubSpot::error(
                 sprintf(
@@ -139,9 +144,10 @@ class Visitor extends Component
 
     /**
      * @param VisitorRecord $record
+     * @param string|null $cache
      * @throws \Exception
      */
-    public function syncFromHubSpot(VisitorRecord $record)
+    public function syncFromHubSpot(VisitorRecord $record, string $cache = null)
     {
         // Only process 'pending'
         if ($record->status !== VisitorRecord::STATUS_PENDING) {
@@ -151,6 +157,7 @@ class Visitor extends Component
         $result = (new ContactCriteria())
             ->setId($record->token)
             ->setConnection($record->connection)
+            ->setCache($cache)
             ->read();
 
         // Contact doesn't exist.  A known response
