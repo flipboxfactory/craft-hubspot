@@ -15,6 +15,7 @@ use flipbox\craft\hubspot\migrations\ObjectAssociations;
 use flipbox\craft\integration\records\EnvironmentalTableTrait;
 use flipbox\craft\integration\records\IntegrationAssociation;
 use Psr\Http\Message\ResponseInterface;
+use yii\db\MigrationInterface;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -44,7 +45,7 @@ class ObjectAssociation extends IntegrationAssociation
     /**
      * @inheritdoc
      */
-    protected static function environmentTableAlias()
+    protected static function environmentTableAlias(): string
     {
         return static::TABLE_ALIAS . HubSpot::getInstance()->getSettings()->environmentTableSuffix;
     }
@@ -52,7 +53,7 @@ class ObjectAssociation extends IntegrationAssociation
     /**
      * @inheritdoc
      */
-    protected static function createEnvironmentTableMigration()
+    protected static function createEnvironmentTableMigration():MigrationInterface
     {
         return new ObjectAssociations();
     }
