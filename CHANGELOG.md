@@ -1,15 +1,18 @@
 # Changelog
 
-## Unreleased
+## 1.4.0 - 2022-09-28
 ### Added
-- Blog Post retrieval capabilities
 - Connection using HubSpot Private App token
 
-## 1.2.2 - - 2019-12-04
+## 1.3.0 - 2019-12-09
+### Added
+- Blog Post retrieval capabilities
+
+## 1.2.2 - 2019-12-04
 ### Fixed
 - Adding visitor table migration to installation [#2](https://github.com/flipboxfactory/craft-hubspot/issues/2)
 
-## 1.2.1 - - 2019-11-20
+## 1.2.1 - 2019-11-20
 ### Changed
 - Syncing visitors respects the 'queue' flag for existing records (still in the queue).
 
