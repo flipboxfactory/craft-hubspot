@@ -14,6 +14,8 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
+ * @deprecated This authentication method is deprecated
+ *
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
@@ -36,7 +38,7 @@ class ApplicationKeyConnection extends AbstractSaveableConnection implements Sav
      */
     public static function displayName(): string
     {
-        return 'Application Key';
+        return 'Application Key [Deprecated]';
     }
 
     /**
@@ -92,6 +94,14 @@ class ApplicationKeyConnection extends AbstractSaveableConnection implements Sav
     }
 
     /**
+     * @return string
+     */
+    protected function getKey(): string
+    {
+        return Craft::parseEnv($this->key);
+    }
+
+    /**
      * Add the 'hapikey' to the query
      *
      * @inheritdoc
@@ -113,7 +123,7 @@ class ApplicationKeyConnection extends AbstractSaveableConnection implements Sav
 
         // Add our key
         $query .= http_build_query([
-            'hapikey' => Craft::parseEnv($this->key)
+            'hapikey' => $this->getKey()
         ]);
 
         return $request->withUri(

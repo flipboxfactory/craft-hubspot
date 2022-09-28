@@ -94,13 +94,13 @@ class PrivateKeyConnection extends AbstractSaveableConnection implements Savable
     /**
      * @return string
      */
-    public function getKey(): string
+    protected function getKey(): string
     {
         return Craft::parseEnv($this->key);
     }
 
     /**
-     * Add the 'hapikey' to the query
+     * Add an Authorization Bearer header
      *
      * @inheritdoc
      */

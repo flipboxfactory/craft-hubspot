@@ -189,9 +189,6 @@ abstract class Objects extends Integrations implements ObjectsFieldInterface
 
         $response = $this->upsertToHubSpot($payload, $id);
 
-        var_dump($response->getBody()->getContents());
-        exit;
-
         return $this->handleSyncToHubSpotResponse(
             $response,
             $element,

@@ -3,6 +3,7 @@
 ## Unreleased
 ### Added
 - Blog Post retrieval capabilities
+- Connection using HubSpot Private App token
 
 ## 1.2.2 - - 2019-12-04
 ### Fixed
