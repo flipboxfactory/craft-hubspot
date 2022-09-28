@@ -14,12 +14,10 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * @deprecated This authentication method is deprecated
- *
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class ApplicationKeyConnection extends AbstractSaveableConnection implements SavableConnectionInterface
+class PrivateKeyConnection extends AbstractSaveableConnection implements SavableConnectionInterface
 {
     /**
      * @var string
@@ -38,7 +36,7 @@ class ApplicationKeyConnection extends AbstractSaveableConnection implements Sav
      */
     public static function displayName(): string
     {
-        return 'Application Key [Deprecated]';
+        return 'Private Application Key';
     }
 
     /**
@@ -49,7 +47,7 @@ class ApplicationKeyConnection extends AbstractSaveableConnection implements Sav
     public function getSettingsHtml()
     {
         return Craft::$app->getView()->renderTemplate(
-            'hubspot/_components/connections/applicationKey',
+            'hubspot/_components/connections/privateApplicationKey',
             [
                 'connection' => $this
             ]
@@ -102,33 +100,15 @@ class ApplicationKeyConnection extends AbstractSaveableConnection implements Sav
     }
 
     /**
-     * Add the 'hapikey' to the query
+     * Add an Authorization Bearer header
      *
      * @inheritdoc
      */
     public function prepareAuthorizationRequest(
         RequestInterface $request
-    ): RequestInterface {
-
-        // Requested URI
-        $uri = $request->getUri();
-
-        // Get Query
-        $query = $uri->getQuery();
-
-        // Append to?
-        if (!empty($query)) {
-            $query .= '&';
-        }
-
-        // Add our key
-        $query .= http_build_query([
-            'hapikey' => $this->getKey()
-        ]);
-
-        return $request->withUri(
-            $uri->withQuery($query)
-        );
+    ): RequestInterface
+    {
+        return $request->withAddedHeader('Authorization', "Bearer {$this->getKey()}");
     }
 
     /**
@@ -138,9 +118,10 @@ class ApplicationKeyConnection extends AbstractSaveableConnection implements Sav
      */
     public function handleAuthorizationResponse(
         ResponseInterface $response,
-        RequestInterface $request,
-        callable $callable
-    ): ResponseInterface {
+        RequestInterface  $request,
+        callable          $callable
+    ): ResponseInterface
+    {
         return $response;
     }
 }

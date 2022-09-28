@@ -185,6 +185,8 @@ abstract class Objects extends Integrations implements ObjectsFieldInterface
             ]
         );
 
+
+
         $response = $this->upsertToHubSpot($payload, $id);
 
         return $this->handleSyncToHubSpotResponse(
