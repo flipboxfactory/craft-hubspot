@@ -36,47 +36,47 @@ abstract class Objects extends Integrations implements ObjectsFieldInterface
     /**
      * @inheritdoc
      */
-    const TRANSLATION_CATEGORY = 'hubspot';
+    const TRANSLATION_CATEGORY = 'flipbox-hubspot';
 
     /**
      * @inheritdoc
      */
-    const INPUT_TEMPLATE_PATH = 'hubspot/_components/fieldtypes/Objects/input';
+    const INPUT_TEMPLATE_PATH = 'flipbox-hubspot/_components/fieldtypes/Objects/input';
 
     /**
      * @inheritdoc
      */
-    const INPUT_ITEM_TEMPLATE_PATH = 'hubspot/_components/fieldtypes/Objects/_inputItem';
+    const INPUT_ITEM_TEMPLATE_PATH = 'flipbox-hubspot/_components/fieldtypes/Objects/_inputItem';
 
     /**
      * @inheritdoc
      */
-    const SETTINGS_TEMPLATE_PATH = 'hubspot/_components/fieldtypes/Objects/settings';
+    const SETTINGS_TEMPLATE_PATH = 'flipbox-hubspot/_components/fieldtypes/Objects/settings';
 
     /**
      * @inheritdoc
      */
-    const ACTION_PREFORM_ACTION_PATH = 'hubspot/cp/fields/perform-action';
+    const ACTION_PREFORM_ACTION_PATH = 'flipbox-hubspot/cp/fields/perform-action';
 
     /**
      * @inheritdoc
      */
-    const ACTION_CREATE_ITEM_PATH = 'hubspot/cp/fields/create-item';
+    const ACTION_CREATE_ITEM_PATH = 'flipbox-hubspot/cp/fields/create-item';
 
     /**
      * @inheritdoc
      */
-    const ACTION_ASSOCIATION_ITEM_PATH = 'hubspot/cp/objects/associate';
+    const ACTION_ASSOCIATION_ITEM_PATH = 'flipbox-hubspot/cp/objects/associate';
 
     /**
      * @inheritdoc
      */
-    const ACTION_DISSOCIATION_ITEM_PATH = 'hubspot/cp/objects/dissociate';
+    const ACTION_DISSOCIATION_ITEM_PATH = 'flipbox-hubspot/cp/objects/dissociate';
 
     /**
      * @inheritdoc
      */
-    const ACTION_PREFORM_ITEM_ACTION_PATH = 'hubspot/cp/fields/perform-item-action';
+    const ACTION_PREFORM_ITEM_ACTION_PATH = 'flipbox-hubspot/cp/fields/perform-item-action';
 
     /**
      * Indicates whether the full sync operation should be preformed if a matching HubSpot Object was found but not

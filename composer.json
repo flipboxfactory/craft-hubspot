@@ -40,7 +40,7 @@
   },
   "extra": {
     "name": "HubSpot",
-    "handle": "hubspot",
+    "handle": "flipbox-hubspot",
     "class": "flipbox\\craft\\hubspot\\HubSpot",
     "developer": "Flipbox Digital",
     "developerUrl": "https://www.flipboxdigital.com",

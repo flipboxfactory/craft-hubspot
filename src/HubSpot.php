@@ -46,7 +46,7 @@ class HubSpot extends Plugin
     /**
      * @var string
      */
-    public static $category = 'hubspot';
+    public static $category = 'flipbox-hubspot';
 
     /**
      * @inheritdoc
@@ -86,7 +86,7 @@ class HubSpot extends Plugin
             function (Event $event) {
                 /** @var CraftVariable $variable */
                 $variable = $event->sender;
-                $variable->set('hubspot', HubSpotVariable::class);
+                $variable->set('flipbox-hubspot', HubSpotVariable::class);
             }
         );
 
@@ -133,17 +133,17 @@ class HubSpot extends Plugin
             parent::getCpNavItem(),
             [
                 'subnav' => [
-                    'hubspot.visitors' => [
+                    'flipbox-hubspot.visitors' => [
                         'label' => static::t('Visitors'),
-                        'url' => 'hubspot/visitors',
+                        'url' => 'flipbox-hubspot/visitors',
                     ],
-                    'hubspot.limits' => [
+                    'flipbox-hubspot.limits' => [
                         'label' => static::t('Limits'),
-                        'url' => 'hubspot/limits',
+                        'url' => 'flipbox-hubspot/limits',
                     ],
-                    'hubspot.settings' => [
+                    'flipbox-hubspot.settings' => [
                         'label' => static::t('Settings'),
-                        'url' => 'hubspot/settings',
+                        'url' => 'flipbox-hubspot/settings',
                     ]
                 ]
             ]
@@ -165,7 +165,7 @@ class HubSpot extends Plugin
     public function settingsHtml()
     {
         Craft::$app->getResponse()->redirect(
-            UrlHelper::cpUrl('hubspot/settings')
+            UrlHelper::cpUrl('flipbox-hubspot/settings')
         );
 
         Craft::$app->end();
@@ -236,7 +236,7 @@ class HubSpot extends Plugin
      */
     public static function t($message, $params = [], $language = null)
     {
-        return Craft::t('hubspot', $message, $params, $language);
+        return Craft::t('flipbox-hubspot', $message, $params, $language);
     }
 
 
@@ -269,25 +269,25 @@ class HubSpot extends Plugin
             $event->rules,
             [
                 // ??
-                'hubspot' => 'hubspot/cp/settings/view/general/index',
+                'flipbox-hubspot' => 'flipbox-hubspot/cp/settings/view/general/index',
 
                 // LIMITS
-                'hubspot/limits' => 'hubspot/cp/view/limits/index',
+                'flipbox-hubspot/limits' => 'flipbox-hubspot/cp/view/limits/index',
 
                 // VISITORS
-                'hubspot/visitors' => 'hubspot/cp/view/visitors/index',
-                'hubspot/visitors/<identifier:\d+>' => 'hubspot/cp/view/visitors/detail',
+                'flipbox-hubspot/visitors' => 'flipbox-hubspot/cp/view/visitors/index',
+                'flipbox-hubspot/visitors/<identifier:\d+>' => 'flipbox-hubspot/cp/view/visitors/detail',
 
                 // OBJECTS: PAYLOAD
-                'hubspot/objects/payloads/<field:\d+>/element/<element:\d+>' => 'hubspot/cp/view/object-payloads/index',
+                'flipbox-hubspot/objects/payloads/<field:\d+>/element/<element:\d+>' => 'flipbox-hubspot/cp/view/object-payloads/index',
 
                 // SETTINGS
-                'hubspot/settings' => 'hubspot/cp/settings/view/general/index',
+                'flipbox-hubspot/settings' => 'flipbox-hubspot/cp/settings/view/general/index',
 
                 // SETTINGS: CONNECTIONS
-                'hubspot/settings/connections' => 'hubspot/cp/settings/view/connections/index',
-                'hubspot/settings/connections/new' => 'hubspot/cp/settings/view/connections/upsert',
-                'hubspot/settings/connections/<identifier:\d+>' => 'hubspot/cp/settings/view/connections/upsert',
+                'flipbox-hubspot/settings/connections' => 'flipbox-hubspot/cp/settings/view/connections/index',
+                'flipbox-hubspot/settings/connections/new' => 'flipbox-hubspot/cp/settings/view/connections/upsert',
+                'flipbox-hubspot/settings/connections/<identifier:\d+>' => 'flipbox-hubspot/cp/settings/view/connections/upsert',
 
             ]
         );

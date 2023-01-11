@@ -47,7 +47,7 @@ class PrivateKeyConnection extends AbstractSaveableConnection implements Savable
     public function getSettingsHtml()
     {
         return Craft::$app->getView()->renderTemplate(
-            'hubspot/_components/connections/privateApplicationKey',
+            'flipbox-hubspot/_components/connections/privateApplicationKey',
             [
                 'connection' => $this
             ]

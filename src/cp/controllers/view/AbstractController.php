@@ -27,7 +27,7 @@ abstract class AbstractController extends Controller
     /**
      * The index view template path
      */
-    const TEMPLATE_BASE = 'hubspot' . '/_cp';
+    const TEMPLATE_BASE = 'flipbox-hubspot' . '/_cp';
 
     /*******************************************
      * BASE PATHS
@@ -116,7 +116,7 @@ abstract class AbstractController extends Controller
         $model->addError(
             'connection',
             'Invalid connection. ' .
-            '<a href="' . UrlHelper::cpUrl('hubspot/settings/connections') . '">' .
+            '<a href="' . UrlHelper::cpUrl('flipbox-hubspot/settings/connections') . '">' .
             'Manage connections to HubSpot' .
             '</a>.'
         );
@@ -159,7 +159,7 @@ abstract class AbstractController extends Controller
         if (!$activeSubNav = Craft::$app->getRequest()->getSegment(2)) {
             $activeSubNav = 'queries';
         }
-        $variables['selectedSubnavItem'] = 'hubspot.' . $activeSubNav;
+        $variables['selectedSubnavItem'] = 'flipbox-hubspot.' . $activeSubNav;
 
         // Breadcrumbs
         $variables['crumbs'][] = [

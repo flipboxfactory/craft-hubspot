@@ -1,17 +1,17 @@
-{% extends "hubspot/_cp/settings/_layout" %}
+{% extends "flipbox-hubspot/_cp/settings/_layout" %}
 {% import "_includes/forms" as forms %}
 
 {% set configOverrideMessage %}
     <span class="config-override">[Config Override]</span>
 {% endset %}
 
-{% set config = craft.app.config.getConfigFromFile('hubspot') %}
+{% set config = craft.app.config.getConfigFromFile('flipbox-hubspot') %}
 
 {% set content %}
     <input type="hidden" name="action" value="{{ baseActionPath }}/save">
     {{ redirectInput(baseCpPath) }}
 
-    {% set connecitonOptions = {(null): '-- Select Connection --'|t('hubspot')} %}
+    {% set connecitonOptions = {(null): '-- Select Connection --'|t('flipbox-hubspot')} %}
     {% for connection in connections %}
         {% set connecitonOptions = connecitonOptions|merge({
             (connection.handle): connection.name
@@ -20,8 +20,8 @@
 
     {% set connectionOverride = attribute(config, 'defaultConnection') is defined %}
     {{ forms.selectField({
-        label: "Default Connection"|t('hubspot'),
-        instructions: "The default connection is used when an API request is made without a specified connection." ~ (connectionOverride ? configOverrideMessage : '') |t('hubspot'),
+        label: "Default Connection"|t('flipbox-hubspot'),
+        instructions: "The default connection is used when an API request is made without a specified connection." ~ (connectionOverride ? configOverrideMessage : '') |t('flipbox-hubspot'),
         id: 'defaultConnection',
         name: 'defaultConnection',
         value: settings.defaultConnection,
@@ -29,7 +29,7 @@
         required: true
     }) }}
 
-    {% set cacheOptions = {(null): '-- Select Cache --'|t('hubspot')} %}
+    {% set cacheOptions = {(null): '-- Select Cache --'|t('flipbox-hubspot')} %}
     {% for key, config in craft.hubspot.cache.all %}
         {% set cacheOptions = cacheOptions|merge({
             (key): key
@@ -38,8 +38,8 @@
 
     {% set cacheOverride = attribute(config, 'defaultCache') is defined %}
     {{ forms.selectField({
-        label: "Default Cache"|t('hubspot'),
-        instructions: "The default cache is used when an API request is made without a specified cache." ~ (cacheOverride ? configOverrideMessage : '') |t('hubspot'),
+        label: "Default Cache"|t('flipbox-hubspot'),
+        instructions: "The default cache is used when an API request is made without a specified cache." ~ (cacheOverride ? configOverrideMessage : '') |t('flipbox-hubspot'),
         id: 'defaultCache',
         name: 'defaultCache',
         value: settings.defaultCache,

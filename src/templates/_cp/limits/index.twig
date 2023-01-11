@@ -1,7 +1,7 @@
-{% extends "hubspot/_cp/_layout" %}
+{% extends "flipbox-hubspot/_cp/_layout" %}
 
 {% block contextMenu %}
-    {% include "hubspot/_cp/_layout/_connectionOptions" with {
+    {% include "flipbox-hubspot/_cp/_layout/_connectionOptions" with {
         availableConnections: availableConnections,
         activeConnection: activeConnection,
         defaultConnection: defaultConnection
@@ -13,8 +13,8 @@
         <thead>
         <tr>
             <th>&nbsp;</th>
-            <th>{{ "Used"|t('hubspot') }}</th>
-            <th>{{ "Max"|t('hubspot') }}</th>
+            <th>{{ "Used"|t('flipbox-hubspot') }}</th>
+            <th>{{ "Max"|t('flipbox-hubspot') }}</th>
         </tr>
         </thead>
         <tbody>

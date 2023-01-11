@@ -1,8 +1,8 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.autosuggestField({
-    label: "Private Application Key"|t('hubspot'),
-    instructions: "Reference HubSpot API Docs: https://developers.hubspot.com/docs/api/private-apps"|t('hubspot'),
+    label: "Private Application Key"|t('flipbox-hubspot'),
+    instructions: "Reference HubSpot API Docs: https://developers.hubspot.com/docs/api/private-apps"|t('flipbox-hubspot'),
     id: 'key',
     name: 'key',
     suggestEnvVars: true,
@@ -12,8 +12,8 @@
 }) }}
 
 {{ forms.autosuggestField({
-    label: "Hub Id"|t('hubspot'),
-    instructions: "The Hub Id."|t('hubspot'),
+    label: "Hub Id"|t('flipbox-hubspot'),
+    instructions: "The Hub Id."|t('flipbox-hubspot'),
     id: 'hubId',
     name: 'hubId',
     suggestEnvVars: true,

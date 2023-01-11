@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Changed
+- Renamed plugin handle (and twig variables) from 'hubspot' to 'flipbox-hubspot'
+
 ## 1.4.0 - 2022-09-28
 ### Added
 - Connection using HubSpot Private App token

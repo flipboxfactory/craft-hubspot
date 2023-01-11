@@ -1,42 +1,42 @@
-{% extends "hubspot/_cp/settings/_layout" %}
+{% extends "flipbox-hubspot/_cp/settings/_layout" %}
 
 {% block actionButton %}
     <div class="buttons right">
         <a href="{{ url(continueEditingUrl ~ '/new') }}"
-           class="btn submit add icon">{{ "New connection"|t('hubspot') }}</a>
+           class="btn submit add icon">{{ "New connection"|t('flipbox-hubspot') }}</a>
     </div>
 {% endblock %}
 
 {% set content %}
     <table id="connections" class="data fullwidth collapsible">
         <thead>
-            <th scope="col">{{ "Name"|t('hubspot') }}</th>
-            <th scope="col">{{ "Handle"|t('hubspot') }}</th>
-            <th scope="col">{{ "Hub Id"|t('hubspot') }}</th>
-            <th scope="col">{{ "Type"|t('hubspot') }}</th>
-            <th scope="col">{{ "Default"|t('hubspot') }}</th>
+            <th scope="col">{{ "Name"|t('flipbox-hubspot') }}</th>
+            <th scope="col">{{ "Handle"|t('flipbox-hubspot') }}</th>
+            <th scope="col">{{ "Hub Id"|t('flipbox-hubspot') }}</th>
+            <th scope="col">{{ "Type"|t('flipbox-hubspot') }}</th>
+            <th scope="col">{{ "Default"|t('flipbox-hubspot') }}</th>
         </thead>
         <tbody>
         {% if connections|length %}
             {% for handle, record in connections %}
                 {% set connection = record.connection %}
                 <tr data-id="{{ record.id }}" data-name="{{ record.handle }}">
-                    <th scope="row" data-title="{{ 'Type'|t('hubspot') }}">
+                    <th scope="row" data-title="{{ 'Type'|t('flipbox-hubspot') }}">
                         <span class="status{% if record.enabled %} enabled{% endif %}"></span>
                         <a href="{{ url(baseCpPath~'/'~record.id) }}">
                             {{ record.name }}
                         </a>
                     </th>
-                    <th data-title="{{ 'Handle'|t('hubspot') }}">
+                    <th data-title="{{ 'Handle'|t('flipbox-hubspot') }}">
                         <code>{{ record.handle }}</code>
                     </th>
-                    <td data-title="{{ 'HubId'|t('hubspot') }}">
+                    <td data-title="{{ 'HubId'|t('flipbox-hubspot') }}">
                         <code>{{ connection.hubId }}</code>
                     </td>
-                    <td data-title="{{ 'Handle'|t('hubspot') }}">
+                    <td data-title="{{ 'Handle'|t('flipbox-hubspot') }}">
                         {{ connection.displayName() }}
                     </td>
-                    <td data-title="{{ 'Default'|t('hubspot') }}">
+                    <td data-title="{{ 'Default'|t('flipbox-hubspot') }}">
                         <span class="status{% if settings.defaultConnection == record.handle %} enabled{% endif %}"></span>
                     </td>
                 </tr>
@@ -44,7 +44,7 @@
         {% else %}
             <tr>
                 <td colspan="3">
-                    {{ "No connections exist yet."|t('hubspot') }}
+                    {{ "No connections exist yet."|t('flipbox-hubspot') }}
                 </td>
             </tr>
         {% endif %}

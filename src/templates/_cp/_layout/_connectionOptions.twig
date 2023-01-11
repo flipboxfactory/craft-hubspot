@@ -1,7 +1,7 @@
 {% import "_includes/forms" as forms %}
 
 {% if not activeConnection %}
-    <a href="{{ cpUrl('hubspot/settings/connections') }}">Create a connection</a>&nbsp;{{ "to get started."|t('force') }}
+    <a href="{{ cpUrl('flipbox-hubspot/settings/connections') }}">Create a connection</a>&nbsp;{{ "to get started."|t('force') }}
 {% endif %}
 
 {% set queryParams = craft.app.request.queryParams|without(craft.app.request.fullPath) %}

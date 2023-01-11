@@ -49,7 +49,7 @@ class ApplicationKeyConnection extends AbstractSaveableConnection implements Sav
     public function getSettingsHtml()
     {
         return Craft::$app->getView()->renderTemplate(
-            'hubspot/_components/connections/applicationKey',
+            'flipbox-hubspot/_components/connections/applicationKey',
             [
                 'connection' => $this
             ]
