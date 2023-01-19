@@ -4,7 +4,7 @@
 > {warning} This plugin handle has been renamed from 'hubspot' to 'flipbox-hubspot' in an effort to resolve plugin store conflicts.  If you're upgrading this plugin, you will need to manually update  the plugin handle in the database: `plugins` table => find the `hubspot` plugin handle and replace with `flipbox-hubspot`.
 
 ### Changed
-- Renamed plugin handle (and twig variables) from 'hubspot' to 'flipbox-hubspot'
+- Renamed plugin handle from `hubspot` to `flipbox-hubspot`
 
 ### Added
 - Plugin setting `variableKey` can be used to override the twig variable used.  Defaults to `hubspot` and is implemented: `{{ craft.hubspot.* }}`  
