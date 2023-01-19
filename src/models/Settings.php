@@ -24,6 +24,11 @@ class Settings extends Model
     /**
      * @var string
      */
+    public $variableKey = 'hubspot';
+
+    /**
+     * @var string
+     */
     public $environmentTableSuffix = '';
 
     /**

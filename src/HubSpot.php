@@ -86,7 +86,7 @@ class HubSpot extends Plugin
             function (Event $event) {
                 /** @var CraftVariable $variable */
                 $variable = $event->sender;
-                $variable->set('flipbox-hubspot', HubSpotVariable::class);
+                $variable->set(HubSpot::getInstance()->getSettings()->variableKey, HubSpotVariable::class);
             }
         );
 
