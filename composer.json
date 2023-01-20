@@ -14,7 +14,7 @@
     "php": ">=8.0",
     "craftcms/cms": "~4.0",
     "flipboxdigital/hubspot": "dev-feature/php8",
-    "flipboxfactory/craft-ember": "dev-feature/craf4",
+    "flipboxfactory/craft-ember": "dev-feature/craft4",
     "flipboxfactory/craft-integration": "dev-feature/php8",
     "flipboxfactory/craft-psr3": "dev-feature/php8"
   },
