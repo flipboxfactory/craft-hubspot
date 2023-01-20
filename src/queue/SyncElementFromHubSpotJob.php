@@ -37,7 +37,7 @@ class SyncElementFromHubSpotJob extends BaseJob implements \Serializable
      * @inheritdoc
      * @return bool
      */
-    public function execute($queue)
+    public function execute($queue): void
     {
         $field = $this->getField();
         $element = $this->getElement();

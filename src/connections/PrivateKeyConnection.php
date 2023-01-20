@@ -41,7 +41,7 @@ class PrivateKeyConnection extends AbstractSaveableConnection implements Savable
 
     /**
      * @inheritdoc
-     * @throws \Twig_Error_Loader
+     * @throws \Twig\Error\LoaderError
      * @throws \yii\base\Exception
      */
     public function getSettingsHtml()

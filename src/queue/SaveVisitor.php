@@ -40,7 +40,7 @@ class SaveVisitor extends BaseJob implements \Serializable
      *
      * @return string|null
      */
-    protected function defaultDescription()
+    protected function defaultDescription(): ?string
     {
         return static::DESCRIPTION . $this->token;
     }
@@ -49,7 +49,7 @@ class SaveVisitor extends BaseJob implements \Serializable
      * @inheritDoc
      * @throws \Exception
      */
-    public function execute($queue)
+    public function execute($queue): void
     {
         if (empty($this->token)) {
             return;

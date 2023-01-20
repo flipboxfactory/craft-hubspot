@@ -127,7 +127,7 @@ class HubSpot extends Plugin
     /**
      * @inheritdoc
      */
-    public function getCpNavItem()
+    public function getCpNavItem(): ?array
     {
         return array_merge(
             parent::getCpNavItem(),
@@ -154,7 +154,7 @@ class HubSpot extends Plugin
      * @inheritdoc
      * @return SettingsModel
      */
-    public function createSettingsModel()
+    public function createSettingsModel(): ?\craft\base\Model
     {
         return new SettingsModel();
     }
@@ -162,7 +162,7 @@ class HubSpot extends Plugin
     /**
      * @inheritdoc
      */
-    public function settingsHtml()
+    public function settingsHtml(): ?string
     {
         Craft::$app->getResponse()->redirect(
             UrlHelper::cpUrl('flipbox-hubspot/settings')

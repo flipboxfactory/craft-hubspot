@@ -11,15 +11,16 @@
     "yii2"
   ],
   "require": {
+    "php": ">=8.0",
     "craftcms/cms": "^3.2",
-    "flipboxdigital/hubspot": "^2.5",
+    "flipboxdigital/hubspot": "dev-feature/php8",
     "flipboxfactory/craft-ember": "^2.1",
-    "flipboxfactory/craft-integration": "^2.2.2",
-    "flipboxfactory/craft-psr3": "^1.1"
+    "flipboxfactory/craft-integration": "dev-feature/php8",
+    "flipboxfactory/craft-psr3": "dev-feature/php8"
   },
   "require-dev": {
-    "squizlabs/php_codesniffer": "^3.4",
-    "codeception/codeception": "^3.0"
+    "codeception/codeception": "^5.0",
+    "squizlabs/php_codesniffer": "^3.4"
   },
   "autoload": {
     "psr-4": {
@@ -38,6 +39,14 @@
     "docs": "https://github.com/flipboxfactory/craft-hubspot",
     "rss": "https://github.com/flipboxfactory/craft-hubspot/commits/master.atom"
   },
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true,
+    "allow-plugins": {
+      "craftcms/plugin-installer": true,
+      "yiisoft/yii2-composer": true
+    }
+  },
   "extra": {
     "name": "HubSpot",
     "handle": "flipbox-hubspot",
@@ -53,5 +62,7 @@
       "dev-master": "1.2.x-dev",
       "dev-develop": "1.2.x-dev"
     }
-  }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }

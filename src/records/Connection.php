@@ -87,7 +87,7 @@ class Connection extends IntegrationConnection
     /**
      * @inheritdoc
      */
-    public function beforeSave($insert)
+    public function beforeSave($insert): bool
     {
         $connection = $this->getConnection();
 
