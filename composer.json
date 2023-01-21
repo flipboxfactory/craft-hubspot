@@ -13,10 +13,10 @@
   "require": {
     "php": ">=8.0",
     "craftcms/cms": "~4.0",
-    "flipboxdigital/hubspot": "dev-feature/php8",
-    "flipboxfactory/craft-ember": "dev-feature/craft4",
+    "flipboxdigital/hubspot": "~3.0",
+    "flipboxfactory/craft-ember": "~3.0",
     "flipboxfactory/craft-integration": "dev-feature/php8",
-    "flipboxfactory/craft-psr3": "dev-feature/php8"
+    "flipboxfactory/craft-psr3": "~2.0"
   },
   "require-dev": {
     "codeception/codeception": "^5.0",
