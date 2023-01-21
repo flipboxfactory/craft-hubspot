@@ -137,10 +137,6 @@ class HubSpot extends Plugin
                         'label' => static::t('Visitors'),
                         'url' => 'flipbox-hubspot/visitors',
                     ],
-                    'flipbox-hubspot.limits' => [
-                        'label' => static::t('Limits'),
-                        'url' => 'flipbox-hubspot/limits',
-                    ],
                     'flipbox-hubspot.settings' => [
                         'label' => static::t('Settings'),
                         'url' => 'flipbox-hubspot/settings',
@@ -270,9 +266,6 @@ class HubSpot extends Plugin
             [
                 // ??
                 'flipbox-hubspot' => 'flipbox-hubspot/cp/settings/view/general/index',
-
-                // LIMITS
-                'flipbox-hubspot/limits' => 'flipbox-hubspot/cp/view/limits/index',
 
                 // VISITORS
                 'flipbox-hubspot/visitors' => 'flipbox-hubspot/cp/view/visitors/index',
