@@ -4,7 +4,6 @@
 ### Added
 - Craft 4.0 support
 
-
 ## 2.0.0 - 2023-01-19 [CRITICAL]
 > {warning} This plugin handle has been renamed from 'hubspot' to 'flipbox-hubspot' in an effort to resolve plugin store conflicts.  If you're upgrading this plugin, you will need to manually update  the plugin handle in the database: `plugins` table => find the `hubspot` plugin handle and replace with `flipbox-hubspot`.
 

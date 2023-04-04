@@ -15,7 +15,7 @@
     "craftcms/cms": "~4.0",
     "flipboxdigital/hubspot": "~3.0",
     "flipboxfactory/craft-ember": "~3.0",
-    "flipboxfactory/craft-integration": "dev-feature/php8",
+    "flipboxfactory/craft-integration": "~3.0",
     "flipboxfactory/craft-psr3": "~2.0"
   },
   "require-dev": {
